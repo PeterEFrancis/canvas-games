@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play Traffic Lights</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+
+      * {
+        max-width: 100%;
+      }
+
+      :root {
+        --green: #00ff00;
+        --red: #ff5757;
+      }
+      canvas {
+        margin:0px;
+        box-shadow: 0px 0px 20px 1px black;
+        display: block;
+      }
+
+      .dark {
+        background-color: #3F3F3F;
+        color: lightgrey;
+      }
+
+      .current_player_box {
+        border-radius: 5px;
+        border: 1px solid lightgrey;
+        max-width: 100px;
+      }
+
+      .current_player_box > p {
+        font-size:40pt;
+        margin-bottom: 0px;
+      }
+
+    </style>
+
+  </head>
+  <body class="dark" onload="reset_board();">
+    <div class="container" style="min-width:670px; margin-top: 30px;">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="dark center-block" style="margin-bottom: 20px; border-radius: 5px;">
+            <canvas id="board" class="center-block" width="600" height="450" onclick="game_step();" style="background-color:black"></canvas>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="dark center-block" style="padding: 20px; border: 1px solid lightgrey; user-select: none; max-width: 400px;">
+            <h1 class="text-center" style="margin-top: 0px;">Traffic Lights</h1>
+            <br>
+            <p class="text-center">Pressing an <strong>off</strong>, <strong style="color:var(--green);">green</strong>,
+            or <strong style="color:yellow;">yellow</strong> light turns it <strong style="color:var(--green);">green</strong>,
+            <strong style="color:yellow;">yellow</strong>, or <strong style="color:var(--red);">red</strong>, respectively.
+            The first player to make three <strong style="color:var(--green);">green</strong>, <strong style="color:yellow;">yellow</strong>,
+             or <strong style="color:var(--red);">red</strong> lights in a row horizontally, vertically, or diagonaly wins!</p>
+            <h3 class="text-center">
+              <strong style="color:var(--green);">green &#9632;</strong><br>
+              <strong style="color:yellow;">yellow &#9650;</strong><br>
+              <strong style="color:var(--red);">red &#9679;</strong>
+            </h3>
+          </div>
+          <h3 class="text-center">Current Player</h3>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="current_player_box" id="one" style="margin-left: auto;">
+                  <p class="text-center">1</p>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="current_player_box" id="two" style="margin-right: auto;">
+                  <p class="text-center">2</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br><br>
+          <button class="btn btn-block btn-lg btn-primary center-block" onclick="reset_board()">
+          Reset Board
+          </button>
+          <button class="btn btn-block btn-lg btn-warning center-block" onclick="undo_step()" disabled id="undo-button">
+          Undo
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <p class="text-center" style="margin-top:40px;">
+          &#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis<u></a>
+        </p>
+      </div>
+    </div>
+
+    <script src="js/engine.js"></script>
+
+
+
+  </body>
+</html>
