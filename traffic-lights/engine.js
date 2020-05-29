@@ -7,7 +7,7 @@ const SQUARE_WIDTH = 150;
 const LINE_WIDTH = 2; // works best if this is even
 
 
-const LINES = [ [0,1,2], [1,2,3], [4,5,6], [5,6,7], [8,9,10], [9,10,11],
+const COMBOS = [[0,1,2], [1,2,3], [4,5,6], [5,6,7], [8,9,10], [9,10,11],
                 [0,4,8], [1,5,9], [2,6,10], [3,7,11],
                 [0,5,10], [1,6,11],
                 [2,5,8], [3,6,9]
@@ -24,18 +24,17 @@ const ctx = canvas.getContext("2d");
 
 
 // state representation of the board
-var board = [0,0,0,0,0,0,0,0,0,0,0,0];
+var board;
 // current player is either 1 or 2
-var current_player = 1;
+var current_player;
 // if game_over, the board cannot be changed
-var game_over = false;
+var game_over;
 //
-var history_squares = [];
+var history_squares;
 
 
 function reset_board() {
     game_over = false;
-    blank = true;
     board = [0,0,0,0,0,0,0,0,0,0,0,0];
     history_squares = [];
 
@@ -57,11 +56,11 @@ function reset_board() {
 }
 
 function is_game_over() {
-    for (i = 0; i < LINES.length; i++) {
-        var line = LINES[i];
-        var a = board[line[0]];
-        var b = board[line[1]];
-        var c = board[line[2]];
+    for (i = 0; i < COMBOS.length; i++) {
+        var combo = COMBOS[i];
+        var a = board[combo[0]];
+        var b = board[combo[1]];
+        var c = board[combo[2]];
         if (a != 0 && a === b && b === c) {
             return true;
         }
