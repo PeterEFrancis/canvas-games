@@ -135,7 +135,7 @@ function game_step() {
               ctx.font = "20px Arial";
               ctx.fillText("Click the board to reset.", MARGIN * 2, MARGIN * 3 + 3*SQUARE_WIDTH + 10);
           } else {
-            ctx.fillText("Draw!", MARGIN, MARGIN * 2 + 3*SQUARE_WIDTH + 25);
+            ctx.fillText("Draw!", MARGIN * 2.8, MARGIN * 2 + 3*SQUARE_WIDTH + 25);
           }
       }
 
