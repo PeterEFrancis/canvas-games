@@ -132,10 +132,12 @@ function game_step() {
           } else if (game_state == X || game_state == O) {
               ctx.fillText((current_player == X ? "X" : "O") + " wins!", MARGIN * 2.5, MARGIN * 2 + 3*SQUARE_WIDTH + 25);
               ctx.fillStyle = "black";
+          } else {
+              ctx.fillText("Draw!", MARGIN * 2.8, MARGIN * 2 + 3*SQUARE_WIDTH + 25);
+          }
+          if (game_state != UNFINISHED) {
               ctx.font = "20px Arial";
               ctx.fillText("Click the board to reset.", MARGIN * 2, MARGIN * 3 + 3*SQUARE_WIDTH + 10);
-          } else {
-            ctx.fillText("Draw!", MARGIN * 2.8, MARGIN * 2 + 3*SQUARE_WIDTH + 25);
           }
       }
 
