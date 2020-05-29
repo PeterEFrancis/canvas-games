@@ -11,16 +11,9 @@ const O = 2;
 const DEAD_LOCK = -1;
 const UNFINISHED = -2;
 
-const WINNING_COMBOS = [[[0,0], [0,1], [0,2]],
-                        [[1,0], [1,1], [1,2]],
-                        [[2,0], [2,1], [2,2]],
-                        [[0,0], [1,0], [2,0]],
-                        [[0,0], [1,0], [2,0]],
-                        [[0,1], [1,1], [2,1]],
-                        [[0,2], [1,2], [2,2]],
-                        [[0,0], [1,1], [2,2]],
-                        [[0,2], [1,1], [2,0]]
-                       ];
+const WINNING_COMBOS = [[0,1,2], [3,4,5], [6,7,8],
+                        [0,3,6], [1,4,7], [2,5,8],
+                        [0,4,8], [2,4,6]];
 
 const canvas = document.getElementById("display");
 const ctx = canvas.getContext("2d");
@@ -28,12 +21,12 @@ const ctx = canvas.getContext("2d");
 var board;
 var current_player;
 
-function add_mark(row, col) {
-    var x = MARGIN + SQUARE_WIDTH * col + SQUARE_WIDTH * 0.2;
-    var y = MARGIN + SQUARE_WIDTH * row + SQUARE_WIDTH * 0.2;
+function add_mark(square_num) {
+    var x = MARGIN + SQUARE_WIDTH * (square_num % 3) + SQUARE_WIDTH * 0.2;
+    var y = MARGIN + SQUARE_WIDTH * Math.floor(square_num / 3) + SQUARE_WIDTH * 0.2;
     var image = new Image();
 
-    if (board[row][col] == X) {
+    if (board[square_num] == X) {
       image.src = "X.png";
     } else {
       image.src = "O.png";
@@ -49,7 +42,7 @@ function add_mark(row, col) {
 }
 
 function reset_game() {
-    board = [[0,0,0],[0,0,0],[0,0,0]];
+    board = [0,0,0,0,0,0,0,0,0];
 
     // clear display
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -71,26 +64,24 @@ function reset_game() {
 function find_three () {
   for (i = 0; i < WINNING_COMBOS.length; i++) {
       var combo = WINNING_COMBOS[i];
-      var a = board[combo[0][0]][combo[0][1]];
-      var b = board[combo[1][0]][combo[1][1]];
-      var c = board[combo[2][0]][combo[2][1]];
+      var a = board[combo[0]];
+      var b = board[combo[1]];
+      var c = board[combo[2]];
       if (a != BLANK && a === b && b === c) {
-        return [combo[0][0], combo[0][1], combo[2][0], combo[2][1]];
+        return combo;
       }
   }
   return [-1];
 }
 
 function get_game_state() {
-    three = find_three();
+    var three = find_three();
     if (three[0] != -1) {
-      return board[three[0]][three[1]]; // X or O
+      return board[three[0]]; // X or O
     }
-    for (r = 0; r < 3; r++) {
-      for (c = 0; c < 3; c++) {
-        if (board[r][c] == 0) {
-          return UNFINISHED;
-        }
+    for (i = 0; i < 9; i++) {
+      if (board[i] == 0) {
+        return UNFINISHED;
       }
     }
     return DEAD_LOCK;
@@ -111,14 +102,15 @@ function game_step() {
 
       var row = ((user_y - MARGIN) - ((user_y - MARGIN) % SQUARE_WIDTH)) / SQUARE_WIDTH;
       var col = ((user_x - MARGIN) - ((user_x - MARGIN) % SQUARE_WIDTH)) / SQUARE_WIDTH;
+      var square_num = row * 3 + col;
 
-      if (board[row][col] == BLANK) {
+      if (board[square_num] == BLANK) {
 
           // set the board array
-          board[row][col] = current_player;
+          board[square_num] = current_player;
 
           // change the board display (this could be replaced by just clearing and resetting the entire board)
-          add_mark(row, col);
+          add_mark(square_num);
 
           // check game state and update message
           ctx.clearRect(0, MARGIN + SQUARE_WIDTH * 3, WIDTH, HEIGHT - MARGIN * 2 - 3 * SQUARE_WIDTH);
@@ -131,7 +123,6 @@ function game_step() {
               // switch players
           } else if (game_state == X || game_state == O) {
               ctx.fillText((current_player == X ? "X" : "O") + " wins!", MARGIN * 2.5, MARGIN * 2 + 3*SQUARE_WIDTH + 25);
-              ctx.fillStyle = "black";
           } else {
               ctx.fillText("Draw!", MARGIN * 2.8, MARGIN * 2 + 3*SQUARE_WIDTH + 25);
           }
@@ -151,10 +142,10 @@ function draw_winning_line() {
         ctx.strokeStyle = "red";
         ctx.lineWidth = 15;
         ctx.beginPath();
-        x1 = MARGIN + (three[1] + 0.5) * SQUARE_WIDTH;
-        y1 = MARGIN + (three[0] + 0.5) * SQUARE_WIDTH;
-        x2 = MARGIN + (three[3] + 0.5) * SQUARE_WIDTH;
-        y2 = MARGIN + (three[2] + 0.5) * SQUARE_WIDTH;
+        x1 = MARGIN + ((three[0] % 3) + 0.5) * SQUARE_WIDTH;
+        y1 = MARGIN + (Math.floor(three[0] / 3) + 0.5) * SQUARE_WIDTH;
+        x2 = MARGIN + ((three[2] % 3) + 0.5) * SQUARE_WIDTH;
+        y2 = MARGIN + (Math.floor(three[2] / 3) + 0.5) * SQUARE_WIDTH;
         if (x1 == x2) {
           y1 -= SQUARE_WIDTH * 0.2;
           y2 += SQUARE_WIDTH * 0.2;
@@ -172,6 +163,7 @@ function draw_winning_line() {
           x2 += SQUARE_WIDTH * 0.2;
           y2 += SQUARE_WIDTH * 0.2;
         }
+        console.log(three);
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
         ctx.stroke();
