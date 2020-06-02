@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play Pig</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+      * {
+        max-width: 100%;
+      }
+      canvas {
+        margin: 0px;
+        display: block;
+        border: 1px solid black;
+      }
+
+    </style>
+
+  </head>
+  <body onload="initialize()">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="center-block">
+            <canvas id="display" class="center-block" width="600" height="300" style="margin-top:30px;" onclick="register_click()"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row">
+        <p class="text-center" style="margin-top:40px;">
+          &#169; 2020 <a href="https://PeterEFrancis.com" target="_blank"><u>Peter E. Francis<u></a>
+        </p>
+      </div> -->
+    </div>
+
+    <script src="engine.js"></script>
+
+  </body>
+</html>
