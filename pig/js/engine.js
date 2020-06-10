@@ -435,7 +435,7 @@ function computer_turn() {
 
   computerTurnIntervalID = setInterval(function() {
 
-    if (does_computer_roll()) {
+    if (shouldRoll(scores[1], scores[0], turn_totals[1])) {
       roll();
     } else {
       clearInterval(computerTurnIntervalID);
@@ -447,7 +447,7 @@ function computer_turn() {
 }
 
 
-function does_computer_roll() {
+function should_computer_roll_keep_pace_and_end_race() {
   console.log("does_computer_roll()");
 
   if (scores[COMPUTER] + turn_totals[COMPUTER] >= GOAL) {
