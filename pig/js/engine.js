@@ -23,8 +23,6 @@ const COMPUTER = 1;
 
 
 
-
-
  //  _____   _          _       _
  // |  ___| (_)   ___  | |   __| |  ___
  // | |_    | |  / _ \ | |  / _` | / __|
@@ -36,7 +34,8 @@ const COMPUTER = 1;
 var scores = [0,0];
 var turn_totals = [0,0];
 
-var current_player;
+var current_player = [COMPUTER, USER][Math.floor(Math.random() * 2)];
+
 
 var title_img;
 var animal_img;
@@ -48,6 +47,9 @@ var moving;
 
 var computerTurnIntervalID;
 
+var hint;
+
+var computer_speed = 1500;
 
 
 
@@ -62,54 +64,50 @@ var computerTurnIntervalID;
 /**
  * place all of the static images and text
  */
-function initialize() {
-
-  title_img = new Image();
-  title_img.src = "img/title.png";
-  title_img.onload = function() {
-      ctx.drawImage(title_img, 10, 10, title_img.width * 0.7, title_img.height * 0.7);
-  }
-
-  animal_img = new Image();
-  animal_img.src = "img/animal.png";
-  animal_img.onload = function() {
-      ctx.drawImage(animal_img, 0, HEIGHT - animal_img.height);
-  }
-
-  hold_img = new Image();
-  hold_img.src = "img/hold.jpg";
-  hold_img.onload = function() {
-    ctx.drawImage(hold_img, WIDTH - hold_img.width - 30, HEIGHT - hold_img.height - 15);
-  }
-
-  roll_img = new Image();
-  roll_img.src = "img/roll.jpg";
-  roll_img.onload = function() {
-    ctx.drawImage(roll_img, WIDTH - roll_img.width - 300, HEIGHT - roll_img.height - 15);
-  }
-
-  ctx.fillStyle = "black";
-  ctx.font = "20px monospace";
-  ctx.fillText(" Your", SCORE_LEFT, USER_SCORE_TOP + 10);
-  ctx.fillText("Score", SCORE_LEFT, USER_SCORE_TOP + 35);
-  ctx.fillText("Comp.", SCORE_LEFT, COMPUTER_SCORE_TOP + 10);
-  ctx.fillText("Score", SCORE_LEFT, COMPUTER_SCORE_TOP + 35);
-
-  // ctx.fillStyle = "grey";
-  // ctx.fillRect(20, 120, 100, 20);
-  // ctx.fillStyle = "white";
-  // ctx.font = "15px monospace";
-  // ctx.fillText("Get Hint", 34, 134);
-
-  ctx.fillStyle = "black";
-  ctx.font = "15px monospace";
-  ctx.fillText("Turn Total", 340, 250);
-
-  current_player = [COMPUTER, USER][Math.floor(Math.random() * 2)];
-
-  reset_game();
-
+title_img = new Image();
+title_img.src = "img/title.png";
+title_img.onload = function() {
+    ctx.drawImage(title_img, 10, 10, title_img.width * 0.7, title_img.height * 0.7);
 }
+
+animal_img = new Image();
+animal_img.src = "img/animal.png";
+animal_img.onload = function() {
+    ctx.drawImage(animal_img, 0, HEIGHT - animal_img.height * 0.8, animal_img.width * 0.8, animal_img.height * 0.8);
+}
+
+hold_img = new Image();
+hold_img.src = "img/hold.jpg";
+hold_img.onload = function() {
+  ctx.drawImage(hold_img, WIDTH - hold_img.width - 30, HEIGHT - hold_img.height - 15);
+}
+
+roll_img = new Image();
+roll_img.src = "img/roll.jpg";
+roll_img.onload = function() {
+  ctx.drawImage(roll_img, WIDTH - roll_img.width - 300, HEIGHT - roll_img.height - 15);
+}
+
+ctx.fillStyle = "black";
+ctx.font = "20px monospace";
+ctx.fillText(" Your", SCORE_LEFT, USER_SCORE_TOP + 10);
+ctx.fillText("Score", SCORE_LEFT, USER_SCORE_TOP + 35);
+ctx.fillText("Comp.", SCORE_LEFT, COMPUTER_SCORE_TOP + 10);
+ctx.fillText("Score", SCORE_LEFT, COMPUTER_SCORE_TOP + 35);
+
+// ctx.fillStyle = "grey";
+// ctx.fillRect(20, 120, 100, 20);
+// ctx.fillStyle = "white";
+// ctx.font = "15px monospace";
+// ctx.fillText("Get Hint", 34, 134);
+
+ctx.fillStyle = "black";
+ctx.font = "15px monospace";
+ctx.fillText("Turn Total", 340, 250);
+
+reset_game();
+
+
 
 
 function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
@@ -152,7 +150,6 @@ function circle(ctx, x, y, radius) {
   ctx.arc(x, y, radius, 0, 2 * Math.PI);
   ctx.fill();
 }
-
 
 function update() {
     console.log("update()");
@@ -226,7 +223,7 @@ function update() {
     ctx.fillStyle = "black";
     ctx.font = "40px monospace";
     ctx.clearRect(350, 255, 90, 40);
-    ctx.fillText(turn_totals[current_player], 360, 285);
+    ctx.fillText(turn_totals[current_player], turn_totals[current_player] < 10 ? 372 : 360, 285);
 
 
 
@@ -288,24 +285,63 @@ function update() {
     }
 
 
-
     // side text
+    var top_side = 105;
     // ctx.fillStyle = "rgb(255,0,0,0.5)";
-    ctx.clearRect(0, 110, 160, 40);
+    ctx.clearRect(5, top_side, 140, 70);
     ctx.fillStyle = "black";
     if (!is_game_over()) {
       ctx.font = "15px monospace";
-      ctx.fillText("Prob. of win:", 12, 125);
-      ctx.font = "12px monospace";
-      var prob_of_user_win = pWin(scores[0], scores[1], turn_totals[0]);
-      var prob_of_comp_win = pWin(scores[1], scores[0], turn_totals[1]);
-      ctx.fillText((current_player == USER ? prob_of_user_win : 1 - prob_of_comp_win) + "", 8, 142);
+      ctx.fillText("Probability", 20, top_side + 20);
+      ctx.fillText("of winning:", 20, top_side + 35);
+      ctx.font = "25px monospace";
+      var prob_of_user_win = Math.round(pWin(scores[0], scores[1], turn_totals[0]) * 1000) / 10;
+      var prob_of_comp_win = Math.round(pWin(scores[1], scores[0], turn_totals[1]) * 1000) / 10;
+      var prob = (current_player == USER ? prob_of_user_win : 100 - prob_of_comp_win).toFixed(1);
+      ctx.fillText(prob + "%", 35, top_side + 60);
     } else {
       ctx.font = "15px monospace";
-      ctx.fillText(current_player == USER ? "   You win!    " : "Computer wins!", 10, 125);
+      ctx.fillText(current_player == USER ? "   You win!    " : "Computer wins!", 10, top_side + 25);
       ctx.font = "12px monospace";
-      ctx.fillText("Click to restart.", 12, 140);
+      ctx.fillText("Click to restart.", 12, top_side + 40);
     }
+
+
+
+    // hint
+    // ctx.fillStyle = "rgb(255,0,0,0.5)";
+    ctx.clearRect(115, 200, 50, 45);
+    if (hint && current_player == USER) {
+      var x = 120;
+      var y = 205;
+      var w = 40;
+      var h = 20;
+      var radius = 5;
+      var r = x + w;
+      var b = y + h;
+      ctx.beginPath();
+      ctx.strokeStyle="black";
+      ctx.lineWidth="2";
+      ctx.moveTo(x+radius, y); // top left
+      ctx.lineTo(r-radius, y); // top right
+      ctx.quadraticCurveTo(r, y, r, y+radius); // top right bend
+      ctx.lineTo(r, y + h - radius); // bottom right
+      ctx.quadraticCurveTo(r, b, r - radius, b); // bottom right bend
+      ctx.lineTo(x + radius * 2, b); // bottom left before the spike
+      ctx.lineTo(x + radius / 2, b + 10); //
+      ctx.lineTo(x + radius, b);
+      ctx.quadraticCurveTo(x, b, x, b - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.stroke();
+      ctx.fillStyle = "black";
+      ctx.font = "12px monospace";
+      ctx.fillText(shouldRoll(scores[0], scores[1], turn_totals[0]) ? "roll" : "hold", 125, 218);
+    }
+
+
+
+
 
 
 }
@@ -340,6 +376,17 @@ function is_game_over() {
 }
 
 
+function switch_players() {
+  console.log("switch_players()");
+
+  current_player = USER + COMPUTER - current_player;
+
+  if (current_player == COMPUTER) {
+    computer_turn();
+  }
+}
+
+
 function register_click() {
   if (is_game_over()) {
     reset_game();
@@ -363,17 +410,21 @@ function register_click() {
 }
 
 
-function switch_players() {
-  console.log("switch_players()");
-
-  current_player = USER + COMPUTER - current_player;
-
-  if (current_player == COMPUTER) {
-    computer_turn();
+canvas.addEventListener('mousemove', function(evt) {
+  var rect = canvas.getBoundingClientRect();
+  var x = evt.clientX - rect.left;
+  var y = evt.clientY - rect.top;
+  if (x < animal_img.width * 0.8 && y > HEIGHT - animal_img.height * 0.8) {
+    hint = true;
+  } else {
+    hint = false;
   }
+});
+
+
+function set_computer_speed(val) {
+  computer_speed = [3000, 2000, 1500, 1000, 450][Number(val)];
 }
-
-
 
 
 
@@ -392,7 +443,7 @@ function roll() {
   var i = 0;
   var rollIntervalId = setInterval(function() {
     current_die = Math.floor((Math.random() * 6) + 1);
-    if (i < 15) {
+    if (i < 5) {
       i++;
     } else {
       clearInterval(rollIntervalId);
@@ -412,7 +463,7 @@ function roll() {
       moving = false;
       update();
     }
-  }, 75);
+  }, 60);
 
 }
 
@@ -434,16 +485,13 @@ function computer_turn() {
   console.log("computer_turn()");
 
   computerTurnIntervalID = setInterval(function() {
-
-    if (shouldRoll(scores[1], scores[0], turn_totals[1])) {
-      roll();
-    } else {
-      clearInterval(computerTurnIntervalID);
-      hold();
-    }
-
-  }, 2000);
-
+      if (shouldRoll(scores[1], scores[0], turn_totals[1])) {
+        roll();
+      } else {
+        clearInterval(computerTurnIntervalID);
+        hold();
+      }
+    }, computer_speed);
 }
 
 

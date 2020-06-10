@@ -19,9 +19,13 @@
     </style>
 
   </head>
-  <body onload="initialize()">
+  <body>
     <center>
       <canvas id="display" class="center-block" width="600" height="300" style="margin-top:30px;" onclick="register_click()"></canvas>
+      <label style="display: block; margin-top:20px;">
+        <span  style="line-height: 1.8em">Computer Speed:</span>
+        <input type="range" min="0" max="4" onchange="set_computer_speed(this.value)">
+      </label>
       <p class="text-center" style="margin-top:40px; user-select: none">
           Developed by <a href="http://cs.gettysburg.edu/~tneller">Dr. Todd W. Neller</a> and <a href="https://PeterEFrancis.com" target="_blank"><u>Peter E. Francis<u></a>.
       </p>
