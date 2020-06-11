@@ -431,8 +431,8 @@ function set_computer_speed(val) {
 
 function set_animation_speed(val) {
   animation_speed = [75, 60, 45, 15, 0][Number(val)];
+  console.log("set_animation_speed() -> " + computer_speed);
 }
-
 
 
 //   ____                                   _             _     _
