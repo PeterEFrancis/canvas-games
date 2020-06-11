@@ -51,6 +51,8 @@ var hint;
 
 var computer_speed = 1500;
 
+var animation_speed = 60;
+
 
 
 //  ____    _                 _
@@ -423,9 +425,13 @@ canvas.addEventListener('mousemove', function(evt) {
 
 
 function set_computer_speed(val) {
-  computer_speed = [3000, 2000, 1500, 1000, 450][Number(val)];
+  computer_speed = [3000, 2000, 1500, 1000, 500][Number(val)];
+  console.log("set_computer_speed() -> " + computer_speed);
 }
 
+function set_animation_speed(val) {
+  animation_speed = [75, 60, 45, 15, 0][Number(val)];
+}
 
 
 
@@ -463,7 +469,7 @@ function roll() {
       moving = false;
       update();
     }
-  }, 60);
+  }, animation_speed);
 
 }
 
