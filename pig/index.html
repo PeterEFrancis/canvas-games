@@ -8,12 +8,17 @@
     <style>
       * {
         max-width: 100%;
+        user-select: none;
       }
       canvas {
-        margin: 0px;
         display: block;
-        border: 1.5px solid black;
-        margin: -1px;
+        border: 1px solid black;
+        padding: 0px;
+      }
+
+      body {
+        max-width: 600px;
+        margin: auto;
       }
 
     </style>
@@ -22,20 +27,68 @@
   <body>
     <center>
       <canvas id="display" class="center-block" width="600" height="300" style="margin-top:30px;" onclick="register_click()"></canvas>
-      <label style="display: block; margin-top:20px; user-select:none">
-        <span  style="line-height: 1.8em">Computer turn speed:</span>
-        <input type="range" min="0" max="4" onchange="set_computer_speed(this.value)">
-      </label>
-      <label style="display: block; margin-top:20px; user-select:none">
-        <span  style="line-height: 1.8em">Roll Animation speed:</span>
-        <input type="range" min="0" max="4" onchange="set_animation_speed(this.value)">
-      </label>
-      <p class="text-center" style="margin-top:40px; user-select: none">
-          Developed by <a href="http://cs.gettysburg.edu/~tneller">Dr. Todd W. Neller</a> and <a href="https://PeterEFrancis.com" target="_blank"><u>Peter E. Francis<u></a>.
-      </p>
+      <table style="margin-top: 30px; font-size: 12pt;">
+        <tbody>
+          <tr>
+            <td><h4 style="margin: 0px 0px 10px 0px">Speed Control</h4></td>
+            <td><h4 style="margin: 0px 0px 10px 0px; padding-left:50px">Computer Difficulty</h4></td>
+          </tr>
+          <tr>
+            <td>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      Computer Turn:
+                      <br>
+                      <input type="range" min="0" max="4" onchange="set_computer_speed(this.value)" style="margin:auto">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Roll Animation:
+                      <br>
+                      <input type="range" min="0" max="4" onchange="set_animation_speed(this.value)">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td style="padding-left:50px">
+              <input type="radio" id="5" name="difficulty" value="5" onclick="set_computer_difficulty(5)" checked>
+              <label for="5">5) Optimal Play</label><br>
+              <input type="radio" id="4" name="difficulty" value="4" onclick="set_computer_difficulty(4)">
+              <label for="4">4) Keep Pace and End Race</label><br>
+              <input type="radio" id="3" name="difficulty" value="3" onclick="set_computer_difficulty(3)">
+              <label for="3">3) Score Base, Keep Pace and End Race</label><br>
+              <input type="radio" id="2" name="difficulty" value="2" onclick="set_computer_difficulty(2)">
+              <label for="2">2) Scoring Turns</label><br>
+              <input type="radio" id="1" name="difficulty" value="1" onclick="set_computer_difficulty(1)">
+              <label for="1">1) Hold at 25 or Goal</label><br>
+              <input type="radio" id="0" name="difficulty" value="0" onclick="set_computer_difficulty(0)">
+              <label for="0">0) Hold at 20 or Goal</label>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </center>
+    <h3 style="margin-top: 50px;">Instructions</h3>
+    <p>The game of Pig is a very simple jeopardy dice game in which two players race to reach 100 points. Each turn, a player repeatedly rolls a die until either a 1 is rolled or the player holds and scores the sum of the rolls (i.e. the turn total). At any time during a player's turn, the player is faced with two decisions:</p>
+    <ul>
+      <li>roll - If the player rolls a
+        <ul>
+          <li>1: the player scores nothing and it becomes the opponent's turn.</li>
+          <li>2 - 6: the number is added to the player's turn total and the player's turn continues.</li>
+        </ul>
+      </li>
+      <li>hold - The turn total is added to the player's score and it becomes the opponent's turn.</li>
+    </ul>
+    <p>You are playing against the computer. The red triangle indicates the current player. Hover over the pig to get the optimal decision.</p>
 
-    <script src="js/prob_winning.js"></script>
+    <p style="margin-top:60px; margin-bottom:30px; display:block;">
+        Developed by <a href="http://cs.gettysburg.edu/~tneller">Dr. Todd W. Neller</a> and <a href="https://PeterEFrancis.com" target="_blank"><u>Peter E. Francis<u></a>.
+    </p>
+
     <script src="js/engine.js"></script>
 
   </body>

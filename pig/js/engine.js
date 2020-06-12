@@ -34,7 +34,9 @@ const COMPUTER = 1;
 var scores = [0,0];
 var turn_totals = [0,0];
 
-var current_player = [COMPUTER, USER][Math.floor(Math.random() * 2)];
+var num_turns_held = 0;
+
+var current_player = COMPUTER; // this gets switched in reset_game() at the start
 
 
 var title_img;
@@ -50,9 +52,8 @@ var computerTurnIntervalID;
 var hint;
 
 var computer_speed = 1500;
-
 var animation_speed = 60;
-
+var computer_difficulty = 5;
 
 
 //  ____    _                 _
@@ -75,7 +76,7 @@ title_img.onload = function() {
 animal_img = new Image();
 animal_img.src = "img/animal.png";
 animal_img.onload = function() {
-    ctx.drawImage(animal_img, 0, HEIGHT - animal_img.height * 0.8, animal_img.width * 0.8, animal_img.height * 0.8);
+    ctx.drawImage(animal_img, 0, HEIGHT - animal_img.height * 0.8 - 1, animal_img.width * 0.8, animal_img.height * 0.8);
 }
 
 hold_img = new Image();
@@ -157,7 +158,7 @@ function update() {
     console.log("update()");
 
     // current player triangle
-    ctx.clearRect(180, 10, 30, 150);
+    ctx.clearRect(180, 10, 30, 110);
     ctx.lineWidth = 0;
     ctx.strokeStyle = "red";
     ctx.fillStyle = "red";
@@ -183,7 +184,7 @@ function update() {
 
     ctx.fillStyle = "black";
     ctx.font = "40px monospace";
-    ctx.clearRect(SCORE_LEFT + SCORE_WIDTH + 100, USER_SCORE_TOP, 80, 30);
+    ctx.clearRect(SCORE_LEFT + SCORE_WIDTH + 100, USER_SCORE_TOP - 10, 80, 40);
     ctx.fillText(scores[USER], SCORE_LEFT + SCORE_WIDTH + 100, USER_SCORE_TOP + 27.5);
 
     ctx.clearRect(SCORE_LEFT + 80, USER_SCORE_TOP, SCORE_WIDTH, 30);
@@ -205,7 +206,7 @@ function update() {
 
     ctx.fillStyle = "black";
     ctx.font = "40px monospace";
-    ctx.clearRect(SCORE_LEFT + SCORE_WIDTH + 100, COMPUTER_SCORE_TOP, 80, 30);
+    ctx.clearRect(SCORE_LEFT + SCORE_WIDTH + 100, COMPUTER_SCORE_TOP - 10, 80, 40);
     ctx.fillText(scores[COMPUTER], SCORE_LEFT + SCORE_WIDTH + 100, COMPUTER_SCORE_TOP + 27.5);
 
     ctx.clearRect(SCORE_LEFT + 80, COMPUTER_SCORE_TOP, SCORE_WIDTH, 30);
@@ -368,6 +369,7 @@ function reset_game() {
   scores = [0,0];
   turn_totals = [0,0];
   current_die = 0;
+  num_turns_held = 0;
 
   switch_players();
 }
@@ -429,10 +431,22 @@ function set_computer_speed(val) {
   console.log("set_computer_speed() -> " + computer_speed);
 }
 
+
 function set_animation_speed(val) {
   animation_speed = [75, 60, 45, 15, 0][Number(val)];
   console.log("set_animation_speed() -> " + computer_speed);
 }
+
+
+function set_computer_difficulty(val) {
+  computer_difficulty = Number(val);
+  console.log("set_computer_difficulty() -> " + computer_difficulty);
+}
+
+
+
+
+
 
 
 //   ____                                   _             _     _
@@ -480,6 +494,10 @@ function hold() {
   scores[current_player] += turn_totals[current_player];
   turn_totals[current_player] = 0;
 
+  if (current_player == COMPUTER) {
+    num_turns_held++;
+  }
+
   if (!is_game_over()) {
     switch_players();
   }
@@ -491,7 +509,7 @@ function computer_turn() {
   console.log("computer_turn()");
 
   computerTurnIntervalID = setInterval(function() {
-      if (shouldRoll(scores[1], scores[0], turn_totals[1])) {
+      if (computer_should_roll()) {
         roll();
       } else {
         clearInterval(computerTurnIntervalID);
@@ -501,17 +519,57 @@ function computer_turn() {
 }
 
 
-function should_computer_roll_keep_pace_and_end_race() {
-  console.log("does_computer_roll()");
 
-  if (scores[COMPUTER] + turn_totals[COMPUTER] >= GOAL) {
+function computer_should_roll() {
+  if (computer_difficulty == 5) { // optimal
+    console.log("here 5");
+    return shouldRoll(scores[COMPUTER], scores[USER], turn_totals[COMPUTER]);
+  } else if (computer_difficulty == 4) { // keep pace and end race
+    console.log("here 4");
+    if (scores[COMPUTER] + turn_totals[COMPUTER] >= GOAL) {
+      return false;
+    }
+    if (scores[USER] >= 71 || scores[COMPUTER] >= 71 || turn_totals[COMPUTER] < 21 + Math.round((scores[USER] - scores[COMPUTER]) / 8)) {
+      return true;
+    }
     return false;
+  } else if (computer_difficulty == 3) { // Score Base, Keep Pace, and End Race
+    console.log("here 3");
+    if (scores[USER] >= 69 || scores[COMPUTER] >= 69) {
+      return true;
+    } else {
+      if (turn_totals[COMPUTER] >= Math.max(19, scores[USER])) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  } else if (computer_difficulty == 2) { // 4 scoring turns
+    console.log("here 2");
+    if (turn_totals[COMPUTER] >= Math.floor((100 - scores[COMPUTER]) / (4 - num_turns_held))) {
+      false;
+    } else {
+      true;
+    }
+  } else if (computer_difficulty == 1) { // hold at 25 or goal
+    console.log("here 1");
+    if (turn_totals[COMPUTER] >= 25 || scores[COMPUTER] + turn_totals[COMPUTER] >= GOAL) {
+      return false;
+    } else {
+      return true;
+    }
+  } else if (computer_difficulty == 0) { // hold at 20 or goal
+    console.log("here 0 (" + scores[COMPUTER] + ")");
+    if (turn_totals[COMPUTER] >= 20 || scores[COMPUTER] + turn_totals[COMPUTER] >= GOAL) {
+      return false;
+    } else {
+      return true;
+    }
   }
-  if (scores[USER] >= 71 || scores[COMPUTER] >= 71 || turn_totals[COMPUTER] < 21 + Math.round((scores[USER] - scores[COMPUTER]) / 8)) {
-    return true;
-  }
-  return false;
+
 }
+
+
 
 
 
