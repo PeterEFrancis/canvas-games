@@ -17,7 +17,8 @@
       }
 
       body {
-        max-width: 600px;
+        min-width: 620px;
+        width: 620px;
         margin: auto;
       }
 
@@ -41,7 +42,7 @@
                     <td>
                       Computer Turn:
                       <br>
-                      <input type="range" min="0" max="4" onchange="set_computer_speed(this.value)" style="margin:auto">
+                      <input type="range" min="0" max="4" onchange="set_computer_speed(this.value)">
                     </td>
                   </tr>
                   <tr>
@@ -72,22 +73,24 @@
         </tbody>
       </table>
     </center>
-    <h3 style="margin-top: 50px;">Instructions</h3>
-    <p>The game of Pig is a very simple jeopardy dice game in which two players race to reach 100 points. Each turn, a player repeatedly rolls a die until either a 1 is rolled or the player holds and scores the sum of the rolls (i.e. the turn total). At any time during a player's turn, the player is faced with two decisions:</p>
-    <ul>
-      <li>roll - If the player rolls a
-        <ul>
-          <li>1: the player scores nothing and it becomes the opponent's turn.</li>
-          <li>2 - 6: the number is added to the player's turn total and the player's turn continues.</li>
-        </ul>
-      </li>
-      <li>hold - The turn total is added to the player's score and it becomes the opponent's turn.</li>
-    </ul>
-    <p>You are playing against the computer. The red triangle indicates the current player. Hover over the pig to get the optimal decision.</p>
+    <div style="padding: 10px;">
+      <h3 style="margin-top: 50px;">Instructions</h3>
+      <p>The game of Pig is a very simple jeopardy dice game in which two players race to reach 100 points. Each turn, a player repeatedly rolls a die until either a 1 is rolled or the player holds and scores the sum of the rolls (i.e. the turn total). At any time during a player's turn, the player is faced with two decisions:</p>
+      <ul>
+        <li>roll - If the player rolls a
+          <ul>
+            <li>1: the player scores nothing and it becomes the opponent's turn.</li>
+            <li>2 - 6: the number is added to the player's turn total and the player's turn continues.</li>
+          </ul>
+        </li>
+        <li>hold - The turn total is added to the player's score and it becomes the opponent's turn.</li>
+      </ul>
+      <p>You are playing against the computer. The red triangle indicates the current player. Hover over the pig to get the optimal decision.</p>
 
-    <p style="margin-top:60px; margin-bottom:30px; display:block;">
-        Developed by <a href="http://cs.gettysburg.edu/~tneller">Dr. Todd W. Neller</a> and <a href="https://PeterEFrancis.com" target="_blank"><u>Peter E. Francis<u></a>.
-    </p>
+      <p style="margin-top:60px; margin-bottom:30px; display:block;">
+          Developed by <a href="http://cs.gettysburg.edu/~tneller">Dr. Todd W. Neller</a> and <a href="https://PeterEFrancis.com" target="_blank"><u>Peter E. Francis<u></a>.
+      </p>
+    </div>
 
     <script src="js/engine.js"></script>
 
