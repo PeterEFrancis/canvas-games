@@ -547,9 +547,9 @@ function computer_should_roll() {
   } else if (computer_difficulty == 2) { // 4 scoring turns
     console.log("here 2");
     if (turn_totals[COMPUTER] >= Math.floor((100 - scores[COMPUTER]) / (4 - num_turns_held))) {
-      false;
+      return false;
     } else {
-      true;
+      return true;
     }
   } else if (computer_difficulty == 1) { // hold at 25 or goal
     console.log("here 1");
