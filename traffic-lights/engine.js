@@ -43,7 +43,7 @@ function reset_board() {
     document.getElementById("one").style.backgroundColor = "purple";
     document.getElementById("two").style.backgroundColor = "transparent";
 
-    // celar board
+    // clear board
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
     // add the grid lines
