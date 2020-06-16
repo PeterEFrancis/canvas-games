@@ -24,8 +24,8 @@ var current_player;
 function add_mark(square_num) {
     var x = MARGIN + SQUARE_WIDTH * (square_num % 3) + SQUARE_WIDTH * 0.2;
     var y = MARGIN + SQUARE_WIDTH * Math.floor(square_num / 3) + SQUARE_WIDTH * 0.2;
-    var image = new Image();
 
+    var image = new Image();
     if (board[square_num] == X) {
       image.src = "X.png";
     } else {
