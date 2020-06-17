@@ -101,18 +101,23 @@ window.addEventListener('mouseup', function(evt) {
 			// put it back
 			card_grid[clicked_card_num] = hover_card_ID;
 		}
+		hover_card_ID = -1;
 	}
 });
 
 document.addEventListener('keydown', function(event) {
   if (event.keyCode == 90 && (event.metaKey || event.ctrlKey)) {
-		undo();
+		if (hover_card_ID == -1) {
+			undo();
+		}
 	}
 });
 
 document.addEventListener('keydown', function(event) {
   if (event.keyCode == 89 && (event.metaKey || event.ctrlKey)) {
-		redo();
+		if (hover_card_ID == -1) {
+			redo();
+		}
 	}
 });
 

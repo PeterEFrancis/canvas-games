@@ -3,7 +3,7 @@ const NUM_ROWS = 3;
 const NUM_COLS = 4;
 const HEIGHT = 450;
 const WIDTH = 600;
-const SQUARE_WIDTH = 150;
+const SQUARE_SIZE = 150;
 const LINE_WIDTH = 2; // works best if this is even
 
 
@@ -49,8 +49,8 @@ function reset_board() {
     // add the grid lines
     ctx.fillStyle = "lightgrey";
     for (var i = 0; i <= 4; i++) {
-      ctx.fillRect(0 - LINE_WIDTH / 2, i * SQUARE_WIDTH - LINE_WIDTH / 2, WIDTH, LINE_WIDTH);
-      ctx.fillRect(i * SQUARE_WIDTH - LINE_WIDTH / 2, 0 - LINE_WIDTH / 2, LINE_WIDTH, HEIGHT);
+      ctx.fillRect(0 - LINE_WIDTH / 2, i * SQUARE_SIZE - LINE_WIDTH / 2, WIDTH, LINE_WIDTH);
+      ctx.fillRect(i * SQUARE_SIZE - LINE_WIDTH / 2, 0 - LINE_WIDTH / 2, LINE_WIDTH, HEIGHT);
       // yes, one of these falls over the edge and doesn't get displayed, but that is ok
     }
 }
@@ -73,13 +73,13 @@ function update_square_display(square_num) {
     var row = Math.floor(square_num / NUM_COLS);
 
     // clear the square that was clicked
-    var top_left_x = col * SQUARE_WIDTH;
-    var top_left_y = row * SQUARE_WIDTH;
-    ctx.clearRect(top_left_x + LINE_WIDTH / 2, top_left_y + LINE_WIDTH / 2, SQUARE_WIDTH - LINE_WIDTH, SQUARE_WIDTH - LINE_WIDTH);
+    var top_left_x = col * SQUARE_SIZE;
+    var top_left_y = row * SQUARE_SIZE;
+    ctx.clearRect(top_left_x + LINE_WIDTH / 2, top_left_y + LINE_WIDTH / 2, SQUARE_SIZE - LINE_WIDTH, SQUARE_SIZE - LINE_WIDTH);
     // add shape
-    var size = SQUARE_WIDTH * 0.3;
-    var center_x = top_left_x + SQUARE_WIDTH / 2;
-    var center_y = top_left_y + SQUARE_WIDTH / 2;
+    var size = SQUARE_SIZE * 0.3;
+    var center_x = top_left_x + SQUARE_SIZE / 2;
+    var center_y = top_left_y + SQUARE_SIZE / 2;
     if (board[square_num] == GREEN) {
         ctx.fillStyle = "#00ff00";
         ctx.fillRect(center_x - size, center_y - size, size * 2, size * 2);
@@ -111,8 +111,8 @@ function game_step() {
         var rect = canvas.getBoundingClientRect();
         var user_x = event.clientX - rect.left;
         var user_y = event.clientY - rect.top;
-        var row = (user_y - (user_y % SQUARE_WIDTH)) / SQUARE_WIDTH;
-        var col = (user_x - (user_x % SQUARE_WIDTH)) / SQUARE_WIDTH;
+				var row = Math.floor(user_y / SQUARE_SIZE);
+				var col = Math.floor(user_x / SQUARE_SIZE);
         var square_num = row * NUM_COLS + col;
 
         if (board[square_num] < RED) {
@@ -130,12 +130,12 @@ function game_step() {
             game_over = is_game_over();
             if (game_over) {
                 ctx.fillStyle = "rgb(75,75,75,0.9)";
-                ctx.fillRect(SQUARE_WIDTH / 2, SQUARE_WIDTH * 3 / 4, SQUARE_WIDTH * 3, SQUARE_WIDTH * 3/2, 0.5);
+                ctx.fillRect(SQUARE_SIZE / 2, SQUARE_SIZE * 3 / 4, SQUARE_SIZE * 3, SQUARE_SIZE * 3/2, 0.5);
                 ctx.fillStyle = "lightgrey";
                 ctx.font = "60px Arial";
-                ctx.fillText("Player " + current_player + " wins!", SQUARE_WIDTH * 3/4, SQUARE_WIDTH * 3/2);
+                ctx.fillText("Player " + current_player + " wins!", SQUARE_SIZE * 3/4, SQUARE_SIZE * 3/2);
                 ctx.font = "20px Arial";
-                ctx.fillText("Click 'Reset Board' to start again.", SQUARE_WIDTH * 31/30, SQUARE_WIDTH * 9/5);
+                ctx.fillText("Click 'Reset Board' to start again.", SQUARE_SIZE * 31/30, SQUARE_SIZE * 9/5);
                 document.getElementById("undo-button").disabled = true;
             } else {
                 switch_players();
