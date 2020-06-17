@@ -70,8 +70,7 @@ function game_step() {
 	    var col = (user_x - (user_x % SQUARE_SIZE)) / SQUARE_SIZE;
 	    var square_num = row * NUM_COLS + col;
 
-			// set all squares black that are above and to the right
-
+			// set all squares black that are below and to the right
 			for (var i = col; i < NUM_COLS; i++) {
 				for (var j = row; j < NUM_ROWS; j++) {
 					var x = i * SQUARE_SIZE + (LINE_WIDTH / 2);
