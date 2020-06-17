@@ -4,22 +4,60 @@
 		<title>Play Birds of a Feather</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+		<style>
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+		</style>
+
 	</head>
-	<body style="background-color: #3F3F3F; color: lightgrey; min-width: 550">
-		<center>
-			<h1>Birds of a Feather</h1>
-			<canvas id="display"
-							class="center-block"
-							width="550" height="750"
-							style="background-color: green;">
-			</canvas>
-			<br><br>
-			<button onclick="this.disabled = true; document.getElementById('solution').innerHTML='Getting the solution...'; show_solution();">Show Solution</button>
-			<p id="solution">&emsp;</p>
-			<p style="margin-top:40px;">
-				Created by <a href="http://cs.gettysburg.edu/~tneller/" target="_blank" style="color:lightgrey;">Todd W. Neller</a>, developed by <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis<u></a>
-			</p>
-		</center>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-6 text-center">
+					<h1 class="text-center">Birds of a Feather</h1>
+					<canvas id="display"
+									class="center-block"
+									width="550" height="750"
+									style="background-color: green;">
+					</canvas>
+					<br><br>
+					<button onclick="document.getElementById('solution').innerHTML='Getting the solution...'; show_solution();"
+									class="btn btn-default">Show Solution</button>
+					<br><br>
+					<p id="solution" style="font-family: monospace;">&emsp;</p>
+				</div>
+				<div class="col-md-3"></div>
+			</div>
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-6">
+					<h3>Game Play</h3>
+					<ul>
+						<li>Object: Form a single stack of all cards.</li>
+		 				<li>Play: A player may move (i.e. flock) one stack of cards onto another stack of cards in the same row or column if the cards on top of both stacks have either
+							<ol>
+								<li>the same suits, or</li>
+								<li>the same or adjacent ranks. Aces are low and not adjacent to kings, so rank adjacency is according the ordering A, 2, 3, ..., J, Q, K.</li>
+							</ol>
+						</li>
+					</ul>
+					<br><br>
+					<p style="margin-top:40px;">
+						Created by <a href="http://cs.gettysburg.edu/~tneller/" target="_blank" style="color:lightgrey;"><u>Todd W. Neller</u></a>, developed by <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis<u></a>
+					</p>
+					<br><br>
+				</div>
+				<div class="col-md-3"></div>
+			</div>
+
+
 		<script src="engine.js"></script>
 	</body>
 </html>

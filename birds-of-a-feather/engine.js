@@ -4,11 +4,11 @@ const ctx = canvas.getContext("2d");
 
 
 
-//                              _                     _
-//  ___    ___    _ __    ___  | |_    __ _   _ __   | |_   ___
-// / __|  / _ \  | '_ \  / __| | __|  / _` | | '_ \  | __| / __|
+//                               _                     _
+//   ___    ___    _ __    ___  | |_    __ _   _ __   | |_   ___
+//  / __|  / _ \  | '_ \  / __| | __|  / _` | | '_ \  | __| / __|
 // | (__  | (_) | | | | | \__ \ | |_  | (_| | | | | | | |_  \__ \
-// \___|  \___/  |_| |_| |___/  \__|  \__,_| |_| |_|  \__| |___/
+//  \___|  \___/  |_| |_| |___/  \__|  \__,_| |_| |_|  \__| |___/
 
 
 const WIDTH = canvas.width;
@@ -45,8 +45,8 @@ var hover_xy;
 var hover_card_offset_xy;
 var hover_card_ID;
 var card_grid;
-var history_moves; // ... [from_num, to_num, hidden_card_ID] ...
-
+var undo_history_moves; // ... [from_num, to_num, hidden_card_ID] ...
+var redo_history_moves;
 
 
 
@@ -90,29 +90,31 @@ window.addEventListener('mouseup', function(evt) {
 	var y = evt.clientY - rect.top;
 	clicking = false;
 	var cn = get_card_num(x, y);
-	if (is_legal_move(clicked_card_ID, clicked_card_num, card_grid[cn], cn) && hover_card_ID != -1) {
-		// add to history
-		history_moves.push([clicked_card_num, cn, card_grid[cn]]);
-		// move card
-		card_grid[cn] = hover_card_ID;
-		hover_card_ID = -1;
-	} else {
-		// put it back
-		card_grid[clicked_card_num] = hover_card_ID;
+	if (hover_card_ID != -1) {
+		if (is_legal_move(clicked_card_ID, clicked_card_num, card_grid[cn], cn)) {
+			// add to history
+			undo_history_moves.push([clicked_card_num, cn, card_grid[cn]]);
+			// move card
+			card_grid[cn] = hover_card_ID;
+			hover_card_ID = -1;
+		} else {
+			// put it back
+			card_grid[clicked_card_num] = hover_card_ID;
+		}
 	}
 });
 
 document.addEventListener('keydown', function(event) {
-    if (event.keyCode == 90 && history_moves.length > 0) {
-			var last = history_moves.pop();
-			var from_num = last[0];
-			var to_num = last[1];
-			var hidden_card_ID = last[2];
-			card_grid[from_num] = card_grid[to_num];
-			card_grid[to_num] = hidden_card_ID;
-		}
-} );
+  if (event.keyCode == 90 && (event.metaKey || event.ctrlKey)) {
+		undo();
+	}
+});
 
+document.addEventListener('keydown', function(event) {
+  if (event.keyCode == 89 && (event.metaKey || event.ctrlKey)) {
+		redo();
+	}
+});
 
 
 
@@ -202,16 +204,18 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
 
 function get_card_string(card_ID) {
 	var rank = "A23456789TJQK"[card_ID % 13];
-	var suit = "SHCD"[Math.floor(card_ID / 13)];
+	var suit = "♠♥♣♦"[Math.floor(card_ID / 13)];
 	return rank + suit;
 }
 
 function draw_card(ctx, x, y, card_ID) {
 	ctx.fillStyle = "white";
 	roundRect(ctx, x, y, CARD_WIDTH, CARD_HEIGHT, 7, true, false);
-	ctx.font = "35pt Arial";
-	ctx.fillStyle = (Math.floor(card_ID / 13)  == 1|| Math.floor(card_ID / 13) == 3) ? "red" : "black";
-	ctx.fillText(get_card_string(card_ID), x + 17, y + 90);
+	ctx.font = "100pt monospace";
+	ctx.fillStyle = ["black", "rgb(255, 42, 92)", "rgb(155, 247, 122)", "rgb(101, 164, 230)"][Math.floor(card_ID / 13)];
+	ctx.fillText(get_card_string(card_ID)[1], x + 10, y + 145);
+	ctx.font = "35pt monospace";
+	ctx.fillText(get_card_string(card_ID)[0], x + 5, y + 40);
 }
 
 
@@ -227,21 +231,22 @@ function draw_card(ctx, x, y, card_ID) {
 
 function reset_game() {
 	// reset history
-	history_moves = [];
+	undo_history_moves = [];
+	redo_history_moves = [];
 
 	// get deal
-	card_grid = [];
-	while (card_grid.length < 16) {
-		var card_ID = Math.floor(Math.random() * 52);
-		if (!card_grid.includes(card_ID)) {
-			card_grid.push(card_ID);
-		}
-	}
+	// card_grid = [];
+	// while (card_grid.length < 16) {
+	// 	var card_ID = Math.floor(Math.random() * 52);
+	// 	if (!card_grid.includes(card_ID)) {
+	// 		card_grid.push(card_ID);
+	// 	}
+	// }
+	card_grid = get_solvable_board();
 
 	// reset shown solution
 	document.getElementById('solution').innerHTML = "&emsp;";
 }
-
 
 
 function update() {
@@ -267,6 +272,33 @@ function update() {
 setInterval(function() {update()}, 5);
 
 
+function undo() {
+	if (undo_history_moves.length > 0) {
+		var last = undo_history_moves.pop();
+		redo_history_moves.push(last);
+		var from_num = last[0];
+		var to_num = last[1];
+		var hidden_card_ID = last[2];
+		card_grid[from_num] = card_grid[to_num];
+		card_grid[to_num] = hidden_card_ID;
+	}
+}
+
+function redo() {
+	console.log("redo");
+	if (redo_history_moves.length > 0) {
+		var last = redo_history_moves.pop();
+		undo_history_moves.push(last);
+		var from_num = last[0];
+		var to_num = last[1];
+		var hidden_card_ID = last[2];
+		card_grid[to_num] = card_grid[from_num];
+		card_grid[from_num] = -1;
+	}
+}
+
+
+
 
 //  ____            _           _     _
 // / ___|    ___   | |  _   _  | |_  (_)   ___    _ __
@@ -274,6 +306,35 @@ setInterval(function() {update()}, 5);
 //  ___) | | (_) | | | | |_| | | |_  | | | (_) | | | | |
 // |____/   \___/  |_|  \__,_|  \__| |_|  \___/  |_| |_|
 
+function get_solvable_board() {
+	var grid = [];
+	for (var i = 0; i < 16; i++) {
+		grid.push(-1);
+	}
+	var j = Math.floor(Math.random() * 16);
+	grid[j] = Math.floor(Math.random() * 52);
+	for (var i = 0; i < 15; i++) {
+		var curr_card_num;
+		var move = -1;
+		var new_card_ID;
+		do {
+			curr_card_num = Math.floor(Math.random() * 16);
+			if (grid[curr_card_num] != -1) {
+				for (var k = 0; k < 6; k++) {
+					move = MOVES[curr_card_num][k];
+					if (grid[move] == -1) {
+						break;
+					}
+				}
+			}
+		} while (grid[curr_card_num] == -1 || move == -1 || grid[move] != -1);
+		do {
+			new_card_ID = Math.floor(Math.random() * 52);
+		} while (grid.includes(new_card_ID) || !is_legal_move(grid[curr_card_num], curr_card_num, new_card_ID, move));
+		grid[move] = new_card_ID;
+	}
+	return grid;
+}
 
 function clone(array) {
 	return JSON.parse(JSON.stringify(array));
@@ -339,14 +400,15 @@ function show_solution() {
 		for (var i = 0; i < solution.length; i++) {
 			var from = solution[i][0];
 			var to = solution[i][1];
-			s += get_card_string(cg[from]) + " > " + get_card_string(cg[to]);
+			s += get_card_string(cg[from]) + "→" + get_card_string(cg[to]);
 			cg[to] = cg[from];
 			cg[from] = -1;
 			if (i < solution.length - 1) {
-				s += "<br>";
+				s += ", ";
 			}
 		}
 		document.getElementById('solution').innerHTML = s;
+		console.log(s);
 	}
 
 }
