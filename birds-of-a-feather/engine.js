@@ -200,15 +200,18 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
 
 }
 
-function draw_card(ctx, x, y, card_ID) {
+function get_card_string(card_ID) {
 	var rank = "A23456789TJQK"[card_ID % 13];
 	var suit = "SHCD"[Math.floor(card_ID / 13)];
+	return rank + suit;
+}
 
+function draw_card(ctx, x, y, card_ID) {
 	ctx.fillStyle = "white";
 	roundRect(ctx, x, y, CARD_WIDTH, CARD_HEIGHT, 7, true, false);
-	ctx.font = "30pt Arial";
-	ctx.fillStyle = (suit == "H" || suit == "D") ? "red" : "black";
-	ctx.fillText(rank + " " + suit, x + 17, y + 80);
+	ctx.font = "35pt Arial";
+	ctx.fillStyle = (Math.floor(card_ID / 13)  == 1|| Math.floor(card_ID / 13) == 3) ? "red" : "black";
+	ctx.fillText(get_card_string(card_ID), x + 17, y + 90);
 }
 
 
@@ -219,6 +222,8 @@ function draw_card(ctx, x, y, card_ID) {
 //  / __|  / _ \  | '_ \  | __| | '__|  / _ \  | |
 // | (__  | (_) | | | | | | |_  | |    | (_) | | |
 //  \___|  \___/  |_| |_|  \__| |_|     \___/  |_|
+
+
 
 function reset_game() {
 	// reset history
@@ -232,7 +237,9 @@ function reset_game() {
 			card_grid.push(card_ID);
 		}
 	}
-	console.log(get_solution(card_grid));
+
+	// reset shown solution
+	document.getElementById('solution').innerHTML = "&emsp;";
 }
 
 
@@ -261,8 +268,6 @@ setInterval(function() {update()}, 5);
 
 
 
-
-
 //  ____            _           _     _
 // / ___|    ___   | |  _   _  | |_  (_)   ___    _ __
 // \___ \   / _ \  | | | | | | | __| | |  / _ \  | '_ \
@@ -274,7 +279,7 @@ function clone(array) {
 	return JSON.parse(JSON.stringify(array));
 }
 
-function count(arr, obj) {
+function count_obj(arr, obj) {
 	count = 0;
 	for (var i = 0; i < arr.length; i++) {
 		if (arr[i] == obj) {
@@ -301,7 +306,7 @@ function expand(array) {
 }
 
 function get_solution(arr) {
-	var stack = [[arr, [], count(arr, -1)]];
+	var stack = [[arr, [], count_obj(arr, -1)]];
 	while (stack.length > 0) {
 		var top = stack.pop();
 		var parent = top[0];
@@ -322,4 +327,26 @@ function get_solution(arr) {
 		}
 	}
 return -1
+}
+
+function show_solution() {
+	var s = "";
+	var solution = get_solution(card_grid);
+	if (solution == -1) {
+		document.getElementById('solution').innerHTML = "No solution.";
+	} else {
+		var cg = clone(card_grid);
+		for (var i = 0; i < solution.length; i++) {
+			var from = solution[i][0];
+			var to = solution[i][1];
+			s += get_card_string(cg[from]) + " > " + get_card_string(cg[to]);
+			cg[to] = cg[from];
+			cg[from] = -1;
+			if (i < solution.length - 1) {
+				s += "<br>";
+			}
+		}
+		document.getElementById('solution').innerHTML = s;
+	}
+
 }
