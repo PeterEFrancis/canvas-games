@@ -153,14 +153,14 @@
 			document.addEventListener('keydown', function(event) {
 			  if (event.keyCode == 90 && (event.metaKey || event.ctrlKey)) {
 					if (hover_card_ID == -1) {
-						setTimeout(function() {undo();}, 100);
+						undo();
 					}
 				}
 			});
 			document.addEventListener('keydown', function(event) {
 			  if (event.keyCode == 89 && (event.metaKey || event.ctrlKey)) {
 					if (hover_card_ID == -1) {
-						setTimeout(function() {redo();}, 100);
+						redo();
 					}
 				}
 			});
