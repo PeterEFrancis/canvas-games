@@ -1,0 +1,27 @@
+
+function basic_depth_first_search(arr) {
+	console.log("DFS");
+	var stack = [[arr, [], count_obj(arr, -1)]];
+	var j = 0;
+	while (stack.length > 0) {
+		// console.log(j++ + " -> " + stack.length);
+		var top = stack.pop();
+		var p_arr = top[0];
+		var soln = top[1];
+		var depth = top[2];
+		if (depth == 15) {
+			return soln;
+		} else {
+			var children = expand(p_arr);
+			for (var i = 0; i < children.length; i++) {
+				var child = children[i];
+				var c_arr = child[0];
+				var move = child[1];
+				var soln_copy = clone(soln);
+				soln_copy.push(move);
+				stack.push([c_arr, soln_copy, depth + 1]);
+			}
+		}
+	}
+	return -1;
+}

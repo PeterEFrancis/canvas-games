@@ -1,18 +1,10 @@
 
-const canvas = document.getElementById("display");
-const ctx = canvas.getContext("2d");
-
-
-
 //                               _                     _
 //   ___    ___    _ __    ___  | |_    __ _   _ __   | |_   ___
 //  / __|  / _ \  | '_ \  / __| | __|  / _` | | '_ \  | __| / __|
 // | (__  | (_) | | | | | \__ \ | |_  | (_| | | | | | | |_  \__ \
 //  \___|  \___/  |_| |_| |___/  \__|  \__,_| |_| |_|  \__| |___/
 
-
-const WIDTH = canvas.width;
-const HEIGHT = canvas.height;
 
 const CARD_WIDTH = 100;
 const CARD_HEIGHT = 150;
@@ -40,8 +32,6 @@ const MOVES = [[1, 2, 3, 4, 8, 12],[0, 2, 3, 5, 9, 13],[0, 1, 3, 6, 10, 14],[0, 
 
 // https://github.com/bryc/code/blob/master/jshash/PRNGs.md
 
-var d = new Date();
-var random = mulberry32(d.getTime());
 
 function set_seed(seed) {
 	random = mulberry32(seed);
@@ -60,112 +50,6 @@ function mulberry32(a) {
 
 
 
-//   __   _          _       _
-//  / _| (_)   ___  | |   __| |  ___
-// | |_  | |  / _ \ | |  / _` | / __|
-// |  _| | | |  __/ | | | (_| | \__ \
-// |_|   |_|  \___| |_|  \__,_| |___/
-
-
-var clicked_card_num;
-var clicked_card_ID;
-var hover_xy;
-var hover_card_offset_xy;
-var hover_card_ID;
-var card_grid;
-var undo_history_moves; // ... [from_num, to_num, hidden_card_ID] ...
-var redo_history_moves;
-var show_flockability_graph;
-
-
-
-
-
-//                                                _
-//  _ __     __ _    __ _    ___     ___    ___  | |_   _   _   _ __
-// | '_ \   / _` |  / _` |  / _ \   / __|  / _ \ | __| | | | | | '_ \
-// | |_) | | (_| | | (_| | |  __/   \__ \ |  __/ | |_  | |_| | | |_) |
-// | .__/   \__,_|  \__, |  \___|   |___/  \___|  \__|  \__,_| | .__/
-// |_|              |___/                                      |_|
-
-
-reset_game();
-
-canvas.addEventListener('contextmenu', event => event.preventDefault());
-
-canvas.addEventListener('mousedown', function(evt) {
-  var rect = canvas.getBoundingClientRect();
-  var x = evt.clientX - rect.left;
-  var y = evt.clientY - rect.top;
-	var cn = get_card_num(x, y);
-	if (cn != -1) {
-		if (card_grid[cn] != -1) {
-			clicked_card_num = cn;
-			clicked_card_ID = card_grid[cn];
-			hover_card_ID = card_grid[cn];
-			card_grid[cn] = -1;
-			hover_card_offset_xy = [x - CARD_LOCATIONS_X[cn % 4], y - CARD_LOCATIONS_Y[Math.floor(cn / 4)]];
-		}
-	}
-});
-
-canvas.addEventListener('mousemove', function(evt) {
-  var rect = canvas.getBoundingClientRect();
-  var x = evt.clientX - rect.left;
-  var y = evt.clientY - rect.top;
-  hover_xy = [x,y];
-});
-
-document.addEventListener('mouseup', function(evt) {
-	var rect = canvas.getBoundingClientRect();
-	var x = evt.clientX - rect.left;
-	var y = evt.clientY - rect.top;
-	var cn = get_card_num(x, y);
-	if (hover_card_ID != -1) {
-		if (is_legal_move(clicked_card_ID, clicked_card_num, card_grid[cn], cn)) {
-			// add to history
-			undo_history_moves.push([clicked_card_num, cn, card_grid[cn]]);
-			// move card
-			card_grid[cn] = hover_card_ID;
-		} else {
-			// put it back
-			card_grid[clicked_card_num] = hover_card_ID;
-		}
-		hover_card_ID = -1;
-	}
-});
-
-document.addEventListener('keydown', function(event) {
-  if (event.keyCode == 90 && (event.metaKey || event.ctrlKey)) {
-		if (hover_card_ID == -1) {
-			undo();
-		}
-	}
-});
-
-document.addEventListener('keydown', function(event) {
-  if (event.keyCode == 89 && (event.metaKey || event.ctrlKey)) {
-		if (hover_card_ID == -1) {
-			redo();
-		}
-	}
-});
-
-document.addEventListener('keydown', function(event) {
-  if (event.keyCode == 84) {
-		toggle_flockability_graph();
-	}
-});
-
-document.addEventListener('keydown', function(event) {
-  if (event.keyCode == 82) {
-		reset_game();
-	}
-});
-
-show_flockability_graph = false;
-
-hover_card_ID = -1;
 
 
 
@@ -184,7 +68,7 @@ function reset_game() {
 	redo_history_moves = [];
 
 	// get deal
-	card_deal = get_random_grid();
+	card_grid = get_random_grid();
 	// card_grid = get_solvable_grid();
 
 	// reset shown solution
@@ -256,7 +140,6 @@ function update() {
 	}
 
 }
-setInterval(function() {update()}, 5);
 
 function undo() {
 	if (undo_history_moves.length > 0) {
@@ -271,7 +154,6 @@ function undo() {
 }
 
 function redo() {
-	console.log("redo");
 	if (redo_history_moves.length > 0) {
 		var last = redo_history_moves.pop();
 		undo_history_moves.push(last);
@@ -290,25 +172,10 @@ function toggle_flockability_graph() {
 function show_solution() {
 	var s = "";
 	var solution = get_solution(card_grid);
-	if (solution == -1) {
-		document.getElementById('solution').innerHTML = "No solution.";
-	} else {
-		var cg = clone(card_grid);
-		for (var i = 0; i < solution.length; i++) {
-			var from = solution[i][0];
-			var to = solution[i][1];
-			s += get_card_string(cg[from]) + "→" + get_card_string(cg[to]);
-			cg[to] = cg[from];
-			cg[from] = -1;
-			if (i < solution.length - 1) {
-				s += ", ";
-			}
-		}
-		document.getElementById('solution').innerHTML = s;
-		console.log(s);
-	}
-
+	document.getElementById('solution').innerHTML = get_solution_string(card_grid, solution);
 }
+
+
 
 
 
@@ -402,6 +269,25 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
 // |_| |_|  \___| |_| | .__/   \___| |_|    |___/
 //                    |_|
 
+function get_solution_string(grid, solution) {
+	var s = "";
+	if (solution == -1) {
+		s = "No solution.";
+	} else {
+		var cg = clone(grid);
+		for (var i = 0; i < solution.length; i++) {
+			var from = solution[i][0];
+			var to = solution[i][1];
+			s += get_card_string(cg[from]) + "→" + get_card_string(cg[to]);
+			cg[to] = cg[from];
+			cg[from] = -1;
+			if (i < solution.length - 1) {
+				s += ", ";
+			}
+		}
+	}
+	return s;
+}
 
 function is_flockable(c1, c2) {
 	var adj_rank = are_adj_rank(c1, c2);
@@ -457,16 +343,70 @@ function get_card_string(card_ID) {
 }
 
 function get_random_grid() {
-	card_grid = [];
-	while (card_grid.length < 16) {
+	var grid = [];
+	while (grid.length < 16) {
 		var card_ID = Math.floor(random() * 52);
-		if (!card_grid.includes(card_ID)) {
-			card_grid.push(card_ID);
+		if (!grid.includes(card_ID)) {
+			grid.push(card_ID);
 		}
 	}
-	return card_grid;
+	return grid;
 }
 
+function clone(array) {
+	return JSON.parse(JSON.stringify(array));
+}
+
+function count_obj(arr, obj) {
+	count = 0;
+	for (var i = 0; i < arr.length; i++) {
+		if (arr[i] == obj) {
+			count++;
+		}
+	}
+	return count;
+}
+
+function get_adjacency_paths_of(cg) {
+	var t =[];
+	for (var i = 0; i < 16; i++) {
+		if (cg[i] != -1) {
+			t.push(i);
+		}
+	}
+	var n = t.length;
+	var graph = [];
+	for (var i = 0; i < n; i++) {
+		var row = [];
+		for (var j = 0; j < n; j++) {
+			if (i == j) {
+				row.push(0);
+			} else if (is_flockable(cg[t[i]], cg[t[j]])) {
+				row.push(1)
+			} else {
+				row.push(Infinity);
+			}
+		}
+		graph.push(row);
+	}
+
+	for (var k = 0; k < n; k++) {
+		for (var i = 0; i < n; i++) {
+			for (var j = 0; j < n; j++) {
+				graph[i][j] = Math.min(graph[i][j], graph[i][k] + graph[k][j]);
+			}
+		}
+	}
+	return graph;
+}
+
+function greater_flockability_per_card(child1, child2) {
+	return flockability_per_card_of(child1[0]) < flockability_per_card_of(child2[0]) ? -1 : 1;
+}
+
+function greater_state_flockability(child1, child2) {
+	return flockability_per_card_of(child1[0]) < flockability_per_card_of(child2[0]) ? -1 : 1;
+}
 
 
 
@@ -498,6 +438,10 @@ function flockability_of(cg) {
 	return count;
 }
 
+function flockability_per_card_of(cg) {
+	return flockability_of(cg) / (16 - count_obj(cg, -1));
+}
+
 function mobility_of(cg) {
 	var count = 0;
 	for (var i = 0; i < 16; i++) {
@@ -510,6 +454,10 @@ function mobility_of(cg) {
 		}
 	}
 	return count;
+}
+
+function mobility_per_card_of(cg) {
+	return mobility_of(cg) / (16 - count_obj(cg, -1));
 }
 
 function has_odd_bird(cg) {
@@ -527,6 +475,17 @@ function has_odd_bird(cg) {
 			if (!has_pair) {
 				return true;
 			}
+		}
+	}
+	return false;
+}
+
+// there is a better way to do this (breadth-first)
+function is_separated(cg) {
+	var paths = get_adjacency_paths_of(cg);
+	for (var i = 0; i < paths.length; i++) {
+		if (paths[i].includes(Infinity)) {
+			return true;
 		}
 	}
 	return false;
@@ -622,38 +581,10 @@ function suit_dominance_of(cg) {
 }
 
 function diameter_of(cg) {
-	var t =[];
-	for (var i = 0; i < 16; i++) {
-		if (cg[i] != -1) {
-			t.push(i);
-		}
-	}
-	var n = t.length;
-	var graph = [];
-	for (var i = 0; i < n; i++) {
-		var row = [];
-		for (var j = 0; j < n; j++) {
-			if (i == j) {
-				row.push(0);
-			} else if (is_flockable(cg[t[i]], cg[t[j]])) {
-				row.push(1)
-			} else {
-				row.push(Infinity);
-			}
-		}
-		graph.push(row);
-	}
-
-	for (var k = 0; k < n; k++) {
-		for (var i = 0; i < n; i++) {
-			for (var j = 0; j < n; j++) {
-				graph[i][j] = Math.min(graph[i][j], graph[i][k] + graph[k][j]);
-			}
-		}
-	}
+	paths = get_adjacency_paths_of(cg);
 	max = 0;
 	for (var i = 0; i < n; i++) {
-		var row_max = Math.max(...graph[i]);
+		var row_max = Math.max(...paths[i]);
 		if (row_max > max) {
 			max = row_max;
 		}
@@ -704,33 +635,23 @@ function get_solvable_grid() {
 	return grid;
 }
 
-function clone(array) {
-	return JSON.parse(JSON.stringify(array));
-}
-
-function count_obj(arr, obj) {
-	count = 0;
-	for (var i = 0; i < arr.length; i++) {
-		if (arr[i] == obj) {
-			count++;
-		}
-	}
-	return count;
-}
-
-function expand(array) {
+function expand(parent) {
+	var arr = parent[0];
+	var depth = parent[2];
 	children = [];
 	for (var from = 0; from < 16; from++) {
 		for (var j = 0; j < MOVES[from].length; j++) {
 			var to = MOVES[from][j];
-			if (is_legal_move(array[from], from, array[to], to)) {
-				var child = clone(array);
+			if (!is_legal_move(arr[from], from, arr[to], to)  || is_separated(arr) || has_odd_bird(arr)) {}
+			else {
+				var child = clone(arr);
 				child[to] = child[from];
 				child[from] = -1;
-				children.push([child, [from, to]]);
+				children.push([child, [from, to], depth + 1]);
 			}
 		}
 	}
+	children.sort(greater_flockability_per_card);
 	return children;
 }
 
@@ -738,26 +659,56 @@ function get_solution(arr) {
 	return basic_depth_first_search(arr);
 }
 
+function avg_time_of(f, num_solves) {
+	var timer = new Timer();
+	var t = 0;
+	for (var i = 0; i < num_solves; i++) {
+		timer.start();
+		f(get_random_grid());
+		timer.stop();
+		t += timer.milliseconds();
+	}
+	return t / num_solves;
+}
+
 function basic_depth_first_search(arr) {
-	var stack = [[arr, [], count_obj(arr, -1)]];
+	var init_depth = count_obj(arr, -1)
+	var stack = [[arr, [], init_depth]];
+	var solution = [];
+	var last_depth = init_depth;
 	while (stack.length > 0) {
-		var top = stack.pop();
-		var parent = top[0];
-		var soln = top[1];
-		var depth = top[2];
-		if (depth == 15) {
-			return soln;
+		var parent = stack.pop();
+		var p_arr = parent[0];
+		var p_move = parent[1];
+		var p_depth = parent[2];
+		for (var i = p_depth; i < last_depth + 1; i++) {
+			solution.pop();
+		}
+		if (p_depth != init_depth) {
+			solution.push(p_move);
+		}
+		last_depth = p_depth;
+		if (p_depth == 15) {
+			return solution;
 		} else {
 			var children = expand(parent);
 			for (var i = 0; i < children.length; i++) {
-				var child = children[i];
-				var a = child[0];
-				var m = child[1];
-				var soln_copy = clone(soln);
-				soln_copy.push(m);
-				stack.push([a, soln_copy, depth + 1]);
+				stack.push(children[i]);
 			}
 		}
 	}
-	return -1
+	return -1;
 }
+
+
+
+
+
+ //  _     _
+ // | |_  (_)  _ __ ___     ___   _ __
+ // | __| | | | '_ ` _ \   / _ \ | '__|
+ // | |_  | | | | | | | | |  __/ | |
+ //  \__| |_| |_| |_| |_|  \___| |_|
+
+/* @source http://purl.eligrey.com/github/timer.js/blob/master/timer.js*/
+"use strict";var Timer=Timer||(function(){var c,b,a=Date.now||function(){return(new Date()).getTime()};if(typeof chrome!=="undefined"&&typeof chrome.Interval==="function"){b=(c=chrome.Interval).prototype;b.milliseconds=function(){return this.microseconds()/1000}}else{b=(c=function(){var e=0,d=0;this.start=function(){d=0;e=a()};this.stop=function(){d=a();if(e===0){d=0}};this.milliseconds=function(){var f=d;if(f===0&&e!==0){f=a()}return f-e}}).prototype;b.microseconds=function(){return this.milliseconds()*1000}}b.profile=function(d,e){if(typeof d==="string"){d=new Function(d)}this.start();while(e--){d()}this.stop()};b.seconds=function(){return this.milliseconds()/1000};return c}());

@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<h1>Seeds</h1>
+		<p id="unsolvable">
+			<u>unsolvable</u>:
+		</p>
+		<p id="out">
+			<u>Solvable</u>: (seed, ms)
+		</p>
+
+		<script src="engine.js"></script>
+		<script>
+			var timer = new Timer();
+			for (var i = 0; i < 10000; i++) {
+				console.log(i);
+				set_seed(i);
+				var cg = get_random_grid();
+				timer.start();
+				var solution = get_solution(cg);
+				timer.stop();
+				document.getElementById('out').innerHTML += +"<br>" + i + ", " + timer.milliseconds() + "<br>";
+				if (solution == -1) {
+					document.getElementById('unsolvable').innerHTML += i + ", ";
+				}
+			}
+		</script>
+	</body>
+</html>
