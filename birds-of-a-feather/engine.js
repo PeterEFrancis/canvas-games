@@ -177,7 +177,6 @@ function redo() {
 		undo_history_moves.push(last);
 		var from_num = last[0];
 		var to_num = last[1];
-		var hidden_card_ID = last[2];
 		card_grid[to_num] = card_grid[from_num];
 		card_grid[from_num] = -1;
 	}

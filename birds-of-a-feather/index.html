@@ -143,6 +143,8 @@
 						undo_history_moves.push([clicked_card_num, cn, card_grid[cn]]);
 						// move card
 						card_grid[cn] = hover_card_ID;
+						// clear redo
+						redo_history_moves = [];
 					} else {
 						// put it back
 						card_grid[clicked_card_num] = hover_card_ID;
