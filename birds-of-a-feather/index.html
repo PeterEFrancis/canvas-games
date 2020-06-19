@@ -175,7 +175,7 @@
 			function change_seed_manual() {
 				var proposed = document.getElementById('seed-input').value;
 				document.getElementById('seed-input').value = "";
-				if (!isNaN(proposed) && proposed.trim() != "") {
+				if (!isNaN(proposed) && proposed.trim() != "" && Number(proposed) < 10000000000) {
 					reset_game(Number(proposed));
 				};
 			}
