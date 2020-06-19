@@ -209,9 +209,9 @@ function show_solution() {
 function draw_card(ctx, x, y, card_ID) {
 	ctx.fillStyle = "white";
 	roundRect(ctx, x, y, CARD_WIDTH, CARD_HEIGHT, 7, true, false);
-	ctx.font = "100pt monospace";
+	ctx.font = "90pt monospace";
 	ctx.fillStyle = ["black", "rgb(255, 42, 92)", "rgb(155, 247, 122)", "rgb(101, 164, 230)"][Math.floor(card_ID / 13)];
-	ctx.fillText(get_card_string(card_ID)[1], x + 10, y + 145);
+	ctx.fillText(get_card_string(card_ID)[1], x + 15, y + 138);
 	ctx.font = "35pt monospace";
 	ctx.fillText(get_card_string(card_ID)[0], x + 5, y + 40);
 }
