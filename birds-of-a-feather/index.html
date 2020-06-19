@@ -39,7 +39,7 @@
 							</div>
 							<div class="col-xs-4">
 								<div class="input-group input-group-sm">
-									<input id="seed-input" class="form-control" placeholder="seed"/>
+									<input id="seed-input" class="form-control" placeholder="set integer seed"/>
 									<span class="input-group-btn">
 										<button type="button" onclick="change_seed_manual();" class="btn btn-default">Set</button>
 									</span>
@@ -153,14 +153,14 @@
 			document.addEventListener('keydown', function(event) {
 			  if (event.keyCode == 90 && (event.metaKey || event.ctrlKey)) {
 					if (hover_card_ID == -1) {
-						undo();
+						setTimeout(function() {undo();}, 100);
 					}
 				}
 			});
 			document.addEventListener('keydown', function(event) {
 			  if (event.keyCode == 89 && (event.metaKey || event.ctrlKey)) {
 					if (hover_card_ID == -1) {
-						redo();
+						setTimeout(function() {redo();}, 100);
 					}
 				}
 			});
@@ -175,7 +175,7 @@
 			function change_seed_manual() {
 				var proposed = document.getElementById('seed-input').value;
 				document.getElementById('seed-input').value = "";
-				if (!isNaN(proposed) && proposed.trim() != "" && Number(proposed) < 10000000000) {
+				if (!isNaN(proposed) && proposed.trim() != "" && proposed.length > 15 && proposed.length > 15) {
 					reset_game(Number(proposed));
 				};
 			}
