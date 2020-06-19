@@ -20,19 +20,39 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-3"></div>
-				<div class="col-lg-6 text-center">
+				<div class="col-lg-6">
 					<h1 class="text-center" style="margin-bottom: 40px;">Birds of a Feather</h1>
-					<canvas id="display"
-									class="center-block"
-									width="550" height="750"
-									style="background-color: green;">
-					</canvas>
+					<!-- <button onclick="toggle_flockability_graph();" class="btn btn-default btn-xs">Toggle Flockability Graph</button> -->
+					<p class="text-center">
+					</p>
+					<div class="center-block" style="width:550px;">
+						<div class="row" style="margin-bottom: 5px;">
+							<div class="col-xs-4">
+								<p id="seed" style="display: block; margin-top: 15px; margin-bottom: 0px; margin-left: 3px;"></p>
+							</div>
+							<div class="col-xs-4">
+								<div class="input-group">
+									<input id="seed-input" class="form-control" placeholder="seed"/>
+									<span class="input-group-btn">
+										<button type="button" onclick="change_seed_manual();" class="btn btn-default">Enter</button>
+									</span>
+								</div>
+							</div>
+							<div class="col-xs-4 text-right">
+								<button onclick="reset_game();" class="btn btn-default" style="margin-right: 3px;">Random Seed</button>
+							</div>
+						</div>
+						<canvas id="display"
+										class="center-block"
+										width="550" height="750"
+										style="background-color: green; margin-bottom: 5px;">
+						</canvas>
+					</div>
+					<br>
+					<button onclick="show_solution();" class="btn btn-default center-block">Show Solution</button>
+
 					<br><br>
-					<button onclick="show_solution();" class="btn btn-default">Show Solution</button>
-					<button onclick="reset_game();" class="btn btn-default">Reset</button>
-					<button onclick="toggle_flockability_graph();" class="btn btn-default">Toggle Flockability Graph</button>
-					<br><br>
-					<p id="solution" style="font-family: monospace;"></p>
+					<p id="solution" style="font-family: monospace;" class="text-center"></p>
 				</div>
 				<div class="col-md-3"></div>
 			</div>
@@ -62,7 +82,6 @@
 		<script src="engine.js"></script>
 		<script>
 
-
 			const canvas = document.getElementById("display");
 			const ctx = canvas.getContext("2d");
 
@@ -79,14 +98,13 @@
 			var redo_history_moves;
 			var show_flockability_graph;
 
-			var d = new Date();
-			var random = mulberry32(d.getTime());
+			var random;
 
 			show_flockability_graph = false;
 			hover_card_ID = -1;
 
 
-			reset_game();
+			reset_game(Math.floor(Math.random() * 100000000));
 
 			canvas.addEventListener('contextmenu', event => event.preventDefault());
 			canvas.addEventListener('mousedown', function(evt) {
@@ -150,6 +168,13 @@
 
 			setInterval(function() {update()}, 5);
 
+			function change_seed_manual() {
+				var proposed = document.getElementById('seed-input').value;
+				document.getElementById('seed-input').value = "";
+				if (!isNaN(proposed) && proposed.trim() != "") {
+					reset_game(Number(proposed));
+				};
+			}
 
 		</script>
 	</body>

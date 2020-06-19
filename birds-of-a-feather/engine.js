@@ -18,8 +18,22 @@ for (var i = 0; i < 4; i++) {
 	CARD_LOCATIONS_X.push(CARD_GRID_MARGIN_X + (CARD_WIDTH + 2 * CARD_MARGIN_X) * i);
 	CARD_LOCATIONS_Y.push(CARD_GRID_MARGIN_Y + (CARD_HEIGHT + 2 * CARD_MARGIN_Y) * i);
 }
-const MOVES = [[1, 2, 3, 4, 8, 12],[0, 2, 3, 5, 9, 13],[0, 1, 3, 6, 10, 14],[0, 1, 2, 7, 11, 15],[0, 5, 6, 7, 8, 12],[1, 4, 6, 7, 9, 13],[2, 4, 5, 7, 10, 14],[3, 4, 5, 6, 11, 15],[0, 4, 9, 10, 11, 12],[1, 5, 8, 10, 11, 13],[2, 6, 8, 9, 11, 14],[3, 7, 8, 9, 10, 15],[0, 4, 8, 13, 14, 15],[1, 5, 9, 12, 14, 15],[2, 6, 10, 12, 13, 15],[3, 7, 11, 12, 13, 14]];
-
+const MOVES = [ [1, 2, 3, 4, 8, 12],
+								[0, 2, 3, 5, 9, 13],
+								[0, 1, 3, 6, 10, 14],
+								[0, 1, 2, 7, 11, 15],
+								[0, 5, 6, 7, 8, 12],
+								[1, 4, 6, 7, 9, 13],
+								[2, 4, 5, 7, 10, 14],
+								[3, 4, 5, 6, 11, 15],
+								[0, 4, 9, 10, 11, 12],
+								[1, 5, 8, 10, 11, 13],
+								[2, 6, 8, 9, 11, 14],
+								[3, 7, 8, 9, 10, 15],
+								[0, 4, 8, 13, 14, 15],
+								[1, 5, 9, 12, 14, 15],
+								[2, 6, 10, 12, 13, 15],
+								[3, 7, 11, 12, 13, 14]];
 
 
 
@@ -34,6 +48,7 @@ const MOVES = [[1, 2, 3, 4, 8, 12],[0, 2, 3, 5, 9, 13],[0, 1, 3, 6, 10, 14],[0, 
 
 
 function set_seed(seed) {
+	document.getElementById('seed').innerHTML = "seed: " + seed;
 	random = mulberry32(seed);
 }
 
@@ -62,14 +77,17 @@ function mulberry32(a) {
 
 
 
-function reset_game() {
+function reset_game(s) {
 	// reset history
 	undo_history_moves = [];
 	redo_history_moves = [];
 
 	// get deal
+	if (s == undefined) {
+		s = Math.floor(Math.random() * 100000000000);
+	}
+	set_seed(s);
 	card_grid = get_random_grid();
-	// card_grid = get_solvable_grid();
 
 	// reset shown solution
 	document.getElementById('solution').innerHTML = "&emsp;";
@@ -170,10 +188,11 @@ function toggle_flockability_graph() {
 }
 
 function show_solution() {
-	var s = "";
 	var solution = get_solution(card_grid);
 	document.getElementById('solution').innerHTML = get_solution_string(card_grid, solution);
 }
+
+
 
 
 
@@ -699,6 +718,8 @@ function basic_depth_first_search(arr) {
 	}
 	return -1;
 }
+
+
 
 
 

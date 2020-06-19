@@ -14,18 +14,26 @@
 		<script src="engine.js"></script>
 		<script>
 			var timer = new Timer();
-			for (var i = 0; i < 10000; i++) {
+			var i = 0;
+			var siid = setInterval(function() {
 				console.log(i);
 				set_seed(i);
 				var cg = get_random_grid();
 				timer.start();
 				var solution = get_solution(cg);
 				timer.stop();
-				document.getElementById('out').innerHTML += +"<br>" + i + ", " + timer.milliseconds() + "<br>";
+				document.getElementById('out').appendChild(document.createElement("br"));
+				document.getElementById('out').appendChild(document.createTextNode(i + ", " + timer.milliseconds()));
+				// document.getElementById('out').innerHTML += "<br>" + i + ", " + timer.milliseconds();
 				if (solution == -1) {
-					document.getElementById('unsolvable').innerHTML += i + ", ";
+					// document.getElementById('unsolvable').innerHTML += i + ", ";
+					document.getElementById('unsolvable').appendChild(document.createTextNode(i + ", "));
 				}
-			}
+				i++;
+				if (i == 340) {
+					clearInterval(siid);
+				}
+			}, 1);
 		</script>
 	</body>
 </html>
