@@ -175,7 +175,7 @@
 			function change_seed_manual() {
 				var proposed = document.getElementById('seed-input').value;
 				document.getElementById('seed-input').value = "";
-				if (!isNaN(proposed) && proposed.trim() != "" && proposed.length > 15 && proposed.length > 15) {
+				if (!isNaN(proposed) && proposed.trim() != "" && proposed.length < 15) {
 					reset_game(Number(proposed));
 				};
 			}
