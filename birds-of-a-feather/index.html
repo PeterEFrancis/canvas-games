@@ -110,7 +110,10 @@
 
 			reset_game(Math.floor(Math.random() * 100000000));
 
-			canvas.addEventListener('contextmenu', event => event.preventDefault());
+			canvas.addEventListener('contextmenu', function(ev) {
+				ev.preventDefault();
+				return false;
+			}, false);
 
 			canvas.addEventListener('mousedown', function(evt) {
 				if (!clicked) {
