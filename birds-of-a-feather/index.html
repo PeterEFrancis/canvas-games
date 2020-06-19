@@ -22,32 +22,36 @@
 				<div class="col-md-3"></div>
 				<div class="col-lg-6">
 					<h1 class="text-center" style="margin-bottom: 40px;">Birds of a Feather</h1>
-					<!-- <button onclick="toggle_flockability_graph();" class="btn btn-default btn-xs">Toggle Flockability Graph</button> -->
 					<p class="text-center">
 					</p>
 					<div class="center-block" style="width:550px;">
-						<div class="row" style="margin-bottom: 5px;">
-							<div class="col-xs-4">
-								<p id="seed" style="display: block; margin-top: 15px; margin-bottom: 0px; margin-left: 3px;"></p>
-							</div>
-							<div class="col-xs-4">
-								<div class="input-group">
-									<input id="seed-input" class="form-control" placeholder="seed"/>
-									<span class="input-group-btn">
-										<button type="button" onclick="change_seed_manual();" class="btn btn-default">Enter</button>
-									</span>
-								</div>
-							</div>
-							<div class="col-xs-4 text-right">
-								<button onclick="reset_game();" class="btn btn-default" style="margin-right: 3px;">Random Seed</button>
-							</div>
+						<div class="text-right">
+							<button onclick="toggle_flockability_graph();" class="btn btn-default btn-xs" style="margin-right: 3px;">Toggle Flockability Graph</button>
 						</div>
 						<canvas id="display"
 										class="center-block"
 										width="550" height="750"
 										style="background-color: green; margin-bottom: 5px;">
 						</canvas>
+						<div class="row">
+							<div class="col-xs-4">
+								<p id="seed" style="margin-left: 3px;"></p>
+							</div>
+							<div class="col-xs-4">
+								<div class="input-group input-group-sm">
+									<input id="seed-input" class="form-control" placeholder="seed"/>
+									<span class="input-group-btn">
+										<button type="button" onclick="change_seed_manual();" class="btn btn-default">Set</button>
+									</span>
+								</div>
+							</div>
+							<div class="col-xs-4 text-right">
+								<button onclick="reset_game();" class="btn btn-default btn-sm" style="margin-right: 3px;">Random Seed</button>
+							</div>
+						</div>
+
 					</div>
+
 					<br>
 					<button onclick="show_solution();" class="btn btn-default center-block">Show Solution</button>
 
