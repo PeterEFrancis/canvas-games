@@ -111,19 +111,22 @@
 			reset_game(Math.floor(Math.random() * 100000000));
 
 			canvas.addEventListener('contextmenu', event => event.preventDefault());
+
 			canvas.addEventListener('mousedown', function(evt) {
-			  var rect = canvas.getBoundingClientRect();
-			  var x = evt.clientX - rect.left;
-			  var y = evt.clientY - rect.top;
+				if (hover_card_ID != -1) {
+				var rect = canvas.getBoundingClientRect();
+				var x = evt.clientX - rect.left;
+				var y = evt.clientY - rect.top;
 				var cn = get_card_num(x, y);
 				if (cn != -1) {
-					if (card_grid[cn] != -1) {
-						clicked_card_num = cn;
-						clicked_card_ID = card_grid[cn];
-						hover_card_ID = card_grid[cn];
-						card_grid[cn] = -1;
-						hover_card_offset_xy = [x - CARD_LOCATIONS_X[cn % 4], y - CARD_LOCATIONS_Y[Math.floor(cn / 4)]];
-					}
+				 if (card_grid[cn] != -1) {
+					 clicked_card_num = cn;
+					 clicked_card_ID = card_grid[cn];
+					 hover_card_ID = card_grid[cn];
+					 card_grid[cn] = -1;
+					 hover_card_offset_xy = [x - CARD_LOCATIONS_X[cn % 4], y - CARD_LOCATIONS_Y[Math.floor(cn / 4)]];
+				 }
+				}
 				}
 			});
 			canvas.addEventListener('mousemove', function(evt) {
