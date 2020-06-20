@@ -194,13 +194,12 @@ function new_game() {
 	length = 1;
 
 	// set direction
-	direction = BOARD_DIRS[Math.floor(Math.random() * 4)];
+	direction = BOARD_RIGHT;
 
 	// place starting piece
-	board[Math.floor(Math.random() * NUM_SQUARES_X * NUM_SQUARES_Y)] = length;
+	board[NUM_SQUARES_X * Math.floor(NUM_SQUARES_Y /  2) + Math.floor(NUM_SQUARES_Y / 4)] = length;
 	board[next_apple()] = APPLE;
 
 	updateID = setInterval(update, 5);
 	moveID = setInterval(move_snake, delay);
-	console.log(delay);
 }
