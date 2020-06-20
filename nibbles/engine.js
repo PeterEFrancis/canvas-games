@@ -47,12 +47,18 @@ var delay = 200;
 
 document.addEventListener('keydown', function(event) {
 	if (KEY_DIRS.includes(event.keyCode)) {
-		var new_direction = BOARD_DIRS[Number(event.keyCode) - KEY_LEFT];
-		if (board[board.indexOf(length) + new_direction] <= 0) {
-			direction = new_direction;
-		}
+		var dir = BOARD_DIRS[Number(event.keyCode) - KEY_LEFT];
+		change_direction(dir);
 	}
 });
+
+function change_direction(dir) {
+	if (board[board.indexOf(length) + dir] <= 0) {
+		if (Math.abs(dir) != Math.abs(direction)) {
+			direction = dir;
+		}
+	}
+}
 
 document.addEventListener('change', function(event) {
 	delay = Number(document.getElementById('delay').value);
@@ -141,6 +147,16 @@ function update() {
 			var top_left_x = (i % NUM_SQUARES_X) * (SQUARE_SIZE);
 			var top_left_y = (Math.floor(i / NUM_SQUARES_X)) * (SQUARE_SIZE);
 			ctx.fillRect(top_left_x, top_left_y, SQUARE_SIZE, SQUARE_SIZE);
+			if (board[i] == length) {
+				ctx.fillStyle = "white";
+				ctx.beginPath();
+				ctx.arc(top_left_x + SQUARE_SIZE / 2, top_left_y + SQUARE_SIZE / 2, SQUARE_SIZE/5, 0, 2 * Math.PI, false);
+				ctx.fill();
+				ctx.fillStyle = "black";
+				ctx.beginPath();
+				ctx.arc(top_left_x + SQUARE_SIZE / 2, top_left_y + SQUARE_SIZE / 2, SQUARE_SIZE/14, 0, 2 * Math.PI, false);
+				ctx.fill();
+			}
 		}
 	}
 

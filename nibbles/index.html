@@ -8,14 +8,37 @@
 	<body style="background-color: #3F3F3F; color: lightgrey; min-width: 640px; width: 640px; margin: auto">
 		<center>
 			<h1>Nibbles</h1>
-			<canvas id="display" class="center-block" width="600" height="450"  style="background-color:black"></canvas>
-			<br>
 			<h3>Score: <span id="score-disp"></span></h3>
-			<br>
+			<canvas id="display" class="center-block" width="600" height="450"  style="background-color:black"></canvas>
+			<br><br>
 			<table>
 				<tr>
-					<td style="padding-right:50px;"><button onclick="new_game()">New Game</button></td>
-					<td style="padding-right:50px;"><p style="display: inline-block;">Delay:</p> <input type="range" min="50" max="1000" value="200" class="slider" id="delay"></td>
+					<td style="padding:0px 50px;">
+						<button onclick="new_game()">New Game</button>
+					</td>
+					<td style="padding:0px 50px;">
+						<table>
+							<tr>
+								<td></td>
+								<td><button onclick="change_direction(BOARD_UP)">&uarr;</button></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><button onclick="change_direction(BOARD_LEFT)">&larr;</button></td>
+								<td></td>
+								<td><button onclick="change_direction(BOARD_RIGHT)">&rarr;</button></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><button onclick="change_direction(BOARD_DOWN)">&darr;</button></td>
+								<td></td>
+							</tr>
+						</table>
+					</td>
+					<td style="padding:0px 50px;">
+						<p style="display: inline-block;">Delay:</p>
+						<input type="range" min="50" max="1000" value="200" class="slider" id="delay">
+					</td>
 				</tr>
 			</table>
 
