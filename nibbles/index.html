@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Play Nibbles</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body style="background-color: #3F3F3F; color: lightgrey; min-width: 640px; width: 640px; margin: auto">
+		<center>
+			<h1>Nibbles</h1>
+			<canvas id="display" class="center-block" width="600" height="450"  style="background-color:black"></canvas>
+			<br>
+			<h3>Score: <span id="score-disp"></span></h3>
+			<br>
+			<table>
+				<tr>
+					<td style="padding-right:50px;"><button onclick="new_game()">New Game</button></td>
+					<td style="padding-right:50px;"><p style="display: inline-block;">Delay:</p> <input type="range" min="50" max="1000" value="200" class="slider" id="delay"></td>
+				</tr>
+			</table>
+
+			<br>
+			<p style="margin-top:40px;">
+				&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+			</p>
+		</center>
+		<script src="engine.js"></script>
+	</body>
+</html>

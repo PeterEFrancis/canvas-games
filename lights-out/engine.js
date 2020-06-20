@@ -39,7 +39,6 @@ function change_num_squares(amount) {
 
 
 
-
 function click(square_id) {
 	var row = Math.floor(square_id / num_squares);
 	var col = square_id % num_squares;
@@ -71,8 +70,8 @@ function update_display() {
 	// add the grid lines
 	ctx.fillStyle = "white";
 	for (var i = 0; i <= num_squares + 1; i++) {
-		ctx.fillRect(0 - LINE_WIDTH / 2, i * (SIZE / num_squares) - LINE_WIDTH / 2, SIZE, LINE_WIDTH);
-		ctx.fillRect(i * (SIZE / num_squares) - (LINE_WIDTH / 2), 0, LINE_WIDTH, SIZE);
+		ctx.fillRect(0 - LINE_WIDTH / 2, i * square_size - LINE_WIDTH / 2, SIZE, LINE_WIDTH);
+		ctx.fillRect(i * square_size - (LINE_WIDTH / 2), 0, LINE_WIDTH, SIZE);
 		// yes, one of these falls over the edge and doesn't get displayed, but that is ok
 	}
 
@@ -101,11 +100,22 @@ function reset_game() {
 }
 
 
+
 function chase_lights() {
 	for (var i = num_squares; i < num_squares * num_squares; i++) {
 		if (board[i - num_squares] == 1) {
 			click(i);
 		}
+	}
+	update_display();
+}
+
+
+
+function clear_board() {
+	console.log("clear");
+	for (var i = 0; i < num_squares * num_squares; i++) {
+		board[i] = 0;
 	}
 	update_display();
 }
