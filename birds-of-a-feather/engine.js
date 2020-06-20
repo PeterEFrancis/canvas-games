@@ -35,7 +35,8 @@ const MOVES = [ [1, 2, 3, 4, 8, 12],
 								[2, 6, 10, 12, 13, 15],
 								[3, 7, 11, 12, 13, 14]];
 
-
+const RANKS = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+const SUITS = ["♠","♥","♣","♦"];
 
 
 //                      _
@@ -60,9 +61,6 @@ function mulberry32(a) {
 		return ((t ^ t >>> 14) >>> 0) / 4294967296;
 	}
 }
-
-
-
 
 
 
@@ -112,7 +110,7 @@ function update() {
 	if (hover_card_ID != -1) {
 		var x = hover_xy[0] - hover_card_offset_xy[0];
 		var y = hover_xy[1] - hover_card_offset_xy[1];
-		draw_card(ctx, x, y, hover_card_ID);
+		draw_card(ctx, x, y, hover_card_ID, true);
 	}
 
 
@@ -142,7 +140,7 @@ function update() {
 		if (hover_card_ID != -1) {
 			var x1 = hover_xy[0] - hover_card_offset_xy[0] + CARD_WIDTH/2;
 			var y1 = hover_xy[1] - hover_card_offset_xy[1] + CARD_HEIGHT/2;
-			ctx.fillStyle = "blue";
+			ctx.fillStyle = "orange";
 			ctx.beginPath();
 			ctx.arc(x1, y1, 10, 0, 2 * Math.PI);
 			ctx.fill();
@@ -150,8 +148,11 @@ function update() {
 				if (card_grid[k] != -1 && is_flockable(hover_card_ID, card_grid[k])) {
 					var x2 = CARD_LOCATIONS_X[k % 4] + CARD_WIDTH/2;
 					var y2 = CARD_LOCATIONS_Y[Math.floor(k/4)] + CARD_HEIGHT/2;
-					ctx.strokeStyle = "blue";
+					ctx.strokeStyle = "orange";
+					ctx.lineWidth = 3;
 					curved_line(x1, y1, x2, y2);
+					ctx.lineWidth = 1;
+
 				}
 			}
 		}
@@ -205,14 +206,19 @@ function show_solution() {
 //  \__,_| |_|     \__,_|   \_/\_/
 
 
-function draw_card(ctx, x, y, card_ID) {
+function draw_card(ctx, x, y, card_ID, shadow) {
 	ctx.fillStyle = "white";
+	ctx.shadowColor = "black";
+	if (shadow) {
+		ctx.shadowBlur = 20;
+	}
 	roundRect(ctx, x, y, CARD_WIDTH, CARD_HEIGHT, 7, true, false);
+	ctx.shadowBlur = 0;
 	ctx.font = "90pt monospace";
 	ctx.fillStyle = ["black", "rgb(255, 42, 92)", "rgb(155, 247, 122)", "rgb(101, 164, 230)"][Math.floor(card_ID / 13)];
-	ctx.fillText(get_card_string(card_ID)[1], x + 15, y + 138);
+	ctx.fillText(SUITS[Math.floor(card_ID / 13)], x + 15, y + 138);
 	ctx.font = "35pt monospace";
-	ctx.fillText(get_card_string(card_ID)[0], x + 5, y + 40);
+	ctx.fillText(RANKS[card_ID % 13], x + 5, y + 40);
 }
 
 function curved_line(x1, y1, x2, y2) {
@@ -355,8 +361,8 @@ function get_card_num(x, y) {
 }
 
 function get_card_string(card_ID) {
-	var rank = "A23456789TJQK"[card_ID % 13];
-	var suit = "♠♥♣♦"[Math.floor(card_ID / 13)];
+	var rank = RANKS[card_ID % 13];
+	var suit = SUITS[Math.floor(card_ID / 13)];
 	return rank + suit;
 }
 

@@ -21,6 +21,16 @@
 				background-color: #3F3F3F;
 				color: lightgrey;
 			}
+
+			#info {
+				color: lightgrey;
+			}
+
+			td {
+
+			}
+
+
 		</style>
 
 	</head>
@@ -30,10 +40,16 @@
 				<div class="col-md-3"></div>
 				<div class="col-lg-6">
 					<div class="center-block" style="width:550px;">
-					<h1 class="text-center" style="margin-bottom: 40px;">Birds of a Feather</h1>
+					<h1 class="text-center" style="margin-bottom: 20px;">Birds of a Feather</h1>
 						<!-- <div class="text-right">
 							<button onclick="toggle_flockability_graph();" class="btn btn-default btn-xs" style="margin-right: 3px;">Toggle Flockability Graph</button>
 						</div> -->
+						<!-- Trigger the modal with a button -->
+						<div class="text-right">
+							<a type="button" id="info" data-toggle="modal" data-target="#info-modal">
+								<span class="glyphicon glyphicon-info-sign"></span>
+							</a>
+						</div>
 						<canvas id="display"
 										class="center-block"
 										width="550" height="750"
@@ -87,7 +103,32 @@
 				</div>
 				<div class="col-md-3"></div>
 			</div>
+		</div>
 
+		<!-- Modal -->
+		<div id="info-modal" class="modal fade" role="dialog" style="color: black;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Game Control Shortcuts</h4>
+					</div>
+					<div class="modal-body">
+						<table class="table">
+							<tr>
+								<td>ctrl + Z</td><td>Undo Move</td>
+							</tr>
+							<tr>
+								<td>ctrl + Y</td><td>Redo Move</td>
+							</tr>
+							<tr>
+								<td>T</td><td>Toggle Flockability Graph</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<script src="engine.js"></script>
 		<script>
