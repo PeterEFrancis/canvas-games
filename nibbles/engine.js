@@ -53,9 +53,11 @@ document.addEventListener('keydown', function(event) {
 });
 
 function change_direction(dir) {
-	if (board[board.indexOf(length) + dir] <= 0) {
-		if (Math.abs(dir) != Math.abs(direction)) {
-			direction = dir;
+	if (is_game_playing) {
+		if (board[board.indexOf(length) + dir] <= 0) {
+			if (Math.abs(dir) != Math.abs(direction)) {
+				direction = dir;
+			}
 		}
 	}
 }
