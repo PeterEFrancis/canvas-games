@@ -129,8 +129,8 @@ function clear_board() {
 
 canvas.addEventListener('click', function() {
 	var rect = canvas.getBoundingClientRect();
-	var user_x = event.clientX - rect.left;
-	var user_y = event.clientY - rect.top;
+	var user_x = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+	var user_y = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
 	var row = Math.floor(user_y / (SIZE / num_squares));
 	var col = Math.floor(user_x / (SIZE / num_squares));
 	click(row * num_squares + col);
