@@ -33,17 +33,16 @@
 					<div class="col-md-3"></div>
 					<div class="col-md-6">
 						<h1 class="text-center" style="margin-bottom:20px;">Lights Out</h1>
-						<canvas id="display" class="center-block" width="600" height="600"></canvas>
-						<br>
-						<div class="text-center">
+						<canvas id="display" class="center-block" width="600" height="600" style="margin-bottom: 20px;">
+							HTML Canvas element is not supported on your device and/or borwser.
+						</canvas>
+						<div class="text-center" style="margin-bottom: 40px;">
 							<button class="btn btn-default" onclick="reset_game()">randomize</button>
-							<!-- <button class="btn btn-default"  onclick="clear_board()">clear</button> -->
 							<button class="btn btn-default"  onclick="change_num_squares(-1)"><span class="glyphicon glyphicon-minus"></span></button>
 							<button class="btn btn-default"  onclick="change_num_squares(1)"><span class="glyphicon glyphicon-plus"></span></button>
 							<button class="btn btn-default"  onclick="chase_lights()">chase lights</button>
 							<input type="color" id="color" name="color" value="#ffd500" onchange="update_color();" style="bottom: -5px; width: 75px; height: 30px; display: inline-block; position: relative">
 						</div>
-						<br><br>
 						<p>The classic version of Lights Out was an electronic handheld puzzle released by Tiger Electronics in 1995, and is played on a  5×5  keypad of square buttons that are either lit or dark. The object is to turn all of the lights off by clicking the buttons on the board, and the one rule is deceptively simple: clicking a button changes its own state, as well as the state of the 4 directly adjacent buttons, if they exist (clicking on an corner only changes the state of 3 buttons and clicking an edge button not in a corner changes the state of 4 buttons).</p>
 						<p class="text-center" style="margin-top:40px;">
 							&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>

@@ -53,7 +53,7 @@ function reset_game() {
 
 
 
-
+canvas.addEventListener('click', game_step);
 
 function game_step() {
   // check the game state with get_game_state()
@@ -67,8 +67,8 @@ function game_step() {
 
   // get the coordinate that was clicked
   var rect = canvas.getBoundingClientRect();
-  var user_x = event.clientX - rect.left;
-  var user_y = event.clientY - rect.top;
+	var user_x = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+	var user_y = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
 
   // otherwise, if the user clicked on the board
   if (user_x > MARGIN && user_y > MARGIN && user_y < SQUARE_WIDTH * 3 + MARGIN && user_x < SQUARE_WIDTH * 3 + MARGIN) {

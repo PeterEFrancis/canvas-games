@@ -87,25 +87,22 @@ function get_game_state() {
     return DEAD_LOCK;
 }
 
-function game_step() {
+canvas.addEventListener('click', function() {
     if (get_game_state() != UNFINISHED) {
       reset_game();
-      return;
-    }
+    } else {
+	    // get the square number that was clicked
+	    var rect = canvas.getBoundingClientRect();
+	    var user_x = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+	    var user_y = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
 
-    // get the square number that was clicked
-    var rect = canvas.getBoundingClientRect();
-    var user_x = event.clientX - rect.left;
-    var user_y = event.clientY - rect.top;
+	    if (user_x > MARGIN && user_y > MARGIN && user_y < SQUARE_WIDTH * 3 + MARGIN && user_x < SQUARE_WIDTH * 3 + MARGIN) {
 
-    if (user_x > MARGIN && user_y > MARGIN && user_y < SQUARE_WIDTH * 3 + MARGIN && user_x < SQUARE_WIDTH * 3 + MARGIN) {
+	      var row = ((user_y - MARGIN) - ((user_y - MARGIN) % SQUARE_WIDTH)) / SQUARE_WIDTH;
+	      var col = ((user_x - MARGIN) - ((user_x - MARGIN) % SQUARE_WIDTH)) / SQUARE_WIDTH;
+	      var square_num = row * 3 + col;
 
-      var row = ((user_y - MARGIN) - ((user_y - MARGIN) % SQUARE_WIDTH)) / SQUARE_WIDTH;
-      var col = ((user_x - MARGIN) - ((user_x - MARGIN) % SQUARE_WIDTH)) / SQUARE_WIDTH;
-      var square_num = row * 3 + col;
-
-      if (board[square_num] == BLANK) {
-
+	      if (board[square_num] == BLANK) {
           // set the board array
           board[square_num] = current_player;
 
@@ -130,10 +127,9 @@ function game_step() {
               ctx.font = "20px Arial";
               ctx.fillText("Click the board to reset.", MARGIN * 2, MARGIN * 3 + 3*SQUARE_WIDTH + 10);
           }
-      }
-
-    }
-
+	      }
+	    }
+		}
 }
 
 function draw_winning_line() {
