@@ -4,19 +4,22 @@
     <title>Play Lights Out</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   </head>
   <body style="background-color: #3F3F3F; color: lightgrey; min-width: 640px; width: 640px; margin: auto" onload="reset_game();">
 		<center>
 			<h1>Lights Out</h1>
 			<canvas id="display" class="center-block" width="600" height="600"  style="background-color:black"></canvas>
 			<br>
-			<button onclick="reset_game()">randomize</button>
-			<button onclick="clear_board()">clear</button>
-			<button onclick="change_num_squares(-1)">-</button>
-			<button onclick="change_num_squares(1)">+</button>
-			<input type="color" id="color" name="color" value="#ffd500" onchange="update_color();">
-			<button onclick="chase_lights()">chase lights</button>
-			<br>
+			<button class="btn btn-default" onclick="reset_game()">randomize</button>
+			<button class="btn btn-default"  onclick="clear_board()">clear</button>
+			<button class="btn btn-default"  onclick="change_num_squares(-1)"><span class="glyphicon glyphicon-minus"></span></button>
+			<button class="btn btn-default"  onclick="change_num_squares(1)"><span class="glyphicon glyphicon-plus"></span></button>
+			<button class="btn btn-default"  onclick="chase_lights()">chase lights</button>
+			<input type="color" id="color" name="color" value="#ffd500" onchange="update_color();" style="bottom: -5px; width: 75px; height: 30px; display: inline-block; position: relative">
+			<br><br>
 			<p>The classic version of Lights Out was an electronic handheld puzzle released by Tiger Electronics in 1995, and is played on a  5×5  keypad of square buttons that are either lit or dark. The object is to turn all of the lights off by clicking the buttons on the board, and the one rule is deceptively simple: clicking a button changes its own state, as well as the state of the 4 directly adjacent buttons, if they exist (clicking on an corner only changes the state of 3 buttons and clicking an edge button not in a corner changes the state of 4 buttons).</p>
 			<p style="margin-top:40px;">
 				&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
