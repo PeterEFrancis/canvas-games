@@ -9,13 +9,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <style>
-      * {
-        max-width: 100%;
-      }
       canvas {
         margin: 0px;
-        display: block;
         border: 1px solid black;
+				width: 100%;
       }
     </style>
 
@@ -23,12 +20,13 @@
   <body onload="reset_game();">
     <div class="container">
       <div class="row">
-        <div class="col-md-12">
-          <div class="center-block">
-            <h1 class="text-center">Tic Tac Toe</h1>
-            <br>
-            <canvas id="display" class="center-block" width="400" height="500"></canvas>
-          </div>
+        <div class="col-md-4"></div>
+	       <div class="col-md-4">
+	          <h1 class="text-center">Tic Tac Toe</h1>
+	          <br>
+	          <canvas id="display" class="center-block" width="400" height="500"></canvas>
+					</div>
+	        <div class="col-md-4"></div>
         </div>
       </div>
       <div class="row">
