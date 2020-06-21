@@ -47,6 +47,7 @@ var delay = 200;
 
 document.addEventListener('keydown', function(event) {
 	if (KEY_DIRS.includes(event.keyCode)) {
+		event.preventDefault();
 		var dir = BOARD_DIRS[Number(event.keyCode) - KEY_LEFT];
 		change_direction(dir);
 	}
@@ -141,7 +142,7 @@ function update() {
 
 	// add squares
 	for (var i = 0; i < NUM_SQUARES_X * NUM_SQUARES_Y; i++) {
-		ctx.fillStyle = is_game_playing ? "rgb(" + (((length - board[i]) * 25.5) % 255) + ",255,0)" : "rgb(0,0,255)";
+		ctx.fillStyle = is_game_playing ? "rgb(0,255,0)" : "rgb(0,0,255)";
 		if (board[i] != 0) {
 			if (board[i] == APPLE) {
 				ctx.fillStyle = "rgb(255,0,0)";

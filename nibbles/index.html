@@ -4,50 +4,77 @@
 		<title>Play Nibbles</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<style>
+			html {
+				min-width: 430px;
+			}
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				background-color: black;
+				width: 100%;
+				margin-bottom: 40px;
+			}
+			p {
+				font-size: 12pt;
+			}
+		</style>
 	</head>
-	<body style="background-color: #3F3F3F; color: lightgrey; min-width: 640px; width: 640px; margin: auto">
-		<center>
-			<h1>Nibbles</h1>
-			<h3>Score: <span id="score-disp"></span></h3>
-			<canvas id="display" class="center-block" width="600" height="450"  style="background-color:black"></canvas>
-			<br><br>
-			<table>
-				<tr>
-					<td style="padding:0px 50px;">
-						<button onclick="new_game()">New Game</button>
-					</td>
-					<td style="padding:0px 50px;">
-						<table>
-							<tr>
-								<td></td>
-								<td><button onclick="change_direction(BOARD_UP)">&uarr;</button></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td><button onclick="change_direction(BOARD_LEFT)">&larr;</button></td>
-								<td></td>
-								<td><button onclick="change_direction(BOARD_RIGHT)">&rarr;</button></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><button onclick="change_direction(BOARD_DOWN)">&darr;</button></td>
-								<td></td>
-							</tr>
-						</table>
-					</td>
-					<td style="padding:0px 50px;">
-						<p style="display: inline-block;">Delay:</p>
-						<input type="range" min="50" max="1000" value="200" class="slider" id="delay">
-					</td>
-				</tr>
-			</table>
-			<br>
-			<p>Move the snake with your keyboard arrow keys or the buttons above. Eat apples but be sure not to bite the walls or yourself!</p>
-			<br>
-			<p style="margin-top:40px;">
-				&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
-			</p>
-		</center>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<h1 class="text-center">Nibbles</h1>
+					<h3>Score: <span id="score-disp"></span></h3>
+					<canvas id="display" class="center-block" width="600" height="450"></canvas>
+					<div>
+						<div class="row">
+							<div class="col-xs-3 text-center">
+								<button class="btn btn-default" onclick="new_game()">New Game</button>
+							</div>
+							<div class="col-xs-4">
+								<center>
+									<table>
+										<tr>
+											<td></td>
+											<td><button class="btn btn-default" onclick="change_direction(BOARD_UP)">&uarr;</button></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td><button class="btn btn-default" onclick="change_direction(BOARD_LEFT)">&larr;</button></td>
+											<td></td>
+											<td><button class="btn btn-default" onclick="change_direction(BOARD_RIGHT)">&rarr;</button></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td><button class="btn btn-default" onclick="change_direction(BOARD_DOWN)">&darr;</button></td>
+											<td></td>
+										</tr>
+									</table>
+								</center>
+							</div>
+							<div class="col-xs-5">
+								<label for="delay">Delay:</label>
+								<input type="range" min="50" max="1000" value="200" class="slider" id="delay">
+							</div>
+						</div>
+					</div>
+					<br>
+					<p>Move the snake with your keyboard arrow keys or the buttons above. Eat apples but be sure not to bite the walls or yourself!</p>
+					<br>
+					<p style="margin-top:40px;" class="text-center">
+						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-2"></div>
+			</div>
+		</div>
 		<script src="engine.js"></script>
 	</body>
 </html>
