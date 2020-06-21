@@ -109,8 +109,8 @@ function game_step() {
     if (!game_over) {
         // get the square number that was clicked
         var rect = canvas.getBoundingClientRect();
-        var user_x = event.clientX - rect.left;
-        var user_y = event.clientY - rect.top;
+				var user_x = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+				var user_y = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
 				var row = Math.floor(user_y / SQUARE_SIZE);
 				var col = Math.floor(user_x / SQUARE_SIZE);
         var square_num = row * NUM_COLS + col;

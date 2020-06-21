@@ -397,8 +397,8 @@ function register_click() {
   }
   if (current_player == USER && !moving) {
     var rect = canvas.getBoundingClientRect();
-    var user_x = event.clientX - rect.left;
-    var user_y = event.clientY - rect.top;
+		var user_x = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+		var user_y = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
 
     if (current_player == USER && scores[USER] < 100 && scores[COMPUTER] < 100) {
       if (user_x >= WIDTH - roll_img.width - 300 && user_x <= WIDTH - 300 && user_y > HEIGHT - roll_img.height - 15 && user_y < user_y < HEIGHT - 15) {
