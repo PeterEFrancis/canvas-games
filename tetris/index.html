@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Play Tetris</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<style>
+
+			html {
+				min-width: 266px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+
+			canvas {
+				width: 100%;
+				background-color:black;
+				margin: 20px;
+			}
+
+			.row > .col-xs-4 {
+				padding-bottom: 30px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-6">
+					<h1 class="text-center" style="margin-bottom:20px;">Tetris</h1>
+					<canvas id="display" class="center-block" width="700" height="780"></canvas>
+					<div class="row">
+						<div class="col-xs-4 text-center">
+							<div class="btn-group">
+								<button class="btn btn-default btn-lg" onclick="shift(LEFT)"><span class="glyphicon glyphicon-arrow-left"></span></button>
+								<button class="btn btn-default btn-lg" onclick="shift(RIGHT)"><span class="glyphicon glyphicon-arrow-right"></span></button>
+							</div>
+						</div>
+						<div class="col-xs-4 text-center">
+							<button class="btn btn-default btn-lg" onclick="rotate()"><i class="fa fa-rotate-right"></i></button>
+						</div>
+						<div class="col-xs-4 text-center">
+							<button class="btn btn-default btn-lg" onclick="drop()"><span class="glyphicon glyphicon-arrow-down"</button>
+						</div>
+					</div>
+					<div class="row text-center">
+						<button class="btn btn-default btn-lg" onclick="new_game()">New Game</button>
+					</div>
+					<p class="text-center" style="margin-top:40px;">
+						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-3">
+					<div id="test" style="font-family: monospace;"></div>
+				</div>
+			</div>
+
+		<script src="engine.js"></script>
+		<script>
+			document.addEventListener('keydown', function(e) {
+				if (e.keyCode == 40) {
+					drop();
+					e.preventDefault();
+				} else if (e.keyCode == 37) {
+					shift(LEFT);
+					e.preventDefault();
+				} else if (e.keyCode == 39) {
+					shift(RIGHT);
+					e.preventDefault();
+				} else if (e.keyCode == 38) {
+					rotate();
+					e.preventDefault();
+				}
+			})
+		</script>
+	</body>
+</html>
