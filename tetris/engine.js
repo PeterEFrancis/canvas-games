@@ -38,7 +38,7 @@ const LEFT = -1;
 
 // this is painful to look at ... the zero marks the pre-plotting offset
 const PIECES = [[],
-                [[UP, 2*UP, RIGHT, 0],         [2*LEFT, LEFT, 0, UP],      [LEFT, 0, DOWN, DOWN*2],  [DOWN, RIGHT, 2*RIGHT, 0]  ],   // L
+                [[UP, 2*UP, RIGHT, 0],         [DOWN, RIGHT, 2*RIGHT, 0],  [LEFT, 0, DOWN, DOWN*2],  [2*LEFT, LEFT, 0, UP],     ],   // L
                 [[LEFT, UP, 2*UP, 0],          [UP, RIGHT, 2*RIGHT, 0],    [RIGHT, 0, DOWN, 2*DOWN], [2*LEFT, LEFT, 0, DOWN]    ],   // BACK_L
                 [[RIGHT, RIGHT+DOWN, 0, DOWN], [LEFT, DOWN, 0, DOWN+LEFT], [LEFT+UP, UP, LEFT, 0],   [UP, UP+RIGHT, RIGHT, 0]   ],   // SQUARE
                 [[UP, 2*UP, 0, DOWN],          [LEFT, RIGHT, 2*RIGHT, 0],  [UP, 0, DOWN, 2*DOWN],    [2*LEFT, LEFT, RIGHT, 0]   ],   // LINE
