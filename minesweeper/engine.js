@@ -14,6 +14,8 @@ const MINE = 2;
 const BLANK_FLAG = -3
 const MINE_FLAG = -4;
 
+const MODE_FLAG = 1;
+const MODE_CLICK = 0;
 
 function is_blank(square_id) {
 	return Math.abs(board[square_id]) == BLANK;
@@ -61,6 +63,24 @@ function change_num_squares(amount) {
 		new_game();
 	}
 }
+
+
+function toggle_mode() {
+	var btn = document.getElementById('mode');
+	if (mode == MODE_FLAG) {
+		mode = MODE_CLICK;
+		btn.children[0].style.color = "red";
+		btn.style.backgroundColor = "white";
+	} else {
+		mode = MODE_FLAG;
+		btn.children[0].style.color = "white";
+		btn.style.backgroundColor = "red";
+
+	}
+
+
+}
+
 
 
 function get_neighbors(square_id) {
@@ -111,6 +131,9 @@ function uncover_empty_squares(square_id) {
 
 
 function is_game_over() {
+	if (clicked_mine != -1) {
+		return true;
+	}
 	var num_mines = 0;
 	var num_covered = 0
 	for (var i = 0; i < num_squares * num_squares; i++) {
@@ -181,7 +204,7 @@ function handle_click(square_id) {
 
 
 function handle_right_click(square_id) {
-	if (!is_uncovered(square_id)) {
+	if (!is_uncovered(square_id) && !is_game_over()) {
 		if (is_flagged(square_id)) {
 			un_flag(square_id);
 		} else {
@@ -196,7 +219,11 @@ function handle_right_click(square_id) {
 
 
 canvas.addEventListener('click', function(e) {
-	handle_click(get_square_id(e));
+	if (mode == MODE_FLAG) {
+		handle_right_click(get_square_id(e));
+	} else {
+		handle_click(get_square_id(e));
+	}
 });
 
 
@@ -239,7 +266,14 @@ function new_game() {
 			board[mines[i]] = -MINE;
 	}
 
+	// reset alert
 	document.getElementById('alert').innerHTML = "";
+
+	// reset mode
+	var btn = document.getElementById('mode');
+	mode = MODE_CLICK;
+	btn.style.color = "red";
+	btn.style.backgroundColor = "white";
 
 	update_display();
 
@@ -322,9 +356,9 @@ function update_display() {
 		document.getElementById('flags-left').innerHTML = num_flags_left;
 
 		// add admin text
-		ctx.fillStyle = "black";
-    ctx.font = (square_size * 0.15) + "pt arial";
-    ctx.fillText(board[i], (i % num_squares) * square_size + 5, (Math.floor(i / num_squares) + 1) * square_size - 5);
+		// ctx.fillStyle = "black";
+    // ctx.font = (square_size * 0.15) + "pt arial";
+    // ctx.fillText(board[i], (i % num_squares) * square_size + 5, (Math.floor(i / num_squares) + 1) * square_size - 5);
 	}
 
 	// add the grid lines
