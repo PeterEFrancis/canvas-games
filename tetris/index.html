@@ -11,7 +11,7 @@
 		<style>
 
 			html {
-				min-width: 225px;
+				min-width: 260px;
 			}
 
 			body {
@@ -41,23 +41,39 @@
 					<div class="row">
 						<div class="col-xs-6 text-center">
 							<div class="btn-group" style="width: 100%">
-								<button class="btn btn-default btn-lg" onclick="shift(LEFT)" style="width:50%">
+								<button class="btn btn-default btn-lg" onclick="shift(LEFT)" style="width:50%" id="left" disabled>
 									<span class="glyphicon glyphicon-arrow-left"></span>
 								</button>
-								<button class="btn btn-default btn-lg" onclick="shift(RIGHT)" style="width:50%">
+								<button class="btn btn-default btn-lg" onclick="shift(RIGHT)" style="width:50%" id="right" disabled>
 									<span class="glyphicon glyphicon-arrow-right"></span>
 								</button>
 							</div>
 						</div>
 						<div class="col-xs-3 text-center">
-							<button class="btn btn-default btn-lg btn-block" onclick="rotate()"><i class="fa fa-rotate-right"></i></button>
+							<button class="btn btn-default btn-lg btn-block" onclick="rotate()" id="rotate" disabled>
+								<i class="fa fa-rotate-right"></i>
+							</button>
 						</div>
 						<div class="col-xs-3 text-center">
-							<button class="btn btn-default btn-lg btn-block" onclick="drop()"><span class="glyphicon glyphicon-arrow-down"</button>
+							<button class="btn btn-default btn-lg btn-block" onclick="drop()" id="drop" disabled>
+								<span class="glyphicon glyphicon-arrow-down"></span>
+							</button>
 						</div>
 					</div>
 					<div class="row text-center">
-						<button class="btn btn-default btn-lg" onclick="new_game()">New Game</button>
+						<div class="col-xs-6 text-center">
+							<button class="btn btn-default btn-lg btn-block" onclick="new_game()">New Game</button>
+						</div>
+						<div class="col-xs-6 text-center">
+							<div class="btn-group" style="width: 100%">
+								<button class="btn btn-default btn-lg" onclick="play()" style="width:50%" id="play" disabled>
+									<span class="glyphicon glyphicon-play"></span>
+								</button>
+								<button class="btn btn-default btn-lg" onclick="pause()" style="width:50%" id="pause" disabled>
+									<span class="glyphicon glyphicon-pause"></span>
+								</button>
+							</div>
+						</div>
 					</div>
 					<p class="text-center" style="margin-top:40px;">
 						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
@@ -70,19 +86,29 @@
 
 		<script src="engine.js"></script>
 		<script>
+			var playing = true;
+
 			document.addEventListener('keydown', function(e) {
 				if (e.keyCode == 40) {
-					drop();
+					document.getElementById('drop').click();
 					e.preventDefault();
 				} else if (e.keyCode == 37) {
-					shift(LEFT);
+					document.getElementById('left').click();
 					e.preventDefault();
 				} else if (e.keyCode == 39) {
-					shift(RIGHT);
+					document.getElementById('right').click();
 					e.preventDefault();
 				} else if (e.keyCode == 38) {
-					rotate();
+					document.getElementById('rotate').click();
 					e.preventDefault();
+				} else if (e.keyCode == 80) {
+					if (playing) {
+						document.getElementById('pause').click();
+						playing = false;
+					} else {
+						document.getElementById('play').click();
+						playing = true;
+					}
 				}
 			})
 

@@ -96,7 +96,6 @@ var game_over;
 
 
 
-
 best = 0;
 
 border();
@@ -127,17 +126,18 @@ function are_on_same_row(loc1, loc2) {
 }
 
 function are_on_same_side(loc1, loc2) {
-	var left_1 = (loc1 % NUM_SQUARES_X) < 4;
-	var left_2 = (loc2 % NUM_SQUARES_X) < 4;
-	var right_1 = (loc1 % NUM_SQUARES_X) > 5;
-	var right_2 = (loc2 % NUM_SQUARES_X) > 5;
-	if (left_1 && right_2) {
-		return false;
-	}
-	if (right_1 && left_2) {
-		return false;
-	}
-	return true;
+	return Math.abs((loc1 % NUM_SQUARES_X) - (loc2 % NUM_SQUARES_X)) <= 3;
+	// var left_1 = (loc1 % NUM_SQUARES_X) < 4;
+	// var left_2 = (loc2 % NUM_SQUARES_X) < 4;
+	// var right_1 = (loc1 % NUM_SQUARES_X) > 5;
+	// var right_2 = (loc2 % NUM_SQUARES_X) > 5;
+	// if (left_1 && right_2) {
+	// 	return false;
+	// }
+	// if (right_1 && left_2) {
+	// 	return false;
+	// }
+	// return true;
 }
 
 
@@ -319,8 +319,7 @@ function start_next_piece() {
 	current_piece_rotation = next_piece[1];
 
 	var plots = PIECES[current_piece_shape][current_piece_rotation];
-	console.log(plots.indexOf(0));
-	current_piece_lead_loc = Math.floor(Math.random() * (NUM_SQUARES_X - 4)) + 2 + NUM_SQUARES_X * plots.indexOf(0);
+	current_piece_lead_loc = NUM_SQUARES_X * plots.indexOf(0) + Math.floor(Math.random() * (NUM_SQUARES_X - 4)) + 2
 	for (var i = 0; i < 4; i++) {
 		grid[current_piece_lead_loc + plots[i]] = -current_piece_shape;
 	}
@@ -361,12 +360,34 @@ function new_game() {
 	start_next_piece();
 
 	// start drop loop
-	clearInterval(dropID);
-	dropID = setInterval(drop, 1000);
+	play();
 
 	// start update loop
 	clearInterval(updateID);
 	updateID = setInterval(update, 10);
+
+}
+
+
+function play() {
+	document.getElementById('right').disabled = false;
+	document.getElementById('left').disabled = false;
+	document.getElementById('rotate').disabled = false;
+	document.getElementById('drop').disabled = false;
+	document.getElementById('pause').disabled = false;
+	document.getElementById('play').disabled = true;
+	clearInterval(dropID);
+	dropID = setInterval(drop, 1000);
+}
+
+function pause() {
+	document.getElementById('right').disabled = true;
+	document.getElementById('left').disabled = true;
+	document.getElementById('rotate').disabled = true;
+	document.getElementById('drop').disabled = true;
+	document.getElementById('pause').disabled = true;
+	document.getElementById('play').disabled = false;
+	clearInterval(dropID);
 }
 
 
@@ -400,6 +421,7 @@ function report() {
 
 
 function update() {
+
 	// clear display
 	ctx.clearRect(0,0,canvas.width, canvas.height);
 
