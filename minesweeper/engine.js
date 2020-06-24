@@ -156,7 +156,7 @@ function is_game_over() {
 function end_game(won) {
 	if (won) {
 		for (var i = 0; i < num_squares * num_squares; i++) {
-			if (!is_uncovered(i)) {
+			if (!is_uncovered(i) && !is_flagged(i)) {
 				flag(i);
 			}
 		}
