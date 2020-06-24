@@ -494,3 +494,48 @@ function update() {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+var audio = new Audio('theme.mp3');
+audio.volume = 0.5;
+
+audio.addEventListener('ended', function() {
+		this.currentTime = 0;
+		this.play();
+}, false);
+audio.addEventListener('pause', function() {
+	off_button();
+});
+audio.addEventListener('play', function() {
+	on_button();
+});
+
+
+function off_button() {
+	document.getElementById('audio-btn').innerHTML = "<span class='	glyphicon glyphicon-volume-off'></span>";
+}
+
+function on_button() {
+	document.getElementById('audio-btn').innerHTML = "<span class='	glyphicon glyphicon-volume-up'></span>";
+}
+
+
+function toggle_music() {
+	if (audio.paused) {
+		audio.play();
+		on_button();
+	} else {
+		audio.pause();
+		off_button();
+	}
+}
