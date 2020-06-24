@@ -30,18 +30,23 @@ var floods;
 
 function flood(color) {
 	floods += 1;
+	var already_checked = [];
 	var same_color = [];
 	var stack = [0];
 	while (stack.length > 0) {
 		var p = stack.pop();
-		same_color.push(p);
-		if (Math.floor(p / NUM_SQUARES) + 1 < NUM_SQUARES && grid[p + NUM_SQUARES] == grid[0]) {
-			stack.push(p + NUM_SQUARES);
-		}
-		if ((p % NUM_SQUARES) < NUM_SQUARES - 1 && grid[p + 1] == grid[0]) {
-			stack.push(p + 1);
+		if (!already_checked.includes(p)) {
+			already_checked.push(p);
+			same_color.push(p);
+			if (Math.floor(p / NUM_SQUARES) + 1 < NUM_SQUARES && grid[p + NUM_SQUARES] == grid[0]) {
+				stack.push(p + NUM_SQUARES);
+			}
+			if ((p % NUM_SQUARES) < NUM_SQUARES - 1 && grid[p + 1] == grid[0]) {
+				stack.push(p + 1);
+			}
 		}
 	}
+	console.log(same_color.sort());
 
 	for (var i = 0; i < same_color.length; i++) {
 		grid[same_color[i]] = color;
