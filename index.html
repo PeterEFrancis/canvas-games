@@ -10,9 +10,46 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>Canvas Games</title>
     <link rel="shortcut icon" href="favicon.png">
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <script>
-    </script>
+    <style>
+
+			.disp {
+				width: 100%;
+				border: 5px solid black;
+				transition: .25s;
+				transition-delay: 5s;
+			}
+
+			.game-title {
+				position: absolute;
+				color: white;
+				top: -100px;
+				left: 20px;
+				padding: 20px;
+				z-index: -10;
+				opacity: 0;
+				transition: .25s;
+				transition-delay: 5s;
+			}
+
+			.disp:hover, .game-title:hover + .disp {
+				transition: .25s;
+				transition-timing-function: ease-in-out;
+				opacity: 0.95;
+				filter: brightness(25%);
+			}
+
+			.disp:hover + .game-title {
+				opacity: 1;
+				top: 0px;
+				z-index: 9;
+				transition: 0.25s;
+			}
+
+			.row {
+				margin-bottom: 40px;
+			}
+
+    </style>
   </head>
   <body style="min-width:330px;">
     <div class="jumbotron text-center">
@@ -20,145 +57,95 @@
     </div>
 
     <div class="container">
-      <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8">
 
-          <h3>Traffic Lights</h3>
-          <div class="row"  style="margin-top:20px; margin-bottom:20px">
-            <div class="col-md-6">
-              <p>In traffic lights, opponents alternate clicking squares on an m x n board and by doing so, progress squares forward (empty, green, yellow, red).
-                The board begins empty and once a square is red, it cannot be changed. The players race to make a row, column, or diagonal of three consecutive squares of the same color.</p>
-            </div>
-            <div class="col-md-6 text-right">
-              <button class="btn btn-primary btn-lg" onclick="window.open('traffic-lights')">Play Traffic Lights</button>
-            </div>
-          </div>
+			<div class="row">
+				<div class="col-sm-3">
+					<a href="traffic-lights">
+						<img class="disp" src="img/traffic-lights.png"/>
+						<h2 class="game-title">Traffic Lights</h2>
+					</a>
+				</div>
+				<div class="col-sm-3">
+					<a href="tictactoe">
+						<img class="disp" src="img/tictactoe.png"/>
+						<h2 class="game-title">Tic Tac Toe</h2>
+					</a>
+				</div>
+				<div class="col-sm-3">
+					<a href="https://sedar.io">
+						<img class="disp" src="img/sedario.png"/>
+						<h2 class="game-title">Sedario</h2>
+					</a>
+				</div>
+				<div class="col-sm-3">
+					<a href="pig">
+						<img class="disp" src="img/pig.png"/>
+						<h2 class="game-title">Pig</h2>
+					</a>
+				</div>
+			</div>
 
+			<div class="row">
+				<div class="col-sm-3">
+					<a href="chomp">
+						<img class="disp" src="img/chomp.png"/>
+						<h2 class="game-title">Chomp</h2>
+					</a>
+				</div>
+				<div class="col-sm-3">
+					<a href="birds-of-a-feather">
+						<img class="disp" src="img/birds-of-a-feather.png"/>
+						<h2 class="game-title">Birds of a Feather</h2>
+					</a>
+				</div>
+				<div class="col-sm-3">
+					<a href="lights-out">
+						<img class="disp" src="img/lights-out.png"/>
+						<h2 class="game-title">Lights Out</h2>
+					</a>
+				</div>
+				<div class="col-sm-3">
+					<a href="nibbles">
+						<img class="disp" src="img/nibbles.png"/>
+						<h2 class="game-title">Nibbles</h2>
+					</a>
+				</div>
+			</div>
 
-          <br>
-          <h3>Tic Tac Toe</h3>
-          <div class="row"  style="margin-top:20px; margin-bottom:20px">
-            <div class="col-md-6">
-              <p>The classic paper and pencil game.</p>
-            </div>
-            <div class="col-md-6 text-right">
-              <button class="btn btn-primary btn-lg" onclick="window.open('tictactoe')">Play Tic Tac Toe</button>
-            </div>
-          </div>
+			<div class="row">
+				<div class="col-sm-3">
+					<a href="tetris">
+						<img class="disp" src="img/tetris.png"/>
+						<h2 class="game-title">Tetris</h2>
+					</a>
+				</div>
+				<div class="col-sm-3">
+					<a href="minesweeper">
+						<img class="disp" src="img/minesweeper.png"/>
+						<h2 class="game-title">Minesweeper</h2>
+					</a>
+				</div>
+				<div class="col-sm-3">
+					<a href="flood-it">
+						<img class="disp" src="img/flood-it.png"/>
+						<h2 class="game-title">Flood It</h2>
+					</a>
+				</div>
 
-
-          <br>
-          <h3>Sedario</h3>
-          <div class="row"  style="margin-top:20px; margin-bottom:20px">
-            <div class="col-md-6">
-              <p>A fun and simple two player strategy game played on a checker board.</p>
-            </div>
-            <div class="col-md-6 text-right">
-              <button class="btn btn-primary btn-lg" onclick="window.open('https://sedar.io')">Play Sedario</button>
-            </div>
-          </div>
-
-          <br>
-          <h3>Pig</h3>
-          <div class="row"  style="margin-top:20px; margin-bottom:20px">
-            <div class="col-md-6">
-              <p>A two player jeopardy dice game.</p>
-            </div>
-            <div class="col-md-6 text-right">
-              <button class="btn btn-primary btn-lg" onclick="window.open('pig')">Play Pig</button>
-            </div>
-          </div>
-
-					<br>
-          <h3>Chomp</h3>
-          <div class="row"  style="margin-top:20px; margin-bottom:20px">
-            <div class="col-md-6">
-              <p>A delicous cookie-based nim game.</p>
-            </div>
-            <div class="col-md-6 text-right">
-              <button class="btn btn-primary btn-lg" onclick="window.open('chomp')">Play Chomp</button>
-            </div>
-          </div>
-
-					<br>
-          <h3>Birds of a Feather</h3>
-          <div class="row"  style="margin-top:20px; margin-bottom:20px">
-            <div class="col-md-6">
-              <p>A Solitaire card game invented by <a href="http://cs.gettysburg.edu/~tneller/" target="_blank"><u>Todd W. Neller</u></a></p>
-            </div>
-            <div class="col-md-6 text-right">
-              <button class="btn btn-primary btn-lg" onclick="window.open('birds-of-a-feather')">Play Birds of a Feather</button>
-            </div>
-          </div>
-
-					<br>
-					<h3>Lights Out</h3>
-					<div class="row"  style="margin-top:20px; margin-bottom:20px">
-						<div class="col-md-6">
-							<p>A puzzle with cellular automaton.</p>
-						</div>
-						<div class="col-md-6 text-right">
-							<button class="btn btn-primary btn-lg" onclick="window.open('lights-out')">Play Lights Out</button>
-						</div>
-					</div>
-
-					<br>
-					<h3>Nibbles</h3>
-					<div class="row"  style="margin-top:20px; margin-bottom:20px">
-						<div class="col-md-6">
-							<p>Make the snake collect the apples but watch out not to bite yourself or the walls!</p>
-						</div>
-						<div class="col-md-6 text-right">
-							<button class="btn btn-primary btn-lg" onclick="window.open('nibbles')">Play Nibbles</button>
-						</div>
-					</div>
+			</div>
 
 
-          <br>
-          <h3>Tetris</h3>
-          <div class="row"  style="margin-top:20px; margin-bottom:20px">
-            <div class="col-md-6">
-              <p>The calssic game: orient the tetrominoes as they fall, and make complete rows disapear.</p>
-            </div>
-            <div class="col-md-6 text-right">
-              <button class="btn btn-primary btn-lg" onclick="window.open('tetris')">Play Tetris</button>
-            </div>
-          </div>
-
-
-					<br>
-          <h3>Minesweeper</h3>
-          <div class="row"  style="margin-top:20px; margin-bottom:20px">
-            <div class="col-md-6">
-              <p>Flag the mines and clear the board!</p>
-            </div>
-            <div class="col-md-6 text-right">
-              <button class="btn btn-primary btn-lg" onclick="window.open('minesweeper')">Play Minesweeper</button>
-            </div>
-          </div>
-
-
-					<br>
-          <h3>Flood it</h3>
-          <div class="row"  style="margin-top:20px; margin-bottom:20px">
-            <div class="col-md-6">
-              <p>Flood the board with one color as fast as you can!</p>
-            </div>
-            <div class="col-md-6 text-right">
-              <button class="btn btn-primary btn-lg" onclick="window.open('flood-it')">Play Flood It</button>
-            </div>
-          </div>
-
-
-
-					<br><br><br>
-
-
-
-        </div>
-        <div class="col-sm-2"></div>
-      </div>
+			<div class="row" style="margin-top: 150px; margin-bottom: 150px;">
+				<div class="col-sm-5"></div>
+				<div class="col-sm-2">
+					<a href="https://peterefrancis.com"><img src="img/logo.png" style="width: 100%"/></a>
+					<p style="margin-top:40px;" class="text-center">
+						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-sm-5"></div>
+			</div>
     </div>
+
   </body>
 </html>
