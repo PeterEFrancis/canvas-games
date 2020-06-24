@@ -18,12 +18,8 @@ const PURPLE = 5;
 
 
 
-
-
-
-
-var grid;
-var floods;
+var grid  = [];
+var floods = 0;
 
 
 
@@ -46,7 +42,6 @@ function flood(color) {
 			}
 		}
 	}
-	console.log(same_color.sort());
 
 	for (var i = 0; i < same_color.length; i++) {
 		grid[same_color[i]] = color;
@@ -60,9 +55,6 @@ function flood(color) {
 function new_game() {
 	// reset floods
 	floods = 0;
-
-	// clear grid
-	grid = [];
 
 	// set grid randomly
 	for (var i = 0; i < NUM_SQUARES * NUM_SQUARES; i++) {
@@ -78,9 +70,6 @@ function new_game() {
 
 
 function update() {
-
-	// clear display
-	ctx.clearRect(0,0,canvas.width, canvas.height);
 
 	// floods
 	document.getElementById('floods').innerHTML = floods;
