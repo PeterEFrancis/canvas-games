@@ -8,6 +8,7 @@ const ctx = canvas.getContext("2d");
 const SIZE = canvas.height;
 const LINE_WIDTH = 2; // works best if this is even
 
+MINE_PERCENTAGE = 0.25;
 
 const BLANK = 1;
 const MINE = 2;
@@ -254,7 +255,7 @@ function new_game() {
 	}
 
 	// reset num flags left
-	num_flags_left = Math.ceil(num_squares * num_squares * 0.1);
+	num_flags_left = Math.ceil(num_squares * num_squares * MINE_PERCENTAGE);
 
 	// place mines
 	var mines = [];
