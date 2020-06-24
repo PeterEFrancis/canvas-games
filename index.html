@@ -12,7 +12,7 @@
     <link rel="shortcut icon" href="favicon.png">
     <style>
 
-			.disp {
+			/* .disp {
 				width: 100%;
 				border: 5px solid black;
 				transition: .25s;
@@ -43,12 +43,52 @@
 				top: 0px;
 				z-index: 9;
 				transition: 0.25s;
+			} */
+
+			.disp {
+				width: 100%;
+				border: 5px solid black;
+
+				transition-delay: .1s;
+				transition: .25s;
 			}
+
+			.game-title {
+				position: absolute;
+				color: white;
+				top: -100px;
+				left: 20px;
+				padding: 20px;
+				z-index: -10;
+				opacity: 0;
+
+				transition-delay: .1s;
+				transition: .25s;
+			}
+
+
+			.wrap:hover .disp {
+				opacity: 0.95;
+				filter: brightness(25%);
+
+				transition-delay: .1s;
+				transition: .25s;
+			}
+
+			.wrap:hover .game-title {
+				opacity: 1;
+				top: 0px;
+				z-index: 9;
+
+				transition-delay: .1s;
+				transition: .25s;
+			}
+
+
 
 			.col-sm-3 {
 				margin-bottom: 40px;
 			}
-
 
 
     </style>
@@ -62,76 +102,98 @@
 
 			<div class="row">
 				<div class="col-sm-3">
-					<a href="traffic-lights">
-						<img class="disp" src="img/traffic-lights.png"/>
-						<h2 class="game-title">Traffic Lights</h2>
-					</a>
+					<div class="wrap">
+						<a href="traffic-lights">
+							<img class="disp" src="img/traffic-lights.png"/>
+							<h2 class="game-title">Traffic Lights</h2>
+						</a>
+					</div>
 				</div>
 				<div class="col-sm-3">
-					<a href="tictactoe">
-						<img class="disp" src="img/tictactoe.png"/>
-						<h2 class="game-title">Tic Tac Toe</h2>
-					</a>
+					<div class="wrap">
+						<a href="tictactoe">
+							<img class="disp" src="img/tictactoe.png"/>
+							<h2 class="game-title">Tic Tac Toe</h2>
+						</a>
+					</div>
 				</div>
 				<div class="col-sm-3">
-					<a href="https://sedar.io">
-						<img class="disp" src="img/sedario.png"/>
-						<h2 class="game-title">Sedario</h2>
-					</a>
+					<div class="wrap">
+						<a href="https://sedar.io">
+							<img class="disp" src="img/sedario.png"/>
+							<h2 class="game-title">Sedario</h2>
+						</a>
+					</div>
 				</div>
 				<div class="col-sm-3">
-					<a href="pig">
-						<img class="disp" src="img/pig.png"/>
-						<h2 class="game-title">Pig</h2>
-					</a>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-sm-3">
-					<a href="chomp">
-						<img class="disp" src="img/chomp.png"/>
-						<h2 class="game-title">Chomp</h2>
-					</a>
-				</div>
-				<div class="col-sm-3">
-					<a href="birds-of-a-feather">
-						<img class="disp" src="img/birds-of-a-feather.png"/>
-						<h2 class="game-title">Birds of a Feather</h2>
-					</a>
-				</div>
-				<div class="col-sm-3">
-					<a href="lights-out">
-						<img class="disp" src="img/lights-out.png"/>
-						<h2 class="game-title">Lights Out</h2>
-					</a>
-				</div>
-				<div class="col-sm-3">
-					<a href="nibbles">
-						<img class="disp" src="img/nibbles.png"/>
-						<h2 class="game-title">Nibbles</h2>
-					</a>
+					<div class="wrap">
+						<a href="pig">
+							<img class="disp" src="img/pig.png"/>
+							<h2 class="game-title">Pig</h2>
+						</a>
+					</div>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-sm-3">
-					<a href="tetris">
-						<img class="disp" src="img/tetris.png"/>
-						<h2 class="game-title">Tetris</h2>
-					</a>
+					<div class="wrap">
+						<a href="chomp">
+							<img class="disp" src="img/chomp.png"/>
+							<h2 class="game-title">Chomp</h2>
+						</a>
+					</div>
 				</div>
 				<div class="col-sm-3">
-					<a href="minesweeper">
-						<img class="disp" src="img/minesweeper.png"/>
-						<h2 class="game-title">Minesweeper</h2>
-					</a>
+					<div class="wrap">
+						<a href="birds-of-a-feather">
+							<img class="disp" src="img/birds-of-a-feather.png"/>
+							<h2 class="game-title">Birds of a Feather</h2>
+						</a>
+					</div>
 				</div>
 				<div class="col-sm-3">
-					<a href="flood-it">
-						<img class="disp" src="img/flood-it.png"/>
-						<h2 class="game-title">Flood It</h2>
-					</a>
+					<div class="wrap">
+						<a href="lights-out">
+							<img class="disp" src="img/lights-out.png"/>
+							<h2 class="game-title">Lights Out</h2>
+						</a>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="wrap">
+						<a href="nibbles">
+							<img class="disp" src="img/nibbles.png"/>
+							<h2 class="game-title">Nibbles</h2>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="wrap">
+						<a href="tetris">
+							<img class="disp" src="img/tetris.png"/>
+							<h2 class="game-title">Tetris</h2>
+						</a>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="wrap">
+						<a href="minesweeper">
+							<img class="disp" src="img/minesweeper.png"/>
+							<h2 class="game-title">Minesweeper</h2>
+						</a>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="wrap">
+						<a href="flood-it">
+							<img class="disp" src="img/flood-it.png"/>
+							<h2 class="game-title">Flood It</h2>
+						</a>
+					</div>
 				</div>
 
 			</div>
@@ -140,6 +202,7 @@
 			<div class="row" style="margin-top: 150px; margin-bottom: 150px;">
 				<div class="col-sm-5"></div>
 				<div class="col-sm-2">
+					<div class="wrap">
 					<a href="https://peterefrancis.com"><img src="img/logo.png" style="width: 100%"/></a>
 					<p style="margin-top:40px;" class="text-center">
 						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank"><u>Peter E. Francis</u></a>
