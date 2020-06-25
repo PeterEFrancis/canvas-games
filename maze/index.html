@@ -27,6 +27,11 @@
 				padding: 0px 5px;
 				margin-bottom: 10px;
 			}
+			@media print {
+				#control {
+					display: none;
+				}
+			}
 		</style>
 	</head>
 	<body>
@@ -36,7 +41,7 @@
 				<div class="col-md-8">
 					<h1 class="text-center">Maze</h1>
 					<canvas id="display" class="center-block" width="1000" height="1000"></canvas>
-					<div class="row">
+					<div class="row" id="control">
 						<div class="col-sm-3">
 							<button class="btn btn-default btn-lg btn-block" onclick="generate()">Regenerate</button>
 						</div>
