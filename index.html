@@ -45,9 +45,14 @@
 				transition: 0.25s;
 			} */
 
+			.wrap {
+				overflow: hidden;
+				border: 5px solid black;
+			}
+
 			.disp {
 				width: 100%;
-				border: 5px solid black;
+				overflow: hidden;
 
 				transition-delay: .1s;
 				transition: .25s;
@@ -70,6 +75,7 @@
 			.wrap:hover .disp {
 				opacity: 0.95;
 				filter: brightness(25%);
+				transform: scale(1.15);
 
 				transition-delay: .1s;
 				transition: .25s;
@@ -202,7 +208,6 @@
 			<div class="row" style="margin-top: 150px; margin-bottom: 150px;">
 				<div class="col-sm-4"></div>
 				<div class="col-sm-4">
-					<div class="wrap">
 					<a href="https://peterefrancis.com">
 						<img src="img/logo.png" style="width: 50%;" class="center-block"/>
 					</a>
