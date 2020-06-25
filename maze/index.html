@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Play a Maze</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<style>
+			html {
+				min-width: 140px;
+			}
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				background-color: white;
+				width: 100%;
+				margin-bottom: 20px;
+			}
+			p {
+				font-size: 12pt;
+			}
+			.col-sm-3 {
+				padding: 0px 5px;
+				margin-bottom: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<h1 class="text-center">Maze</h1>
+					<canvas id="display" class="center-block" width="1000" height="1000"></canvas>
+					<div class="row">
+						<div class="col-sm-3">
+							<button class="btn btn-default btn-lg btn-block" onclick="generate()">Regenerate</button>
+						</div>
+						<div class="col-sm-3">
+							<button class="btn btn-default btn-lg btn-block" onclick="solve()">Solve</button>
+						</div>
+						<div class="col-sm-3 text-center" style="font-size: 20px;">
+							R:
+							<div class="btn-group" style="width:80%">
+								<button class="btn btn-default btn-lg" onclick="change_rows(-1)" style="width:50%">
+									<span class="glyphicon glyphicon-minus"></span>
+								</button>
+								<button class="btn btn-default btn-lg" onclick="change_rows(1)" style="width:50%">
+									<span class="glyphicon glyphicon-plus"></span>
+								</button>
+							</div>
+						</div>
+						<div class="col-sm-3 text-center" style="font-size: 20px;">
+							C:
+							<div class="btn-group" style="width:80%">
+								<button class="btn btn-default btn-lg" onclick="change_cols(-1)" style="width:50%">
+									<span class="glyphicon glyphicon-minus"></span>
+								</button>
+								<button class="btn btn-default btn-lg" onclick="change_cols(1)" style="width:50%">
+									<span class="glyphicon glyphicon-plus"></span>
+								</button>
+							</div>
+						</div>
+					</div>
+					<p style="margin-top:40px;" class="text-center">
+						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-2" id="test" style="font-family: monospace;"></div>
+			</div>
+		</div>
+		<script src="engine.js"></script>
+	</body>
+</html>
