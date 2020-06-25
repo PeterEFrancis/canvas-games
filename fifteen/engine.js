@@ -129,8 +129,8 @@ function update_display() {
 			var y = Math.floor(i / num_squares) * square_size;
 			roundRect(ctx, x + 5, y + 5, square_size - 10, square_size - 10, square_size * 0.2, true, false)
 			ctx.fillStyle = "rgb(220,220,220)";
-			ctx.font = (square_size * 0.5) + "pt monospace";
-			ctx.fillText(board[i], x + (square_size * (0.3 - ((board[i] + "").length - 1) * 0.21)), y + (square_size * 0.7));
+			ctx.font = (square_size * 0.65) + "px monospace";
+			ctx.fillText(board[i], x + (square_size * (0.3 - ((board[i] + "").length - 1) * 0.19)), y + (square_size * 0.7));
 		}
 	}
 
