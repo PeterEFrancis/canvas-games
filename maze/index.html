@@ -43,32 +43,22 @@
 					<canvas id="display" class="center-block" width="1000" height="1000"></canvas>
 					<div class="row" id="control">
 						<div class="col-sm-3">
+							<div class="input-group input-group-lg">
+								<span class="input-group-addon">rows</span>
+								<input class="form-control" type="number" value="30" id="rows">
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="input-group input-group-lg">
+								<span class="input-group-addon">cols</span>
+								<input  class="form-control" type="number" value="30" id="cols">
+							</div>
+						</div>
+						<div class="col-sm-3">
 							<button class="btn btn-default btn-lg btn-block" onclick="generate()">Regenerate</button>
 						</div>
 						<div class="col-sm-3">
-							<button class="btn btn-default btn-lg btn-block" onclick="solve()">Solve</button>
-						</div>
-						<div class="col-sm-3 text-center" style="font-size: 20px;">
-							R:
-							<div class="btn-group" style="width:80%">
-								<button class="btn btn-default btn-lg" onclick="change_rows(-1)" style="width:50%">
-									<span class="glyphicon glyphicon-minus"></span>
-								</button>
-								<button class="btn btn-default btn-lg" onclick="change_rows(1)" style="width:50%">
-									<span class="glyphicon glyphicon-plus"></span>
-								</button>
-							</div>
-						</div>
-						<div class="col-sm-3 text-center" style="font-size: 20px;">
-							C:
-							<div class="btn-group" style="width:80%">
-								<button class="btn btn-default btn-lg" onclick="change_cols(-1)" style="width:50%">
-									<span class="glyphicon glyphicon-minus"></span>
-								</button>
-								<button class="btn btn-default btn-lg" onclick="change_cols(1)" style="width:50%">
-									<span class="glyphicon glyphicon-plus"></span>
-								</button>
-							</div>
+							<button class="btn btn-default btn-lg btn-block" onclick="toggle_solution()">Toggle Solution</button>
 						</div>
 					</div>
 					<p style="margin-top:40px;" class="text-center">

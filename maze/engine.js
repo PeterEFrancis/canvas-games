@@ -10,6 +10,7 @@ const ctx = canvas.getContext("2d");
 const UNREACHED = 0;
 const REACHED = 1;
 const SOLUTION_PATH = 2;
+const HIDDEN_SOLUTION_PATH = 3;
 
 const RIGHT = 0;
 const UP = 1;
@@ -20,35 +21,21 @@ const DIRECTIONS = [RIGHT, UP, LEFT, DOWN];
 const ROW_CHANGE = [0, -1, 0, 1];
 const COL_CHANGE = [1, 0, -1, 0];
 
-const COLORS = ["black", "white", "rgb(0,255,0)"];
+const COLORS = ["black", "white", "rgb(0,255,0)", "white"];
 
 const SQUARE_SIZE = 10;
 
-
-
-var rows = 30;
-var cols = 30;
-
+var rows;
+var cols;
 var grid;
 var open_right;
 var open_left;
+var solved = false;
+
 
 generate();
 
 
-function change_rows(amount) {
-	if (rows + amount > 4) {
-		rows += amount;
-	}
-	generate();
-}
-
-function change_cols(amount) {
-	if (cols + amount > 4) {
-		cols += amount;
-	}
-	generate();
-}
 
 function create_array(r, c, fill) {
 	var a = [];
@@ -99,28 +86,53 @@ function can_travel(row, col, dir) {
 }
 
 function generate() {
+
+	solved = false;
+
+	var rows_el = document.getElementById('rows');
+	var cols_el = document.getElementById('cols');
+
+	if (isNaN(rows_el.value)) {
+		rows_el.value = 30;
+	}
+	if (isNaN(cols_el.value)) {
+		cols_el.value = 30;
+	}
+
+	rows = Number(rows_el.value);
+	cols = Number(cols_el.value);
+
 	grid = create_array(rows, cols, 0);
 	open_right = create_array(rows, cols - 1, false);
 	open_down = create_array(rows - 1, cols, false);
 
-	// var stack = [[0,0]];
-	// while (stack.length > 0) {
-	// 	var top = stack.pop();
-	// 	var row = top[0];
-	// 	var col = top[1];
-	// 	grid[row][col] = REACHED;
-	// 	var dirs = shuffle(DIRECTIONS);
-	// 	for (var i = 0; i < 4; i++) {
-	// 		var dir = dirs[i];
-	// 		if (is_unreached(row, col, dir)) {
-	// 			open_wall(row, col, dir);
-	// 			stack.push([row + ROW_CHANGE[dir], col + COL_CHANGE[dir]]);
-	// 		}
-	// 	}
-	// }
-	maze_step(0,0);
+	make_DF_maze();
+
 	update_display();
 }
+
+function make_DF_maze() {
+	maze_step(0,0);
+}
+
+
+
+// var stack = [[0,0]];
+// while (stack.length > 0) {
+// 	var top = stack.pop();
+// 	var row = top[0];
+// 	var col = top[1];
+// 	grid[row][col] = REACHED;
+// 	var dirs = shuffle(DIRECTIONS);
+// 	for (var i = 0; i < 4; i++) {
+// 		var dir = dirs[i];
+// 		if (is_unreached(row, col, dir)) {
+// 			open_wall(row, col, dir);
+// 			stack.push([row + ROW_CHANGE[dir], col + COL_CHANGE[dir]]);
+// 		}
+// 	}
+// }
+
 
 function maze_step(row, col) {
 	grid[row][col] = REACHED;
@@ -197,9 +209,25 @@ function update_display() {
 	}
 }
 
-function solve() {
-	solve_step(0,0);
+function toggle_solution() {
+	if (!solved) {
+		solve();
+	} else {
+		for (var r = 0; r < rows; r++) {
+			for (var c = 0; c < cols; c++) {
+				if (grid[r][c] >= SOLUTION_PATH) {
+					grid[r][c] = SOLUTION_PATH + HIDDEN_SOLUTION_PATH - grid[r][c];
+				}
+			}
+		}
+	}
 	update_display();
+}
+
+function solve() {
+	console.log("here");
+	solve_step(0,0);
+	solved = true;
 }
 
 function solve_step(row, col) {
