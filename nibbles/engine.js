@@ -31,7 +31,9 @@ const APPLE = -1;
 
 const SCORE_DISP = document.getElementById('score-disp');
 
-
+const FAST = 75;
+const MEDIUM = 200;
+const SLOW = 1000;
 
 
 
@@ -63,11 +65,20 @@ function change_direction(dir) {
 	}
 }
 
-document.addEventListener('change', function(event) {
-	delay = Number(document.getElementById('delay').value);
-	clearInterval(moveID);
-	moveID = setInterval(move_snake, delay);
-});
+function set_delay(d) {
+	delay = d;
+	if (is_game_playing) {
+		clearInterval(moveID);
+		moveID = setInterval(move_snake, delay);
+	}
+}
+
+
+// document.addEventListener('change', function(event) {
+// 	delay = Number(document.getElementById('delay').value);
+// 	clearInterval(moveID);
+// 	moveID = setInterval(move_snake, delay);
+// });
 
 
 
