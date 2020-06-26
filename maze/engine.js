@@ -75,8 +75,8 @@ function is_unreached(row, col, dir) {
 function open_wall(row, col, dir) {
 	var row2 = row + ROW_CHANGE[dir];
 	var col2 = col + COL_CHANGE[dir];
-	console.log("   row2 = " + row2);
-	console.log("   col2 = " + col2);
+	// console.log("   row2 = " + row2);
+	// console.log("   col2 = " + col2);
 	if (row == row2) {
 		open_right[row][col < col2 ? col : col2] = true;
 	} else {
