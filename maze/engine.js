@@ -31,6 +31,8 @@ var grid;
 var open_right;
 var open_left;
 var solved = false;
+var generating;
+var player_pos = [0,0];
 
 
 generate();
@@ -62,6 +64,8 @@ function shuffle(a) {
 	return array;
 }
 
+
+
 function is_unreached(row, col, dir) {
 	var row2 = row + ROW_CHANGE[dir];
 	var col2 = col + COL_CHANGE[dir];
@@ -71,6 +75,8 @@ function is_unreached(row, col, dir) {
 function open_wall(row, col, dir) {
 	var row2 = row + ROW_CHANGE[dir];
 	var col2 = col + COL_CHANGE[dir];
+	console.log("   row2 = " + row2);
+	console.log("   col2 = " + col2);
 	if (row == row2) {
 		open_right[row][col < col2 ? col : col2] = true;
 	} else {
@@ -85,17 +91,20 @@ function can_travel(row, col, dir) {
 	 ((row == row2 && open_right[row][col < col2 ? col : col2]) || (col == col2 && open_down[row < row2 ? row : row2][col])));
 }
 
+
+
 function generate() {
 
 	solved = false;
+	generating = true;
 
 	var rows_el = document.getElementById('rows');
 	var cols_el = document.getElementById('cols');
 
-	if (isNaN(rows_el.value)) {
+	if (isNaN(rows_el.value) || Number(rows_el.value) < 3) {
 		rows_el.value = 30;
 	}
-	if (isNaN(cols_el.value)) {
+	if (isNaN(cols_el.value) || Number(cols_el.value) < 3) {
 		cols_el.value = 30;
 	}
 
@@ -109,30 +118,31 @@ function generate() {
 	make_DF_maze();
 
 	update_display();
+	generating = false;
 }
 
 function make_DF_maze() {
 	maze_step(0,0);
+
+	// var stack = [[0,0]];
+	// while (stack.length > 0) {
+	// 	var top = stack.pop();
+	// 	var row = top[0];
+	// 	var col = top[1];
+	// 	grid[row][col] = REACHED;
+	// 	if (row != 0 || col != 0) {
+	// 		var dir = top[2];
+	// 		open_wall(row + ROW_CHANGE[dir], col + COL_CHANGE[dir], dir);
+	// 	}
+	// 	var dirs = shuffle(DIRECTIONS);
+	// 	for (var i = 0; i < 4; i++) {
+	// 		var dir = dirs[i];
+	// 		if (is_unreached(row, col, dir)) {
+	// 			stack.push([row, col, dir]);
+	// 		}
+	// 	}
+	// }
 }
-
-
-
-// var stack = [[0,0]];
-// while (stack.length > 0) {
-// 	var top = stack.pop();
-// 	var row = top[0];
-// 	var col = top[1];
-// 	grid[row][col] = REACHED;
-// 	var dirs = shuffle(DIRECTIONS);
-// 	for (var i = 0; i < 4; i++) {
-// 		var dir = dirs[i];
-// 		if (is_unreached(row, col, dir)) {
-// 			open_wall(row, col, dir);
-// 			stack.push([row + ROW_CHANGE[dir], col + COL_CHANGE[dir]]);
-// 		}
-// 	}
-// }
-
 
 function maze_step(row, col) {
 	grid[row][col] = REACHED;
@@ -145,6 +155,8 @@ function maze_step(row, col) {
 		}
 	}
 }
+
+
 
 function toString() {
 	var grid_chars = ['#', '&emsp;', '.'];
@@ -201,31 +213,43 @@ function update_display() {
 	// draw to canvas
 	for (var r = 0; r < out_grid.length; r++) {
 		for (var c = 0; c < out_grid[r].length; c++) {
-			// if (out_grid[r][c] != UNREACHED) {
-				ctx.fillStyle = COLORS[out_grid[r][c]];
-				ctx.fillRect(c * SQUARE_SIZE, r * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
-			// }
+			ctx.fillStyle = COLORS[out_grid[r][c]];
+			ctx.fillRect(c * SQUARE_SIZE, r * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
 		}
 	}
+
+	ctx.fillStyle = "red";
+	ctx.beginPath();
+	var x = (player_pos[1] * 2 + 1) * SQUARE_SIZE + SQUARE_SIZE / 2;
+	var y = (player_pos[0] * 2 + 1) * SQUARE_SIZE + SQUARE_SIZE / 2;
+	ctx.arc(x, y, SQUARE_SIZE/3, 0, 2 * Math.PI, false);
+	ctx.fill();
+
+	// document.getElementById('test').innerHTML = toString();
+
+
 }
 
+
+
 function toggle_solution() {
-	if (!solved) {
-		solve();
-	} else {
-		for (var r = 0; r < rows; r++) {
-			for (var c = 0; c < cols; c++) {
-				if (grid[r][c] >= SOLUTION_PATH) {
-					grid[r][c] = SOLUTION_PATH + HIDDEN_SOLUTION_PATH - grid[r][c];
+	if (!generating) {
+		if (!solved) {
+			solve();
+		} else {
+			for (var r = 0; r < rows; r++) {
+				for (var c = 0; c < cols; c++) {
+					if (grid[r][c] >= SOLUTION_PATH) {
+						grid[r][c] = SOLUTION_PATH + HIDDEN_SOLUTION_PATH - grid[r][c];
+					}
 				}
 			}
 		}
+		update_display();
 	}
-	update_display();
 }
 
 function solve() {
-	console.log("here");
 	solve_step(0,0);
 	solved = true;
 }
@@ -249,5 +273,14 @@ function solve_step(row, col) {
 		}
 		grid[row][col] = REACHED;
 		return false;
+	}
+}
+
+
+
+function move(dir) {
+	if (can_travel(player_pos[0], player_pos[1], dir)) {
+		player_pos = [player_pos[0] + ROW_CHANGE[dir], player_pos[1] + COL_CHANGE[dir]];
+		update_display();
 	}
 }
