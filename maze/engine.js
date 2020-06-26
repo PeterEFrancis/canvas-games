@@ -1,7 +1,6 @@
 
-// msome of the maze generation code adapted from Todd Neller
 
-
+// some of the maze generation code adapted from Todd Neller
 
 const canvas = document.getElementById("display");
 const ctx = canvas.getContext("2d");
@@ -102,10 +101,10 @@ function generate() {
 	var cols_el = document.getElementById('cols');
 
 	if (isNaN(rows_el.value) || Number(rows_el.value) < 3) {
-		rows_el.value = 30;
+		rows_el.value = 25;
 	}
 	if (isNaN(cols_el.value) || Number(cols_el.value) < 3) {
-		cols_el.value = 30;
+		cols_el.value = 25;
 	}
 
 	rows = Number(rows_el.value);
@@ -115,46 +114,53 @@ function generate() {
 	open_right = create_array(rows, cols - 1, false);
 	open_down = create_array(rows - 1, cols, false);
 
+	player_pos = [0,0];
+
 	make_DF_maze();
 
 	update_display();
 	generating = false;
 }
 
+
+
 function make_DF_maze() {
-	maze_step(0,0);
-
-	// var stack = [[0,0]];
-	// while (stack.length > 0) {
-	// 	var top = stack.pop();
-	// 	var row = top[0];
-	// 	var col = top[1];
-	// 	grid[row][col] = REACHED;
-	// 	if (row != 0 || col != 0) {
-	// 		var dir = top[2];
-	// 		open_wall(row + ROW_CHANGE[dir], col + COL_CHANGE[dir], dir);
-	// 	}
-	// 	var dirs = shuffle(DIRECTIONS);
-	// 	for (var i = 0; i < 4; i++) {
-	// 		var dir = dirs[i];
-	// 		if (is_unreached(row, col, dir)) {
-	// 			stack.push([row, col, dir]);
-	// 		}
-	// 	}
-	// }
-}
-
-function maze_step(row, col) {
-	grid[row][col] = REACHED;
-	var dirs = shuffle(DIRECTIONS);
-	for (var i = 0; i < 4; i++) {
-		var dir = dirs[i];
+	// maze_step(0,0);
+	var top;
+	var row;
+	var col;
+	var dir;
+	var stack = [[0,0,DOWN], [0,0,RIGHT]];
+	while (stack.length > 0) {
+		top = stack.pop();
+		row = top[0];
+		col = top[1];
+		dir = top[2];
+		grid[row][col] = REACHED;
 		if (is_unreached(row, col, dir)) {
 			open_wall(row, col, dir);
-			maze_step(row + ROW_CHANGE[dir], col + COL_CHANGE[dir]);
+			var dirs = shuffle(DIRECTIONS);
+			stack.push([row + ROW_CHANGE[dir], col + COL_CHANGE[dir], dirs[0]]);
+			stack.push([row + ROW_CHANGE[dir], col + COL_CHANGE[dir], dirs[1]]);
+			stack.push([row + ROW_CHANGE[dir], col + COL_CHANGE[dir], dirs[2]]);
+			stack.push([row + ROW_CHANGE[dir], col + COL_CHANGE[dir], dirs[3]]);
 		}
 	}
 }
+
+
+
+// function maze_step(row, col) {
+// 	grid[row][col] = REACHED;
+// 	var dirs = shuffle(DIRECTIONS);
+// 	for (var i = 0; i < 4; i++) {
+// 		var dir = dirs[i];
+// 		if (is_unreached(row, col, dir)) {
+// 			open_wall(row, col, dir);
+// 			maze_step(row + ROW_CHANGE[dir], col + COL_CHANGE[dir]);
+// 		}
+// 	}
+// }
 
 
 
@@ -218,12 +224,7 @@ function update_display() {
 		}
 	}
 
-	ctx.fillStyle = "red";
-	ctx.beginPath();
-	var x = (player_pos[1] * 2 + 1) * SQUARE_SIZE + SQUARE_SIZE / 2;
-	var y = (player_pos[0] * 2 + 1) * SQUARE_SIZE + SQUARE_SIZE / 2;
-	ctx.arc(x, y, SQUARE_SIZE/3, 0, 2 * Math.PI, false);
-	ctx.fill();
+	draw_user_dot();
 
 	// document.getElementById('test').innerHTML = toString();
 
@@ -276,11 +277,25 @@ function solve_step(row, col) {
 	}
 }
 
-
+function draw_user_dot() {
+	ctx.fillStyle = "red";
+	ctx.beginPath();
+	var x = (player_pos[1] * 2 + 1) * SQUARE_SIZE + SQUARE_SIZE / 2;
+	var y = (player_pos[0] * 2 + 1) * SQUARE_SIZE + SQUARE_SIZE / 2;
+	ctx.arc(x, y, SQUARE_SIZE/3, 0, 2 * Math.PI, false);
+	ctx.fill();
+}
 
 function move(dir) {
 	if (can_travel(player_pos[0], player_pos[1], dir)) {
+
+		var x = (player_pos[1] * 2 + 1) * SQUARE_SIZE;
+		var y = (player_pos[0] * 2 + 1) * SQUARE_SIZE;
+		ctx.clearRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
+
 		player_pos = [player_pos[0] + ROW_CHANGE[dir], player_pos[1] + COL_CHANGE[dir]];
-		update_display();
+
+		draw_user_dot();
+
 	}
 }

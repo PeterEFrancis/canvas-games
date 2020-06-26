@@ -63,6 +63,7 @@ function flood(color) {
 
 
 
+new_game();
 
 function new_game() {
 	// reset floods
