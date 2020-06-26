@@ -35,11 +35,21 @@ function flood(color) {
 			if (!already_checked.includes(p)) {
 				already_checked.push(p);
 				same_color.push(p);
+				// down row
 				if (Math.floor(p / NUM_SQUARES) + 1 < NUM_SQUARES && grid[p + NUM_SQUARES] == grid[0]) {
 					stack.push(p + NUM_SQUARES);
 				}
+				// right col
 				if ((p % NUM_SQUARES) < NUM_SQUARES - 1 && grid[p + 1] == grid[0]) {
 					stack.push(p + 1);
+				}
+				// up row
+				if (Math.floor(p / NUM_SQUARES) - 1 > 0 && grid[p - NUM_SQUARES] == grid[0]) {
+					stack.push(p - NUM_SQUARES);
+				}
+				// left col
+				if ((p % NUM_SQUARES) > 0 && grid[p - 1] == grid[0]) {
+					stack.push(p - 1);
 				}
 			}
 		}
