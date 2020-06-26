@@ -44,11 +44,11 @@ function flood(color) {
 					stack.push(p + 1);
 				}
 				// up row
-				if (Math.floor(p / NUM_SQUARES) - 1 > 0 && grid[p - NUM_SQUARES] == grid[0]) {
+				if (Math.floor(p / NUM_SQUARES) - 1 >= 0 && grid[p - NUM_SQUARES] == grid[0]) {
 					stack.push(p - NUM_SQUARES);
 				}
 				// left col
-				if ((p % NUM_SQUARES) > 0 && grid[p - 1] == grid[0]) {
+				if ((p % NUM_SQUARES) - 1 >= 0 && grid[p - 1] == grid[0]) {
 					stack.push(p - 1);
 				}
 			}
