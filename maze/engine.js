@@ -24,6 +24,8 @@ const COLORS = ["black", "white", "rgb(0,255,0)", "white"];
 
 const SQUARE_SIZE = 10;
 
+const DEFAULT_SIZE = 25;
+
 var rows;
 var cols;
 var grid;
@@ -34,7 +36,7 @@ var generating;
 var player_pos = [0,0];
 
 
-generate();
+generate(DEFAULT_SIZE, DEFAULT_SIZE);
 
 
 
@@ -92,23 +94,13 @@ function can_travel(row, col, dir) {
 
 
 
-function generate() {
+function generate(rs, cs) {
+
+	rows = rs;
+	cols = cs;
 
 	solved = false;
 	generating = true;
-
-	var rows_el = document.getElementById('rows');
-	var cols_el = document.getElementById('cols');
-
-	if (isNaN(rows_el.value) || Number(rows_el.value) < 3) {
-		rows_el.value = 25;
-	}
-	if (isNaN(cols_el.value) || Number(cols_el.value) < 3) {
-		cols_el.value = 25;
-	}
-
-	rows = Number(rows_el.value);
-	cols = Number(cols_el.value);
 
 	grid = create_array(rows, cols, 0);
 	open_right = create_array(rows, cols - 1, false);
