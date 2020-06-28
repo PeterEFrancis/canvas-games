@@ -109,6 +109,8 @@ function generate(rs, cs) {
 	player_pos = [0,0];
 
 	make_DF_maze();
+	// make_binary_maze();
+	// make_block_binary_maze();
 
 	update_display();
 	generating = false;
@@ -117,7 +119,6 @@ function generate(rs, cs) {
 
 
 function make_DF_maze() {
-	// maze_step(0,0);
 	var top;
 	var row;
 	var col;
@@ -140,19 +141,33 @@ function make_DF_maze() {
 	}
 }
 
+function make_binary_maze() {
+	for (var r = 1; r < rows; r++) {
+		for (var c = 0; c < cols; c++) {
+			grid[0][c] = REACHED;
+			open_wall(0, c, RIGHT);
+			grid[r][c] = REACHED;
+			open_wall(r, c, Math.random() < 0.5? LEFT : UP);
+		}
+		grid[r][0] = REACHED;
+		open_wall(r, 0, UP);
+	}
+}
 
+function make_block_binary_maze() {
+	var block = rows + cols <= 20 ? 1 : 10;
+	for (var r = 1; r < rows; r++) {
+		for (var c = 0; c < cols; c++) {
+			grid[0][c] = REACHED;
+			open_wall(0, c, RIGHT);
+			grid[r][c] = REACHED;
+			open_wall(r, c, Math.random() < ((Math.floor(r/block) + Math.floor(c/block)) % 2 == 0 ? 0.75 : 0.25) ? LEFT : UP);
+		}
+		grid[r][0] = REACHED;
+		open_wall(r, 0, UP);
+	}
+}
 
-// function maze_step(row, col) {
-// 	grid[row][col] = REACHED;
-// 	var dirs = shuffle(DIRECTIONS);
-// 	for (var i = 0; i < 4; i++) {
-// 		var dir = dirs[i];
-// 		if (is_unreached(row, col, dir)) {
-// 			open_wall(row, col, dir);
-// 			maze_step(row + ROW_CHANGE[dir], col + COL_CHANGE[dir]);
-// 		}
-// 	}
-// }
 
 
 
@@ -220,8 +235,9 @@ function update_display() {
 
 	// document.getElementById('test').innerHTML = toString();
 
-
 }
+
+
 
 
 
@@ -269,6 +285,9 @@ function solve_step(row, col) {
 	}
 }
 
+
+
+
 function draw_user_dot() {
 	ctx.fillStyle = "red";
 	ctx.beginPath();
@@ -283,7 +302,8 @@ function move(dir) {
 
 		var x = (player_pos[1] * 2 + 1) * SQUARE_SIZE;
 		var y = (player_pos[0] * 2 + 1) * SQUARE_SIZE;
-		ctx.clearRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
+		ctx.fillStyle = COLORS[grid[player_pos[0]][player_pos[1]]];
+		ctx.fillRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
 
 		player_pos = [player_pos[0] + ROW_CHANGE[dir], player_pos[1] + COL_CHANGE[dir]];
 

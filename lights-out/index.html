@@ -9,7 +9,7 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 		<style>
 			html {
-				min-width: 300px;
+				min-width: 150px;
 			}
 
 			body {
@@ -21,8 +21,12 @@
 				background-color: black;
 			}
 
-			* {
+			p {
 				font-size: 12pt;
+			}
+
+			button {
+				margin-bottom: 10px !important;
 			}
 
 		</style>
@@ -37,11 +41,17 @@
 						HTML Canvas element is not supported on your device and/or borwser.
 					</canvas>
 					<div class="text-center" style="margin-bottom: 40px;">
-						<button class="btn btn-default" onclick="reset_game()">randomize</button>
-						<button class="btn btn-default"  onclick="change_num_squares(-1)"><span class="glyphicon glyphicon-minus"></span></button>
-						<button class="btn btn-default"  onclick="change_num_squares(1)"><span class="glyphicon glyphicon-plus"></span></button>
-						<button class="btn btn-default"  onclick="chase_lights()">chase lights</button>
-						<input type="color" id="color" name="color" value="#ffd500" onchange="update_color();" style="bottom: -5px; width: 75px; height: 30px; display: inline-block; position: relative">
+						<button class="btn btn-default btn-lg" onclick="reset_game()">randomize</button>
+						<div class="btn-group">
+							<button class="btn btn-default btn-lg"  onclick="change_num_squares(-1)">
+								<span class="glyphicon glyphicon-minus"></span>
+							</button>
+							<button class="btn btn-default btn-lg"  onclick="change_num_squares(1)">
+								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+						</div>
+						<button class="btn btn-default btn-lg"  onclick="chase_lights()">chase lights</button>
+						<input type="color" id="color" name="color" value="#ffd500" onchange="update_color();" style="bottom: -8px; width: 75px; height: 46px; display: inline-block; position: relative">
 					</div>
 					<p>The classic version of Lights Out was an electronic handheld puzzle released by Tiger Electronics in 1995, and is played on a  5×5  keypad of square buttons that are either lit or dark. The object is to turn all of the lights off by clicking the buttons on the board, and the one rule is deceptively simple: clicking a button changes its own state, as well as the state of the 4 directly adjacent buttons, if they exist (clicking on an corner only changes the state of 3 buttons and clicking an edge button not in a corner changes the state of 4 buttons).</p>
 					<p class="text-center" style="margin-top:40px;">

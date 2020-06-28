@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play Rook Jumping Maze</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<style>
+			html {
+				min-width: 300px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				width: 100%;
+				background-color: white;
+				margin-bottom: 20px;
+			}
+
+			p {
+				font-size: 12pt;
+			}
+
+			button {
+				margin-bottom: 10px !important;
+			}
+
+		</style>
+	</head>
+	<body onload="new_maze();">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-6">
+					<h1 class="text-center" style="margin-bottom:20px;">Rook Jumping Maze</h1>
+					<table style="width: 100%">
+						<tr>
+							<td>
+								<h3>Moves: <span id="moves"></span></h3>
+							</td>
+							<td >
+								<h3 class="text-right">Minimum: <span id="min-moves"></span></h3>
+							</td>
+						</tr>
+					</table>
+					<canvas id="display" class="center-block" width="1000" height="1000">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<div class="text-center" style="margin-bottom: 40px;">
+						<button class="btn btn-default btn-lg" onclick="new_maze()">New Maze</button>
+						<div class="btn-group">
+							<button class="btn btn-default btn-lg" onclick="change_num_squares(-1)" id="minus">
+								<span class="glyphicon glyphicon-minus"></span>
+							</button>
+							<button class="btn btn-default btn-lg" onclick="change_num_squares(1)" id="plus">
+								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+						</div>
+						<button class="btn btn-default btn-lg"  onclick="undo()">Undo</button>
+						<button class="btn btn-default btn-lg"  onclick="toggle_solution()">Toggle Solution</button>
+					</div>
+					<p id="solution" class="text-center" style="margin-bottom: 40px; word-wrap: break-word; font-family: monospace;"></p>
+					<p>Each turn, horizontally or vertically move to a spot that is the number of your current position's squares away. Get to the "G" in as few moves as possible.</p>
+					<p>The Rook Jumping Maze has a long history of developement. You can find out more <a href="http://modelai.gettysburg.edu/2010/rjmaze/index.html">here</a>.</p>
+					<p>Developed by Peter E. Francis and Hoang Anh Just (adapted from <a href="http://cs.gettysburg.edu/~tneller" target="_blank" style="color:lightgrey;"><u>Dr. Todd W. Neller</u></a> and Connor Berson).
+					<p class="text-center" style="margin-top:40px;">&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a></p>
+					</p>
+				</div>
+				<div class="col-md-3"></div>
+			</div>
+		</div>
+		<script src="engine.js"></script>
+		<script>
+
+			document.addEventListener('keydown', function(event) {
+			  if (event.keyCode == 90 && (event.metaKey || event.ctrlKey)) {
+					undo();
+				}
+			});
+
+			const KEY_LEFT = 37;
+			const KEY_UP = 38;
+			const KEY_RIGHT = 39;
+			const KEY_DOWN = 40;
+
+			const KEY_DIRS = [KEY_LEFT, KEY_UP, KEY_RIGHT, KEY_DOWN];
+
+			document.addEventListener('keydown', function(event) {
+				if (KEY_DIRS.includes(event.keyCode)) {
+					event.preventDefault();
+					if (event.keyCode == KEY_LEFT) {
+						click(current_pos - board[current_pos]);
+					} else if (event.keyCode == KEY_RIGHT) {
+						click(current_pos + board[current_pos]);
+					} else if (event.keyCode == KEY_UP) {
+						click(current_pos - board[current_pos] * num_squares);
+					} else {
+						click(current_pos + board[current_pos] * num_squares);
+					}
+				}
+			});
+
+			canvas.addEventListener('click', function() {
+				var rect = canvas.getBoundingClientRect();
+				var user_x = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+				var user_y = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
+				var row = Math.floor(user_y / (SIZE / num_squares));
+				var col = Math.floor(user_x / (SIZE / num_squares));
+				click(row * num_squares + col);
+			});
+
+
+		</script>
+	</body>
+</html>
