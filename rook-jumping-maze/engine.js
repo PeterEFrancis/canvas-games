@@ -39,7 +39,7 @@ function click(square_id) {
 	if (next_moves.includes(square_id)) {
 		move_history.push(current_pos);
 		current_pos = square_id;
-		set_next_moves();
+		next_moves = get_next_moves(board, current_pos);
 		moves += 1;
 		update_display();
 	}
@@ -50,28 +50,29 @@ function undo() {
 	if (move_history.length > 0) {
 		moves -= 1;
 		current_pos = move_history.pop();
-		set_next_moves();
+		next_moves = get_next_moves(board, current_pos);
 		update_display();
 	}
 }
 
 
-function set_next_moves() {
-	next_moves = [];
+function get_next_moves(b, cp) {
+	nm = [];
 	var dir = [1, -1, num_squares, -num_squares];
 	for (var i = 0; i < 4; i++) {
-		var vec = dir[i] * board[current_pos];
-		var move = current_pos + vec;
-		var c_row = Math.floor(current_pos / num_squares);
-		var c_col = current_pos % num_squares;
-		var n_row = Math.floor((current_pos + vec) / num_squares);
-		var n_col = (current_pos + vec) % num_squares;
+		var vec = dir[i] * b[cp];
+		var move = cp + vec;
+		var c_row = Math.floor(cp / num_squares);
+		var c_col = cp % num_squares;
+		var n_row = Math.floor((cp + vec) / num_squares);
+		var n_col = (cp + vec) % num_squares;
 		if (move < num_squares * num_squares && move >= 0) {
 			if (c_row == n_row || c_col == n_col) {
-				next_moves.push(move);
+				nm.push(move);
 			}
 		}
 	}
+	return nm;
 }
 
 
@@ -133,7 +134,7 @@ function new_maze() {
 	current_pos = 0;
 
 	// reset next_moves
-	set_next_moves();
+	next_moves = get_next_moves(board, current_pos);
 
 	// reset moves counter
 	moves = 0;
@@ -160,11 +161,35 @@ function get_max_square_val(tile) {
 }
 
 
-function get_random_maze() {
+function has_dead_ends(b) {
+	for (var i = 0; i < num_squares * num_squares - 1; i++) {
+		var nm1 = get_next_moves(b, i);
+		for (var j = 0; j < nm1.length; j++) {
+			var nm2 = get_next_moves(b, nm1[j]);
+			if (nm2.length == 1 && nm2[0] == i) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+
+function randomize() {
 	var b = [];
-	for (var i = 0; i < num_squares * num_squares; i++) {
+	for (var i = 0; i < num_squares * num_squares - 1; i++) {
 		b.push(Math.floor(Math.random() * get_max_square_val(i)) + 1);
 	}
+	b.push(0);
+	return b;
+}
+
+
+function get_random_maze() {
+	var b;
+	do {
+		b = randomize();
+	} while (has_dead_ends(b));
 	return b;
 }
 
@@ -262,10 +287,17 @@ class RookJumpingMaze {
 		let col = tile % num_squares;
 		let new_val;
 
+		var count = 0
 		do {
+			count++;
 			new_val = Math.floor(Math.random() * get_max_square_val(tile)) + 1;
-		} while (new_val == this.prev_val);
-		this.maze[tile] = new_val;
+			this.maze[tile] = new_val;
+			if (count == num_squares) {
+				this.maze[tile] = this.prev_val;
+				break;
+			}
+		} while (new_val == this.prev_val || has_dead_ends(this.maze));
+
 	}
 
 	undo() {
