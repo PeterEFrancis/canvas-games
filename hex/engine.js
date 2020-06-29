@@ -32,10 +32,10 @@ const HEX_OFFSET_Y = b + HEX_RADIUS;
 const CENTER_X = 15 * HEX_APOTHEM;
 const CENTER_Y = 5 * HEX_RADIUS * 3 / 2;
 
-
 var board;
 var current_player;
 var history_clicks;
+var game_state;
 
 
 function reset_game() {
@@ -57,6 +57,9 @@ function reset_game() {
 
 	// reset history
 	history_clicks = [];
+
+	// reset game_state
+	game_state = BLANK;
 
 	update_display();
 
@@ -80,14 +83,85 @@ function get_hex_id(hex, x, y) {
 
 
 function click(hex_id) {
-	var row = Math.floor(hex_id / NUM_HEXES);
-	var col = hex_id % NUM_HEXES;
+	if (game_state == BLANK) {
+		var row = Math.floor(hex_id / NUM_HEXES);
+		var col = hex_id % NUM_HEXES;
 
-	if (board[hex_id].state == BLANK) {
-		board[hex_id].state = current_player;
-		current_player = RED + BLUE - current_player;
-		history_clicks.push(hex_id);
+		if (board[hex_id].state == BLANK) {
+			board[hex_id].state = current_player;
+			history_clicks.push(hex_id);
+			game_state = game_winner();
+			if (game_state == BLANK) {
+				current_player = RED + BLUE - current_player;
+			}
+		}
+		update_display();
 	}
+}
+
+
+function get_neighbor_ids(hex_id) {
+	var n = [];
+	if (hex_id >= NUM_HEXES) { // if not in the top row
+		n.push(hex_id - NUM_HEXES);
+		if (hex_id % NUM_HEXES < NUM_HEXES - 1) { // if not in right column
+			n.push(hex_id - NUM_HEXES + 1);
+		}
+	}
+	if (hex_id % NUM_HEXES < NUM_HEXES - 1) { // if not in right column
+		n.push(hex_id + 1);
+	}
+	if (hex_id < NUM_HEXES * (NUM_HEXES - 1)) { // if not in bottom row
+		n.push(hex_id + NUM_HEXES);
+		if (hex_id % NUM_HEXES > 0) { // if not in left column
+			n.push(hex_id + NUM_HEXES - 1);
+		}
+	}
+	if (hex_id % NUM_HEXES > 0) { // if not in left column
+		n.push(hex_id - 1);
+	}
+	return n;
+}
+
+
+function game_winner() {
+	if (is_winner(RED)) {
+		return RED;
+	} else if (is_winner(BLUE)) {
+		return BLUE;
+	}
+	return BLANK;
+}
+
+
+function is_winner(player) {
+	var already_checked = [];
+	var stack = [];
+	for (var i = 0; i < NUM_HEXES; i++) {
+		var j = i * (player == RED ? 1 : NUM_HEXES);
+		if (board[j].state == player) {
+			stack.push(j);
+			already_checked.push(j);
+		}
+	}
+	while (stack.length > 0) {
+		var top = stack.pop();
+		if (top >= NUM_HEXES * (NUM_HEXES - 1) && player == RED) {
+			return true;
+		}
+		if (top % NUM_HEXES == NUM_HEXES - 1 && player == BLUE) {
+			return true;
+		}
+		var neighbors = get_neighbor_ids(top);
+		for (var i = 0; i < neighbors.length; i++) {
+			var n = neighbors[i];
+			if (board[n].state == player && !already_checked.includes(n)) {
+				stack.push(n);
+				already_checked.push(n);
+			}
+		}
+	}
+	return false;
 }
 
 
@@ -144,11 +218,17 @@ function update_display() {
 	// show current player
 	document.getElementById('current_player').innerHTML = COLORS[current_player];
 	document.getElementById('current_player').style.backgroundColor = COLORS[current_player];
+
+	// winning message
+	document.getElementById('result').innerHTML = "";
+	if (game_state != BLANK) {
+		document.getElementById('result').innerHTML = " wins!";
+	}
 }
 
 
 function undo() {
-	if (history_clicks.length > 0) {
+	if (history_clicks.length > 0 && game_state == BLANK) {
 		board[history_clicks.pop()].state = BLANK;
 		current_player = RED + BLUE - current_player;
 	}
@@ -167,7 +247,6 @@ canvas.addEventListener('click', function() {
 		var hex_id = get_hex_id(board[i], user_x, user_y);
 		if (hex_id != -1) {
 			click(hex_id);
-			update_display();
 			break;
 		}
 	}
