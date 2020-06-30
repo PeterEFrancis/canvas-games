@@ -5,7 +5,6 @@ const ctx = canvas.getContext("2d");
 
 
 const SIZE = canvas.height;
-const LINE_WIDTH = 2; // works best if this is even
 
 
 
@@ -108,7 +107,7 @@ function solve() {
 
 
 function randomize() {
-	for (var i = 0; i < 500; i++) {
+	for (var i = 0; i < 1000; i++) {
 		click(Math.floor(Math.random() * num_squares * num_squares));
 	}
 	update_display();
@@ -121,6 +120,8 @@ function randomize() {
 function update_display() {
 	// clear the display
 	ctx.clearRect(0,0,SIZE, SIZE);
+	ctx.fillStyle = "silver";
+	roundRect(ctx, 0, 0, SIZE, SIZE, 10, true, false)
 
 	for (var i = 0; i < num_squares * num_squares; i++) {
 		if (board[i] != 0) {
@@ -132,14 +133,6 @@ function update_display() {
 			ctx.font = (square_size * 0.65) + "px monospace";
 			ctx.fillText(board[i], x + (square_size * (0.3 - ((board[i] + "").length - 1) * 0.19)), y + (square_size * 0.7));
 		}
-	}
-
-	// add the grid lines
-	ctx.fillStyle = "silver";
-	for (var i = 0; i <= num_squares + 1; i++) {
-		ctx.fillRect(0 - LINE_WIDTH / 2, i * square_size - LINE_WIDTH / 2, SIZE, LINE_WIDTH);
-		ctx.fillRect(i * square_size - (LINE_WIDTH / 2), 0, LINE_WIDTH, SIZE);
-		// yes, one of these falls over the edge and doesn't get displayed, but that is ok
 	}
 
 }

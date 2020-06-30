@@ -18,7 +18,7 @@
 			}
 			canvas {
 				width: 100%;
-				background-color: silver;
+				background-color: transparent;
 				margin-bottom: 20px;
 			}
 
@@ -40,8 +40,10 @@
 					<div class="text-center" style="margin-bottom: 40px;">
 						<button class="btn btn-default" onclick="randomize()">randomize</button>
 						<button class="btn btn-default" onclick="solve()">solve</button>
-						<button class="btn btn-default"  onclick="change_num_squares(-1)"><span class="glyphicon glyphicon-minus"></span></button>
-						<button class="btn btn-default"  onclick="change_num_squares(1)"><span class="glyphicon glyphicon-plus"></span></button>
+						<div class="btn-group">
+							<button class="btn btn-default"  onclick="change_num_squares(-1)"><span class="glyphicon glyphicon-minus"></span></button>
+							<button class="btn btn-default"  onclick="change_num_squares(1)"><span class="glyphicon glyphicon-plus"></span></button>
+						</div>
 					</div>
 					<p>Click tiles to move them adjacently into an empty space and solve the grid by ordering the squares by row.</p>
 					<p class="text-center" style="margin-top:40px;">
