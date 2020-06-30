@@ -87,6 +87,11 @@
 		</div>
 		<script src="engine.js"></script>
 		<script>
+			const KEY_LEFT = 37;
+			const KEY_UP = 38;
+			const KEY_RIGHT = 39;
+			const KEY_DOWN = 40;
+
 			window.addEventListener('keydown', function(e) {
 				if (e.keyCode >= 48 && e.keyCode <= 57) {
 					place(e.keyCode - 48);
@@ -94,6 +99,27 @@
 					place(0);
 				} else if (e.keyCode == 72) {
 					hint();
+				} else if (e.keyCode == 37) { // left
+					if (selected_square_id != -1 && selected_square_id > 0) {
+						selected_square_id -= 1;
+						update_display();
+					}
+				} else if (e.keyCode == 39) { // right
+					console.log("here");
+					if (selected_square_id != -1 && selected_square_id < NUM_SQUARES * NUM_SQUARES - 1) {
+						selected_square_id += 1;
+						update_display();
+					}
+				} else if (e.keyCode == 38) { // up
+					if (selected_square_id != -1 && selected_square_id > NUM_SQUARES) {
+						selected_square_id -= NUM_SQUARES;
+						update_display();
+					}
+				} else if (e.keyCode == 40) { // down
+					if (selected_square_id != -1 && selected_square_id < NUM_SQUARES * (NUM_SQUARES - 1)) {
+						selected_square_id += NUM_SQUARES;
+						update_display();
+					}
 				} else {
 					return;
 				}

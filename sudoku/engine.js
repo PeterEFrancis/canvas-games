@@ -27,7 +27,7 @@ const GROUPS = groups;
 
 
 
-var diff = 0.25;
+var diff = 50/81;
 
 
 var board;
@@ -43,14 +43,15 @@ new_game();
 function new_game() {
 
 	solution = get_sudoko_grid();
-	board = [];
-	shown = [];
+	board = [...solution];
 	var el;
-	for (var i = 0; i < NUM_SQUARES * NUM_SQUARES; i++) {
-		el = Math.random() < diff ? solution[i] : 0;
-		board.push(el);
-		shown.push(el);
+	for (var i = 0; i < Math.floor(diff * NUM_SQUARES * NUM_SQUARES); i++) {
+		do {
+			loc = Math.floor(Math.random() * NUM_SQUARES * NUM_SQUARES);
+		} while (board[loc] == NONE);
+		board[loc] = NONE;
 	}
+	shown = [...board];
 
 	selected_square_id = -1;
 
@@ -61,7 +62,6 @@ function new_game() {
 function place(num) {
 	if (selected_square_id != -1 && (shown[selected_square_id] == NONE || (num == NONE && shown[selected_square_id] == NONE))) {
 		board[selected_square_id] = num;
-		selected_square_id = -1;
 		update_display();
 	}
 }
