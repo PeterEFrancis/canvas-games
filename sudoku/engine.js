@@ -128,7 +128,7 @@ function shuffle(a) {
 
 
 function show_solution() {
-	board = solution;
+	board = [...solution];
 	update_display();
 }
 
