@@ -36,7 +36,6 @@ var shown;
 var selected_square_id;
 
 
-
 new_game();
 
 
@@ -59,6 +58,8 @@ function new_game() {
 	shown = [...board];
 
 	selected_square_id = -1;
+
+	document.getElementById('message').innerHTML = "";
 
 	update_display();
 }
@@ -151,6 +152,20 @@ function hint() {
 }
 
 
+function check() {
+	if (is_solved(board)) {
+		document.getElementById('message').innerHTML = "You Won!";
+		document.getElementById('message').style.color = "green";
+	} else if (board.includes(NONE)) {
+		document.getElementById('message').innerHTML = "You're not done yet!";
+		document.getElementById('message').style.color = "yellow";
+	} else {
+		document.getElementById('message').innerHTML = "Something is wrong!";
+		document.getElementById('message').style.color = "red";
+	}
+}
+
+
 function is_solved(b) {
 	for (var i = 0; i < GROUPS.length; i++) {
 		var s = [];
@@ -216,6 +231,10 @@ canvas.addEventListener('click', function() {
 	var user_y = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
 	var row = Math.floor(user_y / (canvas.width / NUM_SQUARES));
 	var col = Math.floor(user_x / (canvas.width / NUM_SQUARES));
-	selected_square_id = row * NUM_SQUARES + col;
+	if (selected_square_id == row * NUM_SQUARES + col) {
+		selected_square_id = -1;
+	} else {
+		selected_square_id = row * NUM_SQUARES + col;
+	}
 	update_display();
 });
