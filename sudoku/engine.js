@@ -59,7 +59,7 @@ function new_game() {
 
 
 function place(num) {
-	if (selected_square_id != -1 && (board[selected_square_id] == NONE || (num == NONE && shown[selected_square_id] == NONE))) {
+	if (selected_square_id != -1 && (shown[selected_square_id] == NONE || (num == NONE && shown[selected_square_id] == NONE))) {
 		board[selected_square_id] = num;
 		selected_square_id = -1;
 		update_display();
