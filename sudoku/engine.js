@@ -45,11 +45,16 @@ function new_game() {
 	solution = get_sudoko_grid();
 	board = [...solution];
 	var el;
-	for (var i = 0; i < Math.floor(diff * NUM_SQUARES * NUM_SQUARES); i++) {
+	for (var i = 0; i < Math.floor(diff * NUM_SQUARES * NUM_SQUARES / 4); i++) {
 		do {
 			loc = Math.floor(Math.random() * NUM_SQUARES * NUM_SQUARES);
 		} while (board[loc] == NONE);
-		board[loc] = NONE;
+		var j = loc % NUM_SQUARES;
+		var k = Math.floor(loc / NUM_SQUARES);
+		board[k * NUM_SQUARES + j] = NONE;
+		board[j * NUM_SQUARES + (NUM_SQUARES - 1 - k)] = NONE;
+		board[(NUM_SQUARES - 1 - j) * NUM_SQUARES + k] = NONE;
+		board[(NUM_SQUARES - 1 - k) * NUM_SQUARES + (NUM_SQUARES - 1 - j)] = NONE;
 	}
 	shown = [...board];
 
