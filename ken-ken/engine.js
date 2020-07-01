@@ -79,7 +79,7 @@ function new_game() {
 
 
 function place(num) {
-	if (selected_square_id != -1) {
+	if (selected_square_id != -1 && num <= num_squares) {
 		board[selected_square_id] = num;
 		update_display();
 	}
@@ -95,7 +95,7 @@ function get_cages() {
 	}
 	while (remaining.length > 0) {
 		// make a cage
-		var cage = {locs: [], label: ""};
+		var cage = {locs: [], op: "", comb: 0};
 		// find a random first element, and move it from `remaining` to cage.locs
 		var first = remaining[Math.floor(Math.random() * remaining.length)];
 		cage.locs.push(first);
@@ -104,7 +104,7 @@ function get_cages() {
 		// add adjacent cells to cage.locs
 		var next, last;
 		var dirs = shuffle([...DIRS]);
-		while ((remaining.length > 0 && cage.locs.length < Math.floor(Math.sqrt(num_squares) + Math.random()))) {
+		while (remaining.length > 0 && cage.locs.length < Math.floor(num_squares/2)) {
 			var extended = false;
 			last = cage.locs[cage.locs.length - 1];
 			var col =  last % num_squares;
@@ -134,28 +134,33 @@ function get_cages() {
 			els.push(solution[cage.locs[i]]);
 		}
 		if (els.length == 1) {
-			cage.label = "" + els[0];
+			cage.op = "";
+			cage.comb = els[0];
 		} else if (els.length == 2 && Math.random() < 0.5) {
 			var larger = Math.max(...els);
 			var smaller = Math.min(...els);
 			if (larger % smaller == 0) {
-				cage.label = "" + (larger / smaller) + "÷";
+				cage.op = "÷";
+				cage.comb = larger / smaller;
 			} else {
-				cage.label = "" + (larger - smaller) + "-";
+				cage.op = "-";
+				cage.comb = larger - smaller;
 			}
 		} else {
 			if (Math.random() < 0.5) {
+				cage.op = "+";
 				var s = 0;
 				for (var i = 0; i < els.length; i++) {
 					s += els[i];
 				}
-				cage.label = "" + s + "+";
+				cage.comb = s;
 			} else {
+				cage.op = "×";
 				var p = 1;
 				for (var i = 0; i < els.length; i++) {
 					p *= els[i];
 				}
-				cage.label = "" + p + "×";
+				cage.comb = p;
 			}
 		}
 		// console.log(cage);
@@ -269,8 +274,8 @@ function is_solved(b) {
 
 
 function check_cage(cage) {
-	if (cage.label.length == 1) {
-		return (board[cage.locs[0]] == Number(cage.label));
+	if (cage.op == "") {
+		return (board[cage.locs[0]] == Number(cage.comb));
 	}
 
 	var els = [];
@@ -280,24 +285,25 @@ function check_cage(cage) {
 	var larger = Math.max(...els);
 	var smaller = Math.min(...els);
 
-	if (cage.label[1] == "-") {
-		return (larger - smaller) == Number(cage.label[0]);
-	} else if (cage.label[1] == "÷") {
-		return (larger / smaller) == Number(cage.label[0]);
-	} else if (cage.label[1] == "+") {
+	if (cage.op == "-") {
+		return larger - smaller == cage.comb;
+	} else if (cage.op == "÷") {
+		return larger / smaller == cage.comb;
+	} else if (cage.op == "+") {
 		var s = 0;
 		for (var i = 0; i < els.length; i++) {
 			s += els[i];
 		}
-		return s == Number(cage.label[0]);
+		return s == cage.comb;
 	} else {
 		var p = 1;
 		for (var i = 0; i < els.length; i++) {
 			p *= els[i];
 		}
-		return p == Number(cage.label[0]);
+		return p == cage.comb;
 	}
 }
+
 
 
 
@@ -324,7 +330,7 @@ function update_display() {
 		var x = (top % num_squares) * square_size;
 		var y = Math.floor(top / num_squares) * square_size;
 		ctx.font = (square_size * 0.2) + "px monospace";
-		ctx.fillText(cage.label, x + square_size * 0.1, y + square_size * 0.25);
+		ctx.fillText(cage.comb + cage.op, x + square_size * 0.1, y + square_size * 0.25);
 	}
 
 
