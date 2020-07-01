@@ -369,12 +369,13 @@ function update_display() {
 	}
 
 	// add selected square shadow
+	ctx.strokeStyle = "blue";
 	if (selected_square_id != -1) {
 		var x = (selected_square_id % num_squares) * square_size;
 		var y = Math.floor(selected_square_id / num_squares) * square_size;
 		ctx.shadowBlur = 8;
 		ctx.shadowColor = "blue";
-		ctx.lineWidth = 3;
+		ctx.lineWidth = 5;
 		ctx.strokeRect(x, y, square_size, square_size);
 	}
 	ctx.shadowBlur = 0;
