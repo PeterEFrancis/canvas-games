@@ -104,7 +104,7 @@ function get_cages() {
 		// add adjacent cells to cage.locs
 		var next, last;
 		var dirs = shuffle([...DIRS]);
-		while (remaining.length > 0 && cage.locs.length < Math.floor(num_squares/2)) {
+		while (remaining.length > 0 && cage.locs.length < Math.max(Math.floor(num_squares/2)), 2) {
 			var extended = false;
 			last = cage.locs[cage.locs.length - 1];
 			var col =  last % num_squares;
