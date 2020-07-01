@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Play Sudoku</title>
+    <title>Play KenKen</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -48,7 +48,7 @@
 			<div class="row">
 				<div class="col-md-2"></div>
 				<div class="col-md-8">
-					<h1 class="text-center" style="margin-bottom:20px;">Sudoku</h1>
+					<h1 class="text-center" style="margin-bottom:20px;">KenKen</h1>
 					<canvas id="display" class="center-block" width="1000" height="1000">
 						HTML Canvas element is not supported on your device and/or borwser.
 					</canvas>
@@ -56,7 +56,14 @@
 					<div class="text-center controls" style="margin-bottom: 20px;">
 						<button class="btn btn-default btn-lg" onclick="new_game()">New Game</button>
 						<button class="btn btn-default btn-lg" onclick="show_solution()">Show Solution</button>
-						<!-- <button class="btn btn-default btn-lg" onclick="hint()">Hint</button> -->
+						<div class="btn-group">
+							<button class="btn btn-default btn-lg"  onclick="change_num_squares(-1)">
+								<span class="glyphicon glyphicon-minus"></span>
+							</button>
+							<button class="btn btn-default btn-lg"  onclick="change_num_squares(1)">
+								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+						</div>
 						<button class="btn btn-default btn-lg" onclick="check()">Check</button>
 					</div>
 					<div class="row controls">
@@ -70,12 +77,12 @@
 								<button class="btn btn-default btn-lg num-btn" onclick="place(1)">1</button>
 								<button class="btn btn-default btn-lg num-btn" onclick="place(2)">2</button>
 								<button class="btn btn-default btn-lg num-btn" onclick="place(3)">3</button>
-								<button class="btn btn-default btn-lg num-btn" onclick="place(4)">4</button>
-								<button class="btn btn-default btn-lg num-btn" onclick="place(5)">5</button>
-								<button class="btn btn-default btn-lg num-btn" onclick="place(6)">6</button>
-								<button class="btn btn-default btn-lg num-btn" onclick="place(7)">7</button>
-								<button class="btn btn-default btn-lg num-btn" onclick="place(8)">8</button>
-								<button class="btn btn-default btn-lg num-btn" onclick="place(9)">9</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(4)" id="4">4</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(5)" id="5">5</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(6)" id="6">6</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(7)" id="7">7</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(8)" id="8">8</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(9)" id="9">9</button>
 							</div>
 						</div>
 					</div>
@@ -93,7 +100,7 @@
 			window.addEventListener('keydown', function(e) {
 				if (e.keyCode >= 48 && e.keyCode <= 57) {
 					place(e.keyCode - 48);
-				} else if (e.keyCode == 32) {
+				} else if (e.keyCode == 32 || e.keyCode == 8) {
 					place(0);
 				} else if (e.keyCode == 72) {
 					hint();
@@ -103,19 +110,18 @@
 						update_display();
 					}
 				} else if (e.keyCode == 39) { // right
-					console.log("here");
-					if (selected_square_id != -1 && selected_square_id < NUM_SQUARES * NUM_SQUARES - 1) {
+					if (selected_square_id != -1 && selected_square_id < num_squares * num_squares - 1) {
 						selected_square_id += 1;
 						update_display();
 					}
 				} else if (e.keyCode == 38) { // up
-					if (selected_square_id != -1 && selected_square_id > NUM_SQUARES) {
-						selected_square_id -= NUM_SQUARES;
+					if (selected_square_id != -1 && selected_square_id > num_squares) {
+						selected_square_id -= num_squares;
 						update_display();
 					}
 				} else if (e.keyCode == 40) { // down
-					if (selected_square_id != -1 && selected_square_id < NUM_SQUARES * (NUM_SQUARES - 1)) {
-						selected_square_id += NUM_SQUARES;
+					if (selected_square_id != -1 && selected_square_id < num_squares * (num_squares - 1)) {
+						selected_square_id += num_squares;
 						update_display();
 					}
 				} else {
