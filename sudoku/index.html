@@ -97,19 +97,18 @@
 					place(0);
 				} else if (e.keyCode == 72) {
 					hint();
-				} else if (e.keyCode == 37) { // left
+				} else if (e.keyCode == 37 || (event.shiftKey && event.keyCode == 9)) { // left
 					if (selected_square_id != -1 && selected_square_id > 0) {
 						selected_square_id -= 1;
 						update_display();
 					}
-				} else if (e.keyCode == 39) { // right
-					console.log("here");
+				} else if (e.keyCode == 39 || event.keyCode == 9) { // right
 					if (selected_square_id != -1 && selected_square_id < NUM_SQUARES * NUM_SQUARES - 1) {
 						selected_square_id += 1;
 						update_display();
 					}
 				} else if (e.keyCode == 38) { // up
-					if (selected_square_id != -1 && selected_square_id > NUM_SQUARES) {
+					if (selected_square_id != -1 && selected_square_id > NUM_SQUARES - 1) {
 						selected_square_id -= NUM_SQUARES;
 						update_display();
 					}
