@@ -22,7 +22,7 @@ const DICE = [["R", "I", "F", "O", "B", "X"],
               ["E", "Z", "A", "V", "N", "D"],
               ["R", "A", "L", "E", "S", "C"],
               ["U", "W", "I", "L", "R", "G"],
-              ["P", "A", "C", "E", "M", "D"]]
+              ["P", "A", "C", "E", "M", "D"]];
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const RANDOM_OFFSET = 10;
 const ROTATIONS = [0, Math.PI / 2, Math.PI, -Math.PI / 2];
@@ -48,7 +48,7 @@ var timer_ID;
 
 
 var dictionary = new Trie("");
-$.get("words_alpha.txt", function(txt) { // https://raw.githubusercontent.com/dwyl/english-words/master/
+$.get("https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt", function(txt) { // https://raw.githubusercontent.com/dwyl/english-words/master/
 	var dict_words = txt.split("\n");
 	for (var i = 0; i < dict_words.length; i++ ) {
 		dictionary.push(dict_words[i].trim());
@@ -76,10 +76,12 @@ function jumble() {
 	}
 
 	words = get_all_words();
-	var words_els = document.getElementById('words');
-	for (var i = 0; i < words.length; i++) {
-		words_els.innerHTML += words[i] + " ";
-	}
+	words.sort();
+	var words_els = document.getElementById('words').innerHTML = words.join(", ");
+	// for (var i = 0; i < words.length; i++) {
+	// 	words_els.innerHTML += words[i] + " ";
+	// }
+
 	document.getElementById('get-all-words').disabled = false;
 	document.getElementById('jumble').disabled = false;
 
@@ -183,7 +185,6 @@ function draw_die(ctx, x, y, rot, text) {
 
 
 function update_display(should_randomize) {
-	console.log("here");
 	// clear the display
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -292,7 +293,7 @@ function get_all_words() {
 		}
 		var surr_locs = SURROUNDINGS[parent[parent.length - 1]];
 		for (var i = 0; i < surr_locs.length; i++) {
-			if (!parent.includes(surr_locs[i])) {
+			if (!parent.includes(surr_locs[i]) && parent.length < 6) {
 				stack.push([...parent, surr_locs[i]]);
 			}
 		}
