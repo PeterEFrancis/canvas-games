@@ -30,24 +30,44 @@ const ROTATION_TEXT_OFFSETS = [[SQUARE_SIZE * 0.5, SQUARE_SIZE * 0.65],
                                [SQUARE_SIZE * 0.5, -SQUARE_SIZE * 0.35],
                                [-SQUARE_SIZE * 0.5, -SQUARE_SIZE * 0.35],
                                [-SQUARE_SIZE * 0.5, SQUARE_SIZE * 0.65]];
+const SURROUNDINGS = [[1, 4, 5], [0, 2, 4, 5, 6], [1, 3, 5, 6, 7], [2, 6, 7],
+                      [0, 1, 5, 8, 9], [0, 1, 2, 4, 6, 8, 9, 10], [1, 2, 3, 5, 7, 9, 10, 11], [2, 3, 6, 10, 11],
+                      [4, 5, 9, 12, 13], [4, 5, 6, 8, 10, 12, 13, 14], [5, 6, 7, 9, 11, 13, 14, 15], [6, 7, 10, 14, 15],
+                      [8, 9, 13], [8, 9, 10, 12, 14], [9, 10, 11, 13, 15], [10, 11, 14]];
+const SURROUNDINGS_ = [[1], [0], [1], [2], [0], [0], [1], [2], [4], [4], [5], [6], [8], [8], [9], [10]];
 
 
-var num_squares;
+
 var board;
+var words;
 
 var to_time;
 var remaining_seconds = -1;
 var timer_ID;
 
 
-jumble();
+
+var dictionary = new Trie("");
+$.get("words_alpha.txt", function(txt) { // https://raw.githubusercontent.com/dwyl/english-words/master/
+	var dict_words = txt.split("\n");
+	for (var i = 0; i < dict_words.length; i++ ) {
+		dictionary.push(dict_words[i].trim());
+	}
+	jumble();
+});
+
+
 
 
 
 
 function jumble() {
 
+	document.getElementById('jumble').disabled = true;
+
 	board = [];
+	words = [];
+	stop_timer();
 
 	var dice_order = shuffle(range(NUM_DICE));
 
@@ -55,18 +75,24 @@ function jumble() {
 		board.push(DICE[i][Math.floor(Math.random() * 6)]);
 	}
 
+	words = get_all_words();
+	var words_els = document.getElementById('words');
+	for (var i = 0; i < words.length; i++) {
+		words_els.innerHTML += words[i] + " ";
+	}
+	document.getElementById('get-all-words').disabled = false;
+	document.getElementById('jumble').disabled = false;
+
 	var i = 0;
 	var update_ID = setInterval(function() {
 		update_display(true);
-		if (i == 10) {
+		if (i > 10) {
 			clearInterval(update_ID);
 			update_display(false);
 		} else {
 			i++;
 		}
 	}, 50);
-
-	update_display();
 
 }
 
@@ -157,6 +183,7 @@ function draw_die(ctx, x, y, rot, text) {
 
 
 function update_display(should_randomize) {
+	console.log("here");
 	// clear the display
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -235,4 +262,40 @@ function stop_timer() {
 	document.getElementById('time').innerHTML = "3:00";
 	remaining_seconds = -1;
 	clearInterval(timer_ID);
+}
+
+
+
+
+
+function get_string_from_locs(locs) {
+	var s = "";
+	for (var i = 0; i < locs.length; i++) {
+		s += board[locs[i]];
+	}
+	return s.toLowerCase();
+}
+
+
+function get_all_words() {
+	var words = [];
+	// depth first search through all possible strings
+	var stack = [];
+	for (var i = 0; i < NUM_DICE; i++) {
+		stack.push([i]);
+	}
+	while (stack.length > 0) {
+		var parent = stack.pop();
+		var potent_word = get_string_from_locs(parent);
+		if (dictionary.contains(potent_word)) {
+			words.push(potent_word);
+		}
+		var surr_locs = SURROUNDINGS[parent[parent.length - 1]];
+		for (var i = 0; i < surr_locs.length; i++) {
+			if (!parent.includes(surr_locs[i])) {
+				stack.push([...parent, surr_locs[i]]);
+			}
+		}
+	}
+	return words;
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<p id="test"></p>
+		<!-- <a href="https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt" download>here</a> -->
+	</body>
+
+	<script src="trie.js"></script>
+	<script>
+
+		var root = new Trie("");
+		var list = [];
+
+		$.get("https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt", function(txt) {
+
+			var words = txt.split("\n");
+			for (var i = 0; i < words.length; i++ ) {
+				root.push(words[i].trim());
+				list.push(words[i].trim());
+			}
+
+			// document.getElementById('test').innerHTML = root.toString();
+
+
+			var t_trie = 0;
+			for (var i = 0; i < 100; i++) {
+				var s = (new Date()).getTime();
+				root.contains("hello");
+				t_trie += (new Date()).getTime() - s;
+			}
+			document.getElementById('test').innerHTML += "<br><br>Average time for Trie: " + t_trie;
+			var t_list = 0;
+			for (var i = 0; i < 100; i++) {
+				var s = (new Date()).getTime();
+				list.includes("hello");
+				t_list += (new Date()).getTime() - s;
+			}
+			document.getElementById('test').innerHTML += "<br><br>Average time for list: " + t_list;
+
+
+		});
+
+	</script>
+</html>
