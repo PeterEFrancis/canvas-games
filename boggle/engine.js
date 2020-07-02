@@ -48,7 +48,7 @@ var timer_ID;
 
 
 var dictionary = new Trie("");
-$.get("https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt", function(txt) { // https://raw.githubusercontent.com/dwyl/english-words/master/
+$.get("scrabble.txt", function(txt) { // https://raw.githubusercontent.com/dwyl/english-words/master/
 	var dict_words = txt.split("\n");
 	for (var i = 0; i < dict_words.length; i++ ) {
 		dictionary.push(dict_words[i].trim());
@@ -78,9 +78,6 @@ function jumble() {
 	words = get_all_words();
 	words.sort();
 	var words_els = document.getElementById('words').innerHTML = words.join(", ");
-	// for (var i = 0; i < words.length; i++) {
-	// 	words_els.innerHTML += words[i] + " ";
-	// }
 
 	document.getElementById('get-all-words').disabled = false;
 	document.getElementById('jumble').disabled = false;
@@ -168,10 +165,10 @@ function draw_die(ctx, x, y, rot, text) {
 	ctx.shadowBlur = 0;
 	ctx.textAlign = "center";
 	ctx.fillStyle = "black";
-	ctx.font = "140px monospace";
+	ctx.font = "140px Arial";
 	ctx.translate(x, y);
 	ctx.rotate(ROTATIONS[rot]);
-	ctx.fillText(text, ROTATION_TEXT_OFFSETS[rot][0], ROTATION_TEXT_OFFSETS[rot][1]);
+	ctx.fillText(text, ROTATION_TEXT_OFFSETS[rot][0], ROTATION_TEXT_OFFSETS[rot][1] + 10);
 	if (text == "M" || text == "W") {
 		roundRect(ctx, ROTATION_TEXT_OFFSETS[rot][0] - SQUARE_SIZE * 0.2,
 		               ROTATION_TEXT_OFFSETS[rot][1] + SQUARE_SIZE * 0.05,
@@ -298,5 +295,5 @@ function get_all_words() {
 			}
 		}
 	}
-	return words;
+	return [...new Set(words)];
 }
