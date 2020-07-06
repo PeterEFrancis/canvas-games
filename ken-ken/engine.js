@@ -45,14 +45,6 @@ function set_meta(num_sq) {
 
 }
 
-
-
-set_meta(4);
-
-new_game();
-
-
-
 function change_num_squares(amount) {
 	if (num_squares + amount > 2 && num_squares + amount < 10) {
 		set_meta(num_squares + amount);
@@ -61,34 +53,125 @@ function change_num_squares(amount) {
 }
 
 
-function new_game() {
 
-	solution = get_number_grid();
-	board = [];
+set_meta(4);
+
+new_game();
+
+
+
+
+function get_children(parent) {
+	var child;
+	var children = [];
+	for (var j = 1; j < num_squares + 1; j++) {
+		if (can_place(j, parent.grid, parent.depth)) {
+			child = {grid: [...parent.grid], depth: parent.depth + 1};
+			child.grid[parent.depth] = j;
+			children.push(child);
+		}
+	}
+	return children;
+}
+
+function get_number_grid() {
+	var root = {grid:[], depth:0};
 	for (var i = 0; i < num_squares * num_squares; i++) {
-		board.push(0);
+		root.grid.push(0);
 	}
-	get_cages();
+	var stack = [root];
+	found = 0;
+	while (stack.length > 0) {
+		parent = stack.pop();
+		if (parent.depth == num_squares * num_squares) {
+			return parent.grid;
+		}
+		stack.push(...shuffle(get_children(parent)));
+	}
+	return temp;
+}
 
-	selected_square_id = -1;
+function get_swaps() {
+	swaps = [];
+	for (var i = 0; i < num_squares; i++) {
+		for (var j = i + 1; j < num_squares; j++) {
+			swaps.push([i,j]);
+		}
+	}
+	return swaps;
+}
 
-	document.getElementById('message').innerHTML = "";
-
-	update_display();
+function shuffle(a) {
+	var j, x, i;
+	for (i = a.length - 1; i > 0; i--) {
+		j = Math.floor(Math.random() * (i + 1));
+		x = a[i];
+		a[i] = a[j];
+		a[j] = x;
+	}
+	return a;
 }
 
 
-function place(num) {
-	if (selected_square_id != -1 && num <= num_squares) {
-		board[selected_square_id] = num;
-		update_display();
+
+
+function is_solved(b, c) {
+	for (var i = 0; i < groups.length; i++) {
+		var s = [];
+		for (var j = 0; j < num_squares; j++) {
+			if (b[groups[i][j]] == NONE) {
+				return false;
+			}
+			s.push(b[groups[i][j]]);
+		}
+		if ((new Set(s)).size != num_squares) {
+			return false;
+		}
+	}
+
+	for (var i = 0; i < c.length; i++) {
+		if (!check_cage(b, c[i])) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+function check_cage(b, cage) {
+	if (cage.op == "") {
+		return (b[cage.locs[0]] == Number(cage.comb));
+	}
+
+	var els = [];
+	for (var i = 0; i < cage.locs.length; i++) {
+		els.push(b[cage.locs[i]]);
+	}
+	var larger = Math.max(...els);
+	var smaller = Math.min(...els);
+
+	if (cage.op == "-") {
+		return larger - smaller == cage.comb;
+	} else if (cage.op == "÷") {
+		return larger / smaller == cage.comb;
+	} else if (cage.op == "+") {
+		var s = 0;
+		for (var i = 0; i < els.length; i++) {
+			s += els[i];
+		}
+		return s == cage.comb;
+	} else {
+		var p = 1;
+		for (var i = 0; i < els.length; i++) {
+			p *= els[i];
+		}
+		return p == cage.comb;
 	}
 }
 
-
-function get_cages() {
-	cages = [];
-	board_cage_outline = [];
+function get_cages_and_outline(b) {
+	c = [];
+	bco = [];
 	var remaining = [];
 	for (var i = 0; i < num_squares * num_squares; i++) {
 		remaining.push(i);
@@ -99,7 +182,7 @@ function get_cages() {
 		// find a random first element, and move it from `remaining` to cage.locs
 		var first = remaining[Math.floor(Math.random() * remaining.length)];
 		cage.locs.push(first);
-		board_cage_outline[first] = cages.length;
+		bco[first] = c.length;
 		remaining.splice(remaining.indexOf(first), 1);
 		// add adjacent cells to cage.locs
 		var next, last;
@@ -118,7 +201,7 @@ function get_cages() {
 						if (remaining.includes(next)) {
 							remaining.splice(remaining.indexOf(next), 1);
 							cage.locs.push(next);
-							board_cage_outline[next] = cages.length;
+							bco[next] = c.length;
 							extended = true;
 							break;
 						}
@@ -131,7 +214,7 @@ function get_cages() {
 		}
 		var els = [];
 		for (var i = 0; i < cage.locs.length; i++) {
-			els.push(solution[cage.locs[i]]);
+			els.push(b[cage.locs[i]]);
 		}
 		if (els.length == 1) {
 			cage.op = "";
@@ -164,39 +247,70 @@ function get_cages() {
 			}
 		}
 		// console.log(cage);
-		cages.push(cage);
+		c.push(cage);
 	}
-	return cages;
+	return [c, bco];
+}
+
+function quick_test_has_multiple_solutions(b, c) {
+
+	var temp, new_b_r, new_b_c;
+	var swaps = get_swaps();
+	for (var s = 0; s < swaps.length; s++) {
+		// swap two rows
+		new_b_r = [...b];
+		for (var i = 0; i < num_squares; i++) {
+			new_b_r[swaps[s][0] * num_squares + i] = b[swaps[s][1] * num_squares + i];
+			new_b_r[swaps[s][1] * num_squares + i] = b[swaps[s][0] * num_squares + i];
+		}
+		if (is_solved(new_b_r, c)) {
+			return true;
+		}
+
+		// swap two columns
+		new_b_c = [...b];
+		for (var i = 0; i < num_squares; i++) {
+			new_b_c[i * num_squares + swaps[s][0]] = b[i * num_squares + swaps[s][1]];
+			new_b_c[i * num_squares + swaps[s][1]] = b[i * num_squares + swaps[s][0]];
+		}
+		if (is_solved(new_b_c, c)) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 
-function get_number_grid() {
-	var root = {grid:[], depth:0};
+
+
+function new_game() {
+
+	board = [];
 	for (var i = 0; i < num_squares * num_squares; i++) {
-		root.grid.push(0);
+		board.push(0);
 	}
-	var stack = [root];
-	while (stack.length > 0) {
-		var parent = stack.pop();
-		if (parent.depth == num_squares * num_squares) {
-			return parent.grid;
-		}
-		stack.push(...shuffle(get_children(parent)));
-	}
+
+	do {
+		solution = get_number_grid();
+		cages_and_outline = get_cages_and_outline(solution);
+		cages = cages_and_outline[0];
+		board_cage_outline = cages_and_outline[1];
+	} while(quick_test_has_multiple_solutions(solution, cages));
+
+	selected_square_id = -1;
+
+	document.getElementById('message').innerHTML = "";
+
+	update_display();
 }
 
 
-function get_children(parent) {
-	var child;
-	var children = [];
-	for (var j = 1; j < num_squares + 1; j++) {
-		if (can_place(j, parent.grid, parent.depth)) {
-			child = {grid: [...parent.grid], depth: parent.depth + 1};
-			child.grid[parent.depth] = j;
-			children.push(child);
-		}
+function place(num) {
+	if (selected_square_id != -1 && num <= num_squares) {
+		board[selected_square_id] = num;
+		update_display();
 	}
-	return children;
 }
 
 
@@ -217,18 +331,6 @@ function can_place(num, grid, loc) {
 }
 
 
-function shuffle(a) {
-	var j, x, i;
-	for (i = a.length - 1; i > 0; i--) {
-		j = Math.floor(Math.random() * (i + 1));
-		x = a[i];
-		a[i] = a[j];
-		a[j] = x;
-	}
-	return a;
-}
-
-
 function show_solution() {
 	board = [...solution];
 	update_display();
@@ -236,7 +338,7 @@ function show_solution() {
 
 
 function check() {
-	if (is_solved(board)) {
+	if (is_solved(board, cages)) {
 		document.getElementById('message').innerHTML = "Complete!";
 		document.getElementById('message').style.color = "green";
 	} else if (board.includes(NONE)) {
@@ -248,61 +350,6 @@ function check() {
 	}
 }
 
-
-function is_solved(b) {
-	for (var i = 0; i < groups.length; i++) {
-		var s = [];
-		for (var j = 0; j < num_squares; j++) {
-			if (b[groups[i][j]] == NONE) {
-				return false;
-			}
-			s.push(b[groups[i][j]]);
-		}
-		if ((new Set(s)).size != num_squares) {
-			return false;
-		}
-	}
-
-	for (var i = 0; i < cages.length; i++) {
-		if (!check_cage(cages[i])) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-
-function check_cage(cage) {
-	if (cage.op == "") {
-		return (board[cage.locs[0]] == Number(cage.comb));
-	}
-
-	var els = [];
-	for (var i = 0; i < cage.locs.length; i++) {
-		els.push(board[cage.locs[i]]);
-	}
-	var larger = Math.max(...els);
-	var smaller = Math.min(...els);
-
-	if (cage.op == "-") {
-		return larger - smaller == cage.comb;
-	} else if (cage.op == "÷") {
-		return larger / smaller == cage.comb;
-	} else if (cage.op == "+") {
-		var s = 0;
-		for (var i = 0; i < els.length; i++) {
-			s += els[i];
-		}
-		return s == cage.comb;
-	} else {
-		var p = 1;
-		for (var i = 0; i < els.length; i++) {
-			p *= els[i];
-		}
-		return p == cage.comb;
-	}
-}
 
 
 
@@ -403,3 +450,61 @@ canvas.addEventListener('click', function() {
 	}
 	update_display();
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function get_num_solutions(b) {
+// 	var num_solutions = 0;
+// 	var root = {grid:[], depth:0};
+// 	for (var i = 0; i < num_squares * num_squares; i++) {
+// 		root.grid.push(0);
+// 	}
+// 	var queue = [root];
+// 	while (queue.length > 0) {
+// 		var parent = queue.shift();
+// 		if (parent.depth == num_squares * num_squares) {
+// 			return num_solutions;
+// 		}
+// 		stack.push(...shuffle(get_children(parent)));
+// 	}
+// }
+
+
+
+// // UNIQUE (STRICT):
+// function get_number_grid() {
+// 	var temp = [];
+// 	var root = {grid:[], depth:0};
+// 	for (var i = 0; i < num_squares * num_squares; i++) {
+// 		root.grid.push(0);
+// 	}
+// 	var stack = [root];
+// 	var found, parent;
+// 	do {
+// 		found = 0;
+// 		while (stack.length > 0) {
+// 			parent = stack.pop();
+// 			if (parent.depth == num_squares * num_squares) {
+// 				temp = parent.grid;
+// 				found += 1;
+// 				if (found == 2) {
+// 					break;
+// 				}
+// 			}
+// 			stack.push(...shuffle(get_children(parent)));
+// 		}
+// 	} while (found != 1);
+// 	return temp;
+// }
