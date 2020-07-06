@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Play Birds of a Feather</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+
+		<style>
+			html {
+				min-width: 100%;
+			}
+
+			.container {
+				min-width: 550px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+
+			#info {
+				color: lightgrey;
+			}
+
+			td {
+
+			}
+
+
+		</style>
+
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-lg-6">
+					<div class="center-block" style="width:550px;">
+					<h1 class="text-center" style="margin-bottom: 20px;">Birds of a Feather</h1>
+						<!-- <div class="text-right">
+							<button onclick="toggle_flockability_graph();" class="btn btn-default btn-xs" style="margin-right: 3px;">Toggle Flockability Graph</button>
+						</div> -->
+						<!-- Trigger the modal with a button -->
+						<div class="text-right">
+							<a type="button" id="info" data-toggle="modal" data-target="#info-modal">
+								<span class="glyphicon glyphicon-info-sign"></span>
+							</a>
+						</div>
+						<canvas id="display"
+										class="center-block"
+										width="550" height="750"
+										style="background-color: green; margin-bottom: 5px;">
+						</canvas>
+						<div class="row">
+							<div class="col-xs-4">
+								<p id="seed" style="margin-left: 3px;"></p>
+							</div>
+							<div class="col-xs-4">
+								<div class="input-group input-group-sm">
+									<input id="seed-input" class="form-control" placeholder="set integer seed"/>
+									<span class="input-group-btn">
+										<button type="button" onclick="change_seed_manual();" class="btn btn-default">Set</button>
+									</span>
+								</div>
+							</div>
+							<div class="col-xs-4 text-right">
+								<button onclick="reset_game();" class="btn btn-default btn-sm" style="margin-right: 3px;">Random Seed</button>
+							</div>
+						</div>
+
+					</div>
+
+					<br>
+					<button onclick="show_solution();" class="btn btn-default center-block">Show Solution</button>
+
+					<br><br>
+					<p id="solution" style="font-family: monospace;" class="text-center"></p>
+				</div>
+				<div class="col-md-3"></div>
+			</div>
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-6">
+					<h3>Game Play</h3>
+					<ul>
+						<li>Object: Form a single stack of all cards.</li>
+		 				<li>Play: A player may move (i.e. flock) one stack of cards onto another stack of cards in the same row or column if the cards on top of both stacks have either
+							<ol>
+								<li>the same suits, or</li>
+								<li>the same or adjacent ranks. Aces are low and not adjacent to kings, so rank adjacency is according the ordering A, 2, 3, ..., J, Q, K.</li>
+							</ol>
+						</li>
+					</ul>
+					<br><br>
+					<p style="margin-top:40px;">
+						Created by <a href="http://cs.gettysburg.edu/~tneller/" target="_blank" style="color:lightgrey;"><u>Todd W. Neller</u></a>, developed by <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis<u></a>
+					</p>
+					<br><br>
+				</div>
+				<div class="col-md-3"></div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div id="info-modal" class="modal fade" role="dialog" style="color: black;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Game Control Shortcuts</h4>
+					</div>
+					<div class="modal-body">
+						<table class="table">
+							<tr>
+								<td>ctrl + Z</td><td>Undo Move</td>
+							</tr>
+							<tr>
+								<td>ctrl + Y</td><td>Redo Move</td>
+							</tr>
+							<tr>
+								<td>T</td><td>Toggle Flockability Graph</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="engine.js"></script>
+		<script>
+
+			const canvas = document.getElementById("display");
+			const ctx = canvas.getContext("2d");
+
+			const WIDTH = canvas.width;
+			const HEIGHT = canvas.height;
+
+			var clicked_card_num;
+			var clicked_card_ID;
+			var hover_xy;
+			var hover_card_offset_xy;
+			var hover_card_ID;
+			var card_grid;
+			var undo_history_moves; // ... [from_num, to_num, hidden_card_ID] ...
+			var redo_history_moves;
+			var show_flockability_graph;
+
+			var random;
+
+			show_flockability_graph = false;
+			hover_card_ID = -1;
+			clicked = false;
+
+			reset_game(Math.floor(Math.random() * 100000000));
+
+			canvas.addEventListener('contextmenu', function(ev) {
+				ev.preventDefault();
+				return false;
+			}, false);
+
+			canvas.addEventListener('mousedown', function(evt) {
+				if (!clicked) {
+					clicked = true;
+					var rect = canvas.getBoundingClientRect();
+					var x = evt.clientX - rect.left;
+					var y = evt.clientY - rect.top;
+					var cn = get_card_num(x, y);
+					if (cn != -1) {
+						if (card_grid[cn] != -1) {
+							clicked_card_num = cn;
+							clicked_card_ID = card_grid[cn];
+							hover_card_ID = card_grid[cn];
+							card_grid[cn] = -1;
+							hover_card_offset_xy = [x - CARD_LOCATIONS_X[cn % 4], y - CARD_LOCATIONS_Y[Math.floor(cn / 4)]];
+						}
+					}
+				}
+			});
+			canvas.addEventListener('mousemove', function(evt) {
+			  var rect = canvas.getBoundingClientRect();
+			  var x = evt.clientX - rect.left;
+			  var y = evt.clientY - rect.top;
+			  hover_xy = [x,y];
+			});
+			document.addEventListener('mouseup', function(evt) {
+				clicked = false;
+				var rect = canvas.getBoundingClientRect();
+				var x = evt.clientX - rect.left;
+				var y = evt.clientY - rect.top;
+				var cn = get_card_num(x, y);
+				if (hover_card_ID != -1) {
+					if (is_legal_move(clicked_card_ID, clicked_card_num, card_grid[cn], cn)) {
+						// add to history
+						undo_history_moves.push([clicked_card_num, cn, card_grid[cn]]);
+						// move card
+						card_grid[cn] = hover_card_ID;
+						// clear redo
+						redo_history_moves = [];
+					} else {
+						// put it back
+						card_grid[clicked_card_num] = hover_card_ID;
+					}
+					hover_card_ID = -1;
+				}
+			});
+			document.addEventListener('keydown', function(event) {
+			  if (event.keyCode == 90 && (event.metaKey || event.ctrlKey)) {
+					if (hover_card_ID == -1) {
+						undo();
+					}
+				}
+			});
+			document.addEventListener('keydown', function(event) {
+			  if (event.keyCode == 89 && (event.metaKey || event.ctrlKey)) {
+					if (hover_card_ID == -1) {
+						redo();
+					}
+				}
+			});
+			document.addEventListener('keydown', function(event) {
+			  if (event.keyCode == 84) {
+					toggle_flockability_graph();
+				}
+			});
+
+			setInterval(function() {update()}, 5);
+
+			function change_seed_manual() {
+				var proposed = document.getElementById('seed-input').value;
+				document.getElementById('seed-input').value = "";
+				if (!isNaN(proposed) && proposed.trim() != "" && proposed.length < 15) {
+					reset_game(Number(proposed));
+				};
+			}
+
+		</script>
+	</body>
+</html>

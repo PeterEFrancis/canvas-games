@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play KenKen</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+
+		<style>
+			html {
+				min-width: 300px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				width: 100%;
+				background-color: white;
+				margin-bottom: 20px;
+			}
+
+			* {
+				font-size: 12pt;
+			}
+
+			.num-btn {
+				padding: 10px 2px;
+				width: 11%;
+			}
+
+			@media print {
+				.controls {
+					display: none;
+				}
+			}
+
+			.btn-lg {
+				margin-bottom: 20px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<h1 class="text-center" style="margin-bottom:20px;">KenKen</h1>
+					<canvas id="display" class="center-block" width="1000" height="1000">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<h3 id="message" class="text-center" style="margin-bottom: 20px;"></h3>
+					<div class="text-center controls" style="margin-bottom: 20px;">
+						<button class="btn btn-default btn-lg" onclick="new_game()">New Game</button>
+						<button class="btn btn-default btn-lg" onclick="show_solution()">Show Solution</button>
+						<div class="btn-group">
+							<button class="btn btn-default btn-lg"  onclick="change_num_squares(-1)">
+								<span class="glyphicon glyphicon-minus"></span>
+							</button>
+							<button class="btn btn-default btn-lg"  onclick="change_num_squares(1)">
+								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+						</div>
+						<button class="btn btn-default btn-lg" onclick="check()">Check</button>
+					</div>
+					<div class="row controls">
+						<div class="col-xs-2" style="padding: 2px 2px 2px 4px;">
+							<button class="btn btn-danger btn-block btn-lg" onclick="place(NONE)" style="padding: 10px 2px">
+								<span class="	glyphicon glyphicon-remove"></span>
+							</button>
+						</div>
+						<div class="col-xs-10 text-center" style="padding: 2px;">
+							<div class="btn-group" style="width: 100%;">
+								<button class="btn btn-default btn-lg num-btn" onclick="place(1)">1</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(2)">2</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(3)">3</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(4)" id="4">4</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(5)" id="5">5</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(6)" id="6">6</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(7)" id="7">7</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(8)" id="8">8</button>
+								<button class="btn btn-default btn-lg num-btn" onclick="place(9)" id="9">9</button>
+							</div>
+						</div>
+					</div>
+					<p class="controls">Click squares and then numbers (either the buttons above or on a keyboard) to fill in the grid. Each row and column must contain exactly one 1, 2, 3, etc. In addition, the numbers in each "cage" must be able to combine to the given cage numer, using the given arithmetic operation.</p>
+					<p class="text-center" style="margin-top:40px;">
+						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-2"></div>
+			</div>
+		</div>
+		<script src="engine.js"></script>
+		<script>
+
+			window.addEventListener('keydown', function(e) {
+				if (e.keyCode >= 48 && e.keyCode <= 57) {
+					place(e.keyCode - 48);
+				} else if (e.keyCode == 32 || e.keyCode == 8) {
+					place(0);
+				} else if (e.keyCode == 72) {
+					hint();
+				} else if (e.keyCode == 37 || (event.shiftKey && event.keyCode == 9)) { // left
+					if (selected_square_id != -1 && selected_square_id > 0) {
+						selected_square_id -= 1;
+						update_display();
+					}
+				} else if (e.keyCode == 39 || event.keyCode == 9) { // right
+					if (selected_square_id != -1 && selected_square_id < num_squares * num_squares - 1) {
+						selected_square_id += 1;
+						update_display();
+					}
+				} else if (e.keyCode == 38) { // up
+					if (selected_square_id != -1 && selected_square_id > num_squares - 1) {
+						selected_square_id -= num_squares;
+						update_display();
+					}
+				} else if (e.keyCode == 40) { // down
+					if (selected_square_id != -1 && selected_square_id < num_squares * (num_squares - 1)) {
+						selected_square_id += num_squares;
+						update_display();
+					}
+				} else {
+					return;
+				}
+				e.preventDefault();
+			});
+		</script>
+	</body>
+</html>

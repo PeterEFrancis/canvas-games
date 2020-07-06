@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Play Flappy Bird</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+
+		<style>
+
+			html {
+				min-width: 260px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+
+			canvas {
+				width: 100%;
+				background-color:black;
+				margin: 0px 20px;
+			}
+
+			p {
+				font-size: 12pt;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-6">
+					<h1 class="text-center" style="margin-bottom:20px;">Flappy Bird</h1>
+					<canvas id="display" class="center-block" width="1000" height="1200" onclick="flap();"></canvas>
+					<div class="row text-center" style="padding-top: 30px;">
+						<button class="btn btn-default btn-lg btn-block" onclick="new_game()">New Game</button>
+					</div>
+					<div class="row text-center" style="padding-top: 30px;">
+						<p>Need  I say more?</p>
+					</div>
+										<p class="text-center" style="margin-top:40px;">
+						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-3">
+					<div id="test" style="font-family: monospace;"></div>
+				</div>
+			</div>
+
+		<script src="engine.js"></script>
+
+		<script>
+			document.addEventListener('keydown', function(e) {
+				if (e.keyCode == 32) {
+					flap();
+				}
+			});
+		</script>
+	</body>
+</html>
