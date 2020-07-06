@@ -20,7 +20,7 @@ const VERTICAL_SEGS = [1, 3, 4, 6];
 const NUM_SEGMENTS = 7;
 const NUM_NUMBERS = 4;
 
-const WIDTH = 15;
+const WIDTH = 25;
 const LENGTH = (333 - 3 * WIDTH) / 2;
 
 const LEFT_OFFSETS = [50, 275, 550, 775];
@@ -103,8 +103,8 @@ function update() {
 	}
 
 	ctx.fillStyle = "rgb(102, 255, 51, " + (date.getMilliseconds() < 500 ? 1 : DARK) + ")";
-	roundRect(ctx, 500 - 15, 500 - 65 - 15, 30, 30, 2, true, false);
-	roundRect(ctx, 500 - 15, 500 + 65 - 15, 30, 30, 2, true, false);
+	roundRect(ctx, 500 - 15, 500 - 65 - 15, 30, 30, 5, true, false);
+	roundRect(ctx, 500 - 15, 500 + 65 - 15, 30, 30, 5, true, false);
 
 
 }
