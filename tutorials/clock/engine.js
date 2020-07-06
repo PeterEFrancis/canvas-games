@@ -36,7 +36,7 @@ const SEGMENT_LOCS = [[WIDTH, 0],                           // 0
                       [WIDTH + LENGTH, 2 * WIDTH + LENGTH], // 6
                      ];
 
-const DARK = 0.05;
+const DARK = 0.1;
 
 
 function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
