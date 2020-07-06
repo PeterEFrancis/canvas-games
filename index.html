@@ -76,24 +76,16 @@
 
 			#banner {
 				display: block;
-				max-width: 100%; padding: 20px;
+				width: 100%;
+				max-width: 1000px;
+				padding: 20px;
 			}
 
 			#logo {
 				display: none;
-				max-width: 100%; width: 100%;
-			}
-
-			@media screen and (max-width: 300px) {
-				#banner {
-					display: none;
-				}
-
-				#logo {
-					display: block;
-				}
-			}
-
+				max-width: 100%;
+				width: 100%;
+			
 
 			@media screen and (max-width: 991px) {
 				.game-title {
@@ -132,8 +124,7 @@
   <body style="min-width:330px; background-color: rgb(30,30,30)">
     <div class="jumbotron text-center" style="background-color: rgb(50,50,50)">
       <!-- <h1>Canvas Games</h1> -->
-			<img id="banner" src="img/logo/canvas-games-banner.png" class="img-repsonsive"/>
-			<img id="logo" src="img/logo/canvas-games-logo.png" class="img-repsonsive"/>
+			<img id="banner" src="img/logo/canvas-games-banner.png" class="img-repsonsive center-block"/>
     </div>
 
     <div class="container">
