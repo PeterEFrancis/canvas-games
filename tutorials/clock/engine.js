@@ -80,7 +80,7 @@ function update() {
 
 	var date = new Date();
 
-	var hour = "0" + date.getHours();
+	var hour = "0" + (date.getHours() % 12);
 	var min = "0" + date.getMinutes();
 
 	var a = hour.substring(hour.length - 2, hour.length - 1);
@@ -105,6 +105,12 @@ function update() {
 	ctx.fillStyle = "rgb(102, 255, 51, " + (date.getMilliseconds() < 500 ? 1 : DARK) + ")";
 	roundRect(ctx, 500 - 15, 250 - 65 - 15, 30, 30, 5, true, false);
 	roundRect(ctx, 500 - 15, 250 + 65 - 15, 30, 30, 5, true, false);
+
+
+	ctx.fillStyle = "rgb(102, 255, 51)";
+	ctx.font = "50px Arial";
+	ctx.fillText(date.getHours() > 12 ? "PM" : "AM", 900, 500);
+
 
 
 }
