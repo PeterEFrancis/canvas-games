@@ -273,10 +273,11 @@ function get_all_words() {
 	for (var i = 0; i < NUM_DICE; i++) {
 		stack.push([i]);
 	}
+	var parent, potent_word, state;
 	while (stack.length > 0) {
-		var parent = stack.pop();
-		var potent_word = get_string_from_locs(parent);
-		var state = dictionary.contains(potent_word);
+		parent = stack.pop();
+		potent_word = get_string_from_locs(parent);
+		state = dictionary.contains(potent_word);
 		if (state != 0) { // is a stem
 			var surr_locs = SURROUNDINGS[parent[parent.length - 1]];
 			for (var i = 0; i < surr_locs.length; i++) {

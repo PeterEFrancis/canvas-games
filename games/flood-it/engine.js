@@ -22,14 +22,26 @@ var grid  = [];
 var floods = 0;
 
 
+
 new_game();
 
 
 
 function user_flood(color) {
-	grid = fill(grid, get_flooded(grid).flooded, color);
-	floods += 1;
-	update();
+	if (!is_all_flooded(grid)) {
+		grid = fill(grid, get_flooded(grid).flooded, color);
+		floods += 1;
+		update();
+		if (is_all_flooded(grid)) {
+			ctx.fillStyle = ["white", "black", "black", "white", "white", "white"][grid[0]];
+			ctx.textAlign = "center";
+			ctx.fillStyle = "black";
+			ctx.font = "80px Arial";
+			ctx.fillText("You Flooded the Board", canvas.width / 2, canvas.height / 2 - 50);
+			ctx.fillText("in " + floods + " flood" + (floods == 1 ? "" : "s") + "!", canvas.width / 2, canvas.height / 2 + 50);
+		}
+	}
+
 }
 
 
@@ -93,6 +105,7 @@ function new_game() {
 	for (var i = 0; i < NUM_SQUARES * NUM_SQUARES; i++) {
 		grid[i] = Math.floor(Math.random() * (PURPLE + 1));
 	}
+
 
 	// update display
 	update();
