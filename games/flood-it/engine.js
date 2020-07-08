@@ -20,8 +20,8 @@ const COLORS = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE];
 
 var grid  = [];
 var floods = 0;
-
-
+var best = Infinity;
+var possible;
 
 new_game();
 
@@ -33,6 +33,10 @@ function user_flood(color) {
 		floods += 1;
 		update();
 		if (is_all_flooded(grid)) {
+			if (floods < best) {
+				best = floods;
+				update();
+			}
 			ctx.fillStyle = ["white", "black", "black", "white", "white", "white"][grid[0]];
 			ctx.textAlign = "center";
 			ctx.font = "80px Arial";
@@ -40,7 +44,6 @@ function user_flood(color) {
 			ctx.fillText("in " + floods + " flood" + (floods == 1 ? "" : "s") + "!", canvas.width / 2, canvas.height / 2 + 50);
 		}
 	}
-
 }
 
 
@@ -49,18 +52,22 @@ function get_flooded(g) {
 		var already_checked = [];
 		var same_color = [];
 		var boundary_colors = [];
+		var boundary_color_counts = [0, 0, 0, 0, 0, 0];
 		var stack = [0];
 		while (stack.length > 0) {
 			var p = stack.pop();
 			if (!already_checked.includes(p)) {
 				already_checked.push(p);
 				same_color.push(p);
+				var counted = false;
 				// down row
 				if (Math.floor(p / NUM_SQUARES) + 1 < NUM_SQUARES) {
 					if (g[p + NUM_SQUARES] == g[0]) {
 						stack.push(p + NUM_SQUARES);
 					} else {
 						boundary_colors.push(g[p + NUM_SQUARES]);
+						boundary_color_counts[g[p + NUM_SQUARES]] += 1;
+						counted = true;
 					}
 				}
 				// right col
@@ -69,6 +76,9 @@ function get_flooded(g) {
 						stack.push(p + 1);
 					} else {
 						boundary_colors.push(g[p + 1]);
+						if (!counted) {
+							boundary_color_counts[g[p + 1]] += 1;
+						}
 					}
 				}
 				// up row
@@ -77,6 +87,9 @@ function get_flooded(g) {
 						stack.push(p - NUM_SQUARES);
 					} else {
 						boundary_colors.push(g[p - NUM_SQUARES]);
+						if (!counted) {
+							boundary_color_counts[g[p - NUM_SQUARES]] += 1;
+						}
 					}
 				}
 				// left col
@@ -85,15 +98,26 @@ function get_flooded(g) {
 						stack.push(p - 1);
 					} else {
 						boundary_colors.push(g[p - 1]);
+						if (!counted) {
+							boundary_color_counts[g[p - 1]] += 1;
+						}
 					}
 				}
 			}
 		}
 
-		return {flooded: same_color, boundary_colors: [...(new Set(boundary_colors))]};
+		return {flooded: same_color, boundary_colors: [...(new Set(boundary_colors))], boundary_color_counts: boundary_color_counts};
 
 }
 
+
+function get_random_grid() {
+	var g = [];
+	for (var i = 0; i < NUM_SQUARES * NUM_SQUARES; i++) {
+		g.push(Math.floor(Math.random() * (PURPLE + 1)));
+	}
+	return g;
+}
 
 
 function new_game() {
@@ -101,10 +125,10 @@ function new_game() {
 	floods = 0;
 
 	// set grid randomly
-	for (var i = 0; i < NUM_SQUARES * NUM_SQUARES; i++) {
-		grid[i] = Math.floor(Math.random() * (PURPLE + 1));
-	}
+	grid = get_random_grid();
 
+	// get possible
+	possible = get_possible();
 
 	// update display
 	update();
@@ -157,8 +181,10 @@ function fill(g, locs, color) {
 
 function update() {
 
-	// floods
+	// floods and best
 	document.getElementById('floods').innerHTML = floods;
+	document.getElementById('possible').innerHTML = possible;
+	document.getElementById('best').innerHTML = best == Infinity ? "" : ("Personal Best: " + best);
 
 	// draw blocks
 	for (var i = 0; i < NUM_SQUARES; i++) {
@@ -178,6 +204,21 @@ function update() {
 
 
 
+
+// testing function
+
+
+function get_possible() {
+	var g = [...grid]; // get_random_grid();
+	var f = 0;
+	while (!is_all_flooded(g)) {
+		var boundary_color_counts = get_flooded(g).boundary_color_counts;
+		var color = boundary_color_counts.indexOf(Math.max(...boundary_color_counts));
+		g = fill(g, get_flooded(g).flooded, color);
+		f += 1;
+	}
+	return f;
+}
 
 
 
