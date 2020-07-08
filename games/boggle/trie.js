@@ -21,17 +21,21 @@ class Trie {
 
 	contains(string) {
 		if (string.length == 1) {
-			if (string in this.children && this.children[string].leaf) {
-				return true;
+			if (string in this.children) {
+				if (this.children[string].leaf) {
+					return 2;
+				} else {
+					return 1;
+				}
 			} else {
-				return false;
+				return 0;
 			}
 		}
 
 		if (string[0] in this.children) {
 			return this.children[string[0]].contains(string.substring(1));
 		} else {
-			return false;
+			return 0;
 		}
 	}
 

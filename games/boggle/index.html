@@ -45,10 +45,9 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title" style="color: black">All Words (of at most 10 letters)</h4>
+						<h4 class="modal-title" style="color: black">All Words</h4>
 					</div>
 					<div class="modal-body">
-						<img class="img-responsive center-block" src="loading.gif" style="max-width: 150px" id="loading"/>
 						<p id="words" style="color: black"></p>
 					</div>
 				</div>
@@ -69,7 +68,7 @@
 						<div class="col-sm-7">
 							<div class="text-center controls" style="margin-bottom: 20px;">
 								<button class="btn btn-default btn-lg btn-block" onclick="jumble()" id="jumble">Jumble!</button>
-								<button class="btn btn-default btn-lg btn-block" id="get-all-words" onclick="modal_helper();">Get All Words</button>
+								<button class="btn btn-default btn-lg btn-block" id="get-all-words" data-toggle="modal" data-target="#modal">Get All Words</button>
 							</div>
 						</div>
 						<div class="col-sm-5">

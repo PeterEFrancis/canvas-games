@@ -45,38 +45,24 @@ var to_time;
 var remaining_seconds = -1;
 var timer_ID;
 
-var dictionary;
 
 
 
-var start = new Promise(
-	function(resolve, reject) {
-		jumble();
-		document.getElementById('jumble').disabled = true;
-		resolve();
+
+var dictionary = new Trie("");
+$.get("https://raw.githubusercontent.com/PeterEFrancis/canvas-games/master/games/boggle/scrabble.txt", function(txt) {
+	var dict_words = txt.split("\n");
+	for (var i = 0; i < dict_words.length; i++ ) {
+		dictionary.push(dict_words[i].trim());
 	}
-)
-
-start.then(function() {
-	dictionary = new Trie("");
-	$.get("https://raw.githubusercontent.com/PeterEFrancis/canvas-games/master/games/boggle/scrabble.txt", function(txt) {
-		var dict_words = txt.split("\n");
-		for (var i = 0; i < dict_words.length; i++ ) {
-			dictionary.push(dict_words[i].trim());
-		}
-		document.getElementById('jumble').disabled = false;
-	});
+	jumble();
 });
 
 
 
 
 
-
 function jumble() {
-
-	document.getElementById('loading').style.display = "block";
-	document.getElementById('words').innerHTML = "";
 
 	board = [];
 	words = [];
@@ -87,6 +73,9 @@ function jumble() {
 	for (var i = 0; i < NUM_DICE; i++) {
 		board.push(DICE[i][Math.floor(Math.random() * 6)]);
 	}
+
+	words = get_all_words();
+	document.getElementById('words').innerHTML = words.join(", ");
 
 	var i = 0;
 	var update_ID = setInterval(function() {
@@ -100,70 +89,6 @@ function jumble() {
 	}, 50);
 
 }
-
-
-
-
-
-
-function modal_helper() {
-
-	var p = new Promise(
-		function(resolve, reject) {
-			$('#modal').modal();
-			resolve();
-		}
-	);
-
-	p.then(function() {
-		setTimeout(function() {
-			get_all_words_helper();
-		}, 500);
-	});
-
-}
-
-
-
-
-
-function get_all_words_helper() {
-
-	if (words.length == 0) {
-
-		var get_words = new Promise(
-			function(resolve, reject) {
-
-				document.getElementById('jumble').disabled = true;
-
-				words = get_all_words();
-
-				resolve();
-			}
-		);
-
-		get_words.then(function() {
-			document.getElementById('words').innerHTML = words.join(", ");
-
-			document.getElementById('jumble').disabled = false;
-
-			document.getElementById('loading').style.display = "none";
-		});
-
-	}
-
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -351,13 +276,16 @@ function get_all_words() {
 	while (stack.length > 0) {
 		var parent = stack.pop();
 		var potent_word = get_string_from_locs(parent);
-		if (dictionary.contains(potent_word)) {
-			w.push(potent_word);
-		}
-		var surr_locs = SURROUNDINGS[parent[parent.length - 1]];
-		for (var i = 0; i < surr_locs.length; i++) {
-			if (!parent.includes(surr_locs[i]) && parent.length < 10) {
-				stack.push([...parent, surr_locs[i]]);
+		var state = dictionary.contains(potent_word);
+		if (state != 0) { // is a stem
+			var surr_locs = SURROUNDINGS[parent[parent.length - 1]];
+			for (var i = 0; i < surr_locs.length; i++) {
+				if (!parent.includes(surr_locs[i])) {
+					stack.push([...parent, surr_locs[i]]);
+				}
+			}
+			if (state == 2) { // is a leaf
+				w.push(potent_word);
 			}
 		}
 	}
