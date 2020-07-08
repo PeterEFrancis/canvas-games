@@ -75,8 +75,7 @@ start.then(function() {
 
 function jumble() {
 
-	document.getElementById('loading').display = "block";
-
+	document.getElementById('loading').style.display = "block";
 	document.getElementById('words').innerHTML = "";
 
 	board = [];
