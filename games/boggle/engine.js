@@ -45,15 +45,27 @@ var to_time;
 var remaining_seconds = -1;
 var timer_ID;
 
+var dictionary;
 
 
-var dictionary = new Trie("");
-$.get("scrabble.txt", function(txt) { // https://raw.githubusercontent.com/dwyl/english-words/master/
-	var dict_words = txt.split("\n");
-	for (var i = 0; i < dict_words.length; i++ ) {
-		dictionary.push(dict_words[i].trim());
+
+var start = new Promise(
+	function(resolve, reject) {
+		jumble();
+		document.getElementById('jumble').disabled = true;
+		resolve();
 	}
-	jumble();
+)
+
+start.then(function() {
+	dictionary = new Trie("");
+	$.get("https://raw.githubusercontent.com/PeterEFrancis/canvas-games/master/games/boggle/scrabble.txt", function(txt) {
+		var dict_words = txt.split("\n");
+		for (var i = 0; i < dict_words.length; i++ ) {
+			dictionary.push(dict_words[i].trim());
+		}
+		document.getElementById('jumble').disabled = false;
+	});
 });
 
 
@@ -63,7 +75,9 @@ $.get("scrabble.txt", function(txt) { // https://raw.githubusercontent.com/dwyl/
 
 function jumble() {
 
-	document.getElementById('jumble').disabled = true;
+	document.getElementById('loading').display = "block";
+
+	document.getElementById('words').innerHTML = "";
 
 	board = [];
 	words = [];
@@ -75,17 +89,10 @@ function jumble() {
 		board.push(DICE[i][Math.floor(Math.random() * 6)]);
 	}
 
-	words = get_all_words();
-	words.sort();
-	var words_els = document.getElementById('words').innerHTML = words.join(", ");
-
-	document.getElementById('get-all-words').disabled = false;
-	document.getElementById('jumble').disabled = false;
-
 	var i = 0;
 	var update_ID = setInterval(function() {
 		update_display(true);
-		if (i > 10) {
+		if (i > 6) {
 			clearInterval(update_ID);
 			update_display(false);
 		} else {
@@ -94,6 +101,70 @@ function jumble() {
 	}, 50);
 
 }
+
+
+
+
+
+
+function modal_helper() {
+
+	var p = new Promise(
+		function(resolve, reject) {
+			$('#modal').modal();
+			resolve();
+		}
+	);
+
+	p.then(function() {
+		setTimeout(function() {
+			get_all_words_helper();
+		}, 500);
+	});
+
+}
+
+
+
+
+
+function get_all_words_helper() {
+
+	if (words.length == 0) {
+
+		var get_words = new Promise(
+			function(resolve, reject) {
+
+				document.getElementById('jumble').disabled = true;
+
+				words = get_all_words();
+
+				resolve();
+			}
+		);
+
+		get_words.then(function() {
+			document.getElementById('words').innerHTML = words.join(", ");
+
+			document.getElementById('jumble').disabled = false;
+
+			document.getElementById('loading').style.display = "none";
+		});
+
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -169,10 +240,10 @@ function draw_die(ctx, x, y, rot, text) {
 	ctx.translate(x, y);
 	ctx.rotate(ROTATIONS[rot]);
 	ctx.fillText(text, ROTATION_TEXT_OFFSETS[rot][0], ROTATION_TEXT_OFFSETS[rot][1] + 10);
-	if (text == "M" || text == "W") {
-		roundRect(ctx, ROTATION_TEXT_OFFSETS[rot][0] - SQUARE_SIZE * 0.2,
-		               ROTATION_TEXT_OFFSETS[rot][1] + SQUARE_SIZE * 0.05,
-		               SQUARE_SIZE * 0.4, SQUARE_SIZE * 0.04, SQUARE_SIZE * 0.02, true, false);
+	if (["M", "W", "N", "Z"].includes(text)) {
+		ctx.fillRect(ROTATION_TEXT_OFFSETS[rot][0] - SQUARE_SIZE * 0.2,
+		             ROTATION_TEXT_OFFSETS[rot][1] + SQUARE_SIZE * 0.1,
+		             SQUARE_SIZE * 0.4, SQUARE_SIZE * 0.04, SQUARE_SIZE * 0.02);
 	}
 	ctx.rotate(-ROTATIONS[rot]);
 	ctx.translate(-x, -y);
@@ -249,21 +320,14 @@ function start_timer() {
 	}, 10);
 
 }
-
-
 function pause_timer() {
 	clearInterval(timer_ID);
 }
-
-
 function stop_timer() {
 	document.getElementById('time').innerHTML = "3:00";
 	remaining_seconds = -1;
 	clearInterval(timer_ID);
 }
-
-
-
 
 
 function get_string_from_locs(locs) {
@@ -275,8 +339,11 @@ function get_string_from_locs(locs) {
 }
 
 
+
+
+
 function get_all_words() {
-	var words = [];
+	w = [];
 	// depth first search through all possible strings
 	var stack = [];
 	for (var i = 0; i < NUM_DICE; i++) {
@@ -286,14 +353,16 @@ function get_all_words() {
 		var parent = stack.pop();
 		var potent_word = get_string_from_locs(parent);
 		if (dictionary.contains(potent_word)) {
-			words.push(potent_word);
+			w.push(potent_word);
 		}
 		var surr_locs = SURROUNDINGS[parent[parent.length - 1]];
 		for (var i = 0; i < surr_locs.length; i++) {
-			if (!parent.includes(surr_locs[i]) && parent.length < 6) {
+			if (!parent.includes(surr_locs[i]) && parent.length < 10) {
 				stack.push([...parent, surr_locs[i]]);
 			}
 		}
 	}
-	return [...new Set(words)];
+	w = [...new Set(w)];
+	w.sort();
+	return w;
 }
