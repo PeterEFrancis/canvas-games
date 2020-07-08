@@ -35,7 +35,6 @@ function user_flood(color) {
 		if (is_all_flooded(grid)) {
 			ctx.fillStyle = ["white", "black", "black", "white", "white", "white"][grid[0]];
 			ctx.textAlign = "center";
-			ctx.fillStyle = "black";
 			ctx.font = "80px Arial";
 			ctx.fillText("You Flooded the Board", canvas.width / 2, canvas.height / 2 - 50);
 			ctx.fillText("in " + floods + " flood" + (floods == 1 ? "" : "s") + "!", canvas.width / 2, canvas.height / 2 + 50);
