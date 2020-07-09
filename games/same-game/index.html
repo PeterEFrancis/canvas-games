@@ -26,14 +26,6 @@
 				margin: 0px 20px;
 			}
 
-			button {
-				height: 50px;
-			}
-
-			.col-xs-2 {
-				padding: 0px 2.5px;
-			}
-
 			p {
 				font-size: 12pt;
 			}
@@ -43,54 +35,58 @@
 	<body>
 		<div class="container">
 			<div class="row">
-				<div class="col-md-3"></div>
-				<div class="col-md-6">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
 					<h1 class="text-center" style="margin-bottom:20px;">Same Game</h1>
 					<div class="row">
 						<div class="col-xs-6">
-							<h3>Floods: <span id="floods">0</span><br>Possible: <span id="possible"></span></h3>
+							<h3>Score: <span id="score">0</span><span id="score-add"></span></h3>
 						</div>
 						<div class="col-xs-6">
 							<h3 class="text-right" id="best"></h3>
 						</div>
 					</div>
-					<canvas id="display" class="center-block" width="1000" height="1000"></canvas>
-					<div class="row" style="margin-top: 20px;">
-						<div class="col-xs-2 text-center">
-							<button class="btn btn-default btn-lg btn-block" onclick="user_flood(RED)" style="background-color: red"></button>
-						</div>
-						<div class="col-xs-2 text-center">
-							<button class="btn btn-default btn-lg btn-block" onclick="user_flood(ORANGE)" style="background-color: orange"></button>
-						</div>
-						<div class="col-xs-2 text-center">
-							<button class="btn btn-default btn-lg btn-block" onclick="user_flood(YELLOW)" style="background-color: yellow"></button>
-						</div>
-						<div class="col-xs-2 text-center">
-							<button class="btn btn-default btn-lg btn-block" onclick="user_flood(GREEN)" style="background-color: green"></button>
-						</div>
-						<div class="col-xs-2 text-center">
-							<button class="btn btn-default btn-lg btn-block" onclick="user_flood(BLUE)" style="background-color: blue"></button>
-						</div>
-						<div class="col-xs-2 text-center">
-							<button class="btn btn-default btn-lg btn-block" onclick="user_flood(PURPLE)" style="background-color: purple"></button>
-						</div>
-					</div>
+					<canvas id="display" class="center-block" width="1500" height="1000"></canvas>
 					<div class="row text-center" style="padding-top: 30px;">
 						<button class="btn btn-default btn-lg btn-block" onclick="new_game()">New Game</button>
 					</div>
 					<div class="row text-center" style="padding-top: 30px;">
-						<p>Click a colored button to flood: change the color of any square that is in the pool of the same color as the top left.
-							Try to cover the board in one color with as few floods as possible!</p>
+						<p>Click groups of two or more same-color and adjacent circles to make them vanish. Vanishing a group of n circles increases your score by n - 2 squared points.</p>
 					</div>
-										<p class="text-center" style="margin-top:40px;">
+					<p class="text-center" style="margin-top:40px;">
 						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
 					</p>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-2">
 					<div id="test" style="font-family: monospace;"></div>
 				</div>
 			</div>
 
 		<script src="engine.js"></script>
+		<script>
+
+			canvas.addEventListener('mousemove', function(e) {
+				var rect = canvas.getBoundingClientRect();
+				var user_x = (e.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+				var user_y = (e.clientY - rect.top) * (canvas.height / canvas.clientHeight);
+				var row = Math.floor(user_y / SQUARE_SIZE);
+				var col = Math.floor(user_x / SQUARE_SIZE);
+				hover = row * NUM_SQUARES_X + col;
+			});
+
+			canvas.addEventListener('mouseout', function(e) {
+				hover = -1;
+			});
+
+			canvas.addEventListener('click', function(e) {
+				var rect = canvas.getBoundingClientRect();
+				var user_x = (e.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+				var user_y = (e.clientY - rect.top) * (canvas.height / canvas.clientHeight);
+				var row = Math.floor(user_y / SQUARE_SIZE);
+				var col = Math.floor(user_x / SQUARE_SIZE);
+				click(row * NUM_SQUARES_X + col);
+			});
+
+		</script>
 	</body>
 </html>

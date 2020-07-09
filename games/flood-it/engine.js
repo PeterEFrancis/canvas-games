@@ -18,8 +18,8 @@ const PURPLE = 5;
 const COLORS = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE];
 
 
-var grid  = [];
-var floods = 0;
+var grid;
+var floods;
 var best = 0;
 var baseline;
 
@@ -238,7 +238,7 @@ function get_score(flo, bl) {
 	var b = (32 * Math.PI - 6) / 5;
 	var c = 5960 / Math.PI;
 	var d = 1 + Math.sqrt(3);
-	return Math.round((c / (b + Math.exp(a * flo - d))) * 100) / 100;
+	return Math.max(0, Math.round((c / (b + Math.exp(a * flo - d))) * 100) / 100);
 }
 
 

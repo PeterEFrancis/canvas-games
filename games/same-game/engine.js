@@ -2,333 +2,225 @@
 const canvas = document.getElementById("display");
 const ctx = canvas.getContext("2d");
 
-const NUM_SQUARES = 20;
+const NUM_SQUARES_X = 30;
+const NUM_SQUARES_Y = 20;
 
-const SQUARE_SIZE = canvas.width / NUM_SQUARES;
+const SQUARE_SIZE = canvas.width / NUM_SQUARES_X;
+if (canvas.height / NUM_SQUARES_Y != SQUARE_SIZE) {
+	alert("canvas is not correctly porportioned!")
+}
 
-const COLOR_STRINGS = ["red", "orange", "yellow", "green", "blue", "purple"];
+const COLOR_STRINGS = ["red", "green", "blue"];
 
+const BLANK = -1;
 const RED = 0;
-const ORANGE = 1;
-const YELLOW = 2;
-const GREEN = 3;
-const BLUE = 4;
-const PURPLE = 5;
+const GREEN = 1;
+const BLUE = 2;
 
-const COLORS = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE];
-
+const COLORS = [RED, GREEN, BLUE,];
 
 var grid  = [];
-var floods = 0;
-var best = Infinity;
-var possible;
+var hover;
+
+var score;
+var score_add;
+var game_over;
+
+var best = 0;
 
 new_game();
 
 
-
-function user_flood(color) {
-	if (!is_all_flooded(grid)) {
-		grid = fill(grid, get_flooded(grid).flooded, color);
-		floods += 1;
-		update();
-		if (is_all_flooded(grid)) {
-			if (floods < best) {
-				best = floods;
-				update();
-			}
-			ctx.fillStyle = ["white", "black", "black", "white", "white", "white"][grid[0]];
-			ctx.textAlign = "center";
-			ctx.font = "80px Arial";
-			ctx.fillText("You Flooded the Board", canvas.width / 2, canvas.height / 2 - 50);
-			ctx.fillText("in " + floods + " flood" + (floods == 1 ? "" : "s") + "!", canvas.width / 2, canvas.height / 2 + 50);
-		}
-	}
-}
-
-
-
-function get_flooded(g) {
-		var already_checked = [];
-		var same_color = [];
-		var boundary_colors = [];
-		var boundary_color_counts = [0, 0, 0, 0, 0, 0];
-		var stack = [0];
-		while (stack.length > 0) {
-			var p = stack.pop();
-			if (!already_checked.includes(p)) {
-				already_checked.push(p);
-				same_color.push(p);
-				var counted = false;
-				// down row
-				if (Math.floor(p / NUM_SQUARES) + 1 < NUM_SQUARES) {
-					if (g[p + NUM_SQUARES] == g[0]) {
-						stack.push(p + NUM_SQUARES);
-					} else {
-						boundary_colors.push(g[p + NUM_SQUARES]);
-						boundary_color_counts[g[p + NUM_SQUARES]] += 1;
-						counted = true;
-					}
-				}
-				// right col
-				if ((p % NUM_SQUARES) < NUM_SQUARES - 1) {
-					if (g[p + 1] == g[0]) {
-						stack.push(p + 1);
-					} else {
-						boundary_colors.push(g[p + 1]);
-						if (!counted) {
-							boundary_color_counts[g[p + 1]] += 1;
-						}
-					}
-				}
-				// up row
-				if (Math.floor(p / NUM_SQUARES) - 1 >= 0) {
-					if (g[p - NUM_SQUARES] == g[0]) {
-						stack.push(p - NUM_SQUARES);
-					} else {
-						boundary_colors.push(g[p - NUM_SQUARES]);
-						if (!counted) {
-							boundary_color_counts[g[p - NUM_SQUARES]] += 1;
-						}
-					}
-				}
-				// left col
-				if ((p % NUM_SQUARES) - 1 >= 0) {
-					if (g[p - 1] == g[0]) {
-						stack.push(p - 1);
-					} else {
-						boundary_colors.push(g[p - 1]);
-						if (!counted) {
-							boundary_color_counts[g[p - 1]] += 1;
-						}
-					}
-				}
-			}
-		}
-
-		return {flooded: same_color, boundary_colors: [...(new Set(boundary_colors))], boundary_color_counts: boundary_color_counts};
-
-}
-
-
 function get_random_grid() {
 	var g = [];
-	for (var i = 0; i < NUM_SQUARES * NUM_SQUARES; i++) {
-		g.push(Math.floor(Math.random() * (PURPLE + 1)));
+	for (var i = 0; i < NUM_SQUARES_X * NUM_SQUARES_Y; i++) {
+		g.push(COLORS[Math.floor(Math.random() * COLORS.length)]);
 	}
 	return g;
 }
 
-
 function new_game() {
-	// reset floods
-	floods = 0;
+	// reset Score
+	score = 0;
+
+	// reset game_over
+	game_over = false;
 
 	// set grid randomly
 	grid = get_random_grid();
-
-	// get possible
-	possible = get_possible();
-
-	// update display
-	update();
-
 }
 
+function update() {
 
-function is_all_flooded(g) {
-	var tl = g[0];
-	for (var i = 0; i < NUM_SQUARES * NUM_SQUARES; i++) {
-		if (g[i] != tl) {
+	// show score
+	document.getElementById('score').innerHTML = score;
+	document.getElementById('best').innerHTML = best > 0 ? "Best: " + best : "";
+	document.getElementById('score-add').innerHTML = "";
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	// hover
+	if (hover != -1 && grid[hover] != BLANK) {
+		ctx.fillStyle = "lightgrey";
+		var same_group = get_same_group(hover);
+		if (same_group.length > 1) {
+			// set score add
+			score_add = Math.pow(same_group.length - 2, 2);
+			if (score_add > 0) {
+				document.getElementById('score-add').innerHTML = " + " + score_add;
+			}
+			// higlight squares
+			var x, y;
+			for (var i = 0; i < same_group.length; i++) {
+				x = (same_group[i] % NUM_SQUARES_X) * SQUARE_SIZE;
+				y = Math.floor(same_group[i] / NUM_SQUARES_X) * SQUARE_SIZE;
+				ctx.fillRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
+			}
+		}
+	}
+
+	// draw circles
+	for (var i = 0; i < NUM_SQUARES_X; i++) {
+		for (var j = 0; j < NUM_SQUARES_Y; j++) {
+			if (grid[j * NUM_SQUARES_X + i] != BLANK) {
+				var x = i * SQUARE_SIZE + SQUARE_SIZE / 2;
+				var y = j * SQUARE_SIZE + SQUARE_SIZE / 2;
+				ctx.fillStyle = COLOR_STRINGS[grid[j * NUM_SQUARES_X + i]];
+				ctx.beginPath();
+				ctx.arc(x, y, SQUARE_SIZE / 2.3, 0, 2 * Math.PI);
+				ctx.fill();
+			}
+		}
+	}
+
+
+	// game over title
+	if (game_over) {
+		ctx.fillStyle = "white";
+		ctx.textAlign = "center";
+		ctx.font = "80px Arial";
+		ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2 - 100);
+		ctx.fillText("Your Score: " + score, canvas.width / 2, canvas.height / 2 + 100);
+	}
+
+}
+setInterval(update, 10);
+
+function get_same_group(pos) {
+	var already_checked = [];
+	var same_group = [];
+	var stack = [pos];
+	while (stack.length > 0) {
+		var parent = stack.pop();
+		if (!already_checked.includes(parent)) {
+			already_checked.push(parent);
+			same_group.push(parent);
+			// down row
+			if (Math.floor(parent / NUM_SQUARES_X) + 1 < NUM_SQUARES_X) {
+				if (grid[parent + NUM_SQUARES_X] == grid[pos]) {
+					stack.push(parent + NUM_SQUARES_X);
+				}
+			}
+			// right col
+			if ((parent % NUM_SQUARES_X) < NUM_SQUARES_X - 1) {
+				if (grid[parent + 1] == grid[pos]) {
+					stack.push(parent + 1);
+				}
+			}
+			// up row
+			if (Math.floor(parent / NUM_SQUARES_X) - 1 >= 0) {
+				if (grid[parent - NUM_SQUARES_X] == grid[pos]) {
+					stack.push(parent - NUM_SQUARES_X);
+				}
+			}
+			// left col
+			if ((parent % NUM_SQUARES_X) - 1 >= 0) {
+				if (grid[parent - 1] == grid[pos]) {
+					stack.push(parent - 1);
+				}
+			}
+		}
+	}
+
+	return same_group;
+}
+
+function click(pos) {
+	if (grid[pos] != BLANK && !game_over) {
+		var same_group = get_same_group(pos);
+		if (same_group.length > 1) {
+			for (var i = 0; i < same_group.length; i++) {
+				grid[same_group[i]] = BLANK;
+			}
+			score += Math.pow(same_group.length - 2, 2);
+			collapse();
+			game_over = is_game_over();
+			if (game_over) {
+				if (score > best) {
+					best = score;
+				}
+			}
+		}
+	}
+}
+
+function has_gap(g) {
+	for (var i = 0; i < NUM_SQUARES_X * NUM_SQUARES_Y; i++) {
+		if (grid[i] == BLANK) {
+			// has above square filled in
+			if (i >= NUM_SQUARES_X && g[i - NUM_SQUARES_X] != BLANK) {
+				return true;
+			}
+			// has empty column (has bottom row empty square and there is filled to the right)
+			if (i >= NUM_SQUARES_X * (NUM_SQUARES_Y - 1) && i + 1 < NUM_SQUARES_X * NUM_SQUARES_Y && grid[i + 1] != BLANK) {
+				return true
+			}
+		}
+	}
+	return false;
+}
+
+function collapse() {
+
+	while (has_gap(grid)) {
+		var shifted = false;
+		for (var i = 0; i < NUM_SQUARES_X * (NUM_SQUARES_Y - 1); i++) {
+			if (grid[i] != BLANK && grid[i + NUM_SQUARES_X] == BLANK) {
+				grid[i + NUM_SQUARES_X] = grid[i];
+				grid[i] = BLANK;
+				shifted = true;
+				break;
+			}
+		}
+
+		if (shifted) {
+			continue;
+		}
+
+		for (var i = 0; i < NUM_SQUARES_X - 1; i++) {
+			var all_blank_col = true;
+			for (var j = 0; j < NUM_SQUARES_Y; j++) {
+				if (grid[j * NUM_SQUARES_X + i] != BLANK) {
+					all_blank_col = false;
+					break;
+				}
+			}
+			if (all_blank_col) {
+				for (var j = 0; j < NUM_SQUARES_Y; j++) {
+					grid[j * NUM_SQUARES_X + i] = grid[j * NUM_SQUARES_X + i + 1];
+					grid[j * NUM_SQUARES_X + i + 1] = BLANK;
+				}
+			}
+		}
+
+	}
+}
+
+function is_game_over() {
+	for (var i = 0; i < NUM_SQUARES_X * NUM_SQUARES_Y; i++) {
+		if (grid[i] != BLANK && get_same_group(i).length > 1) {
 			return false;
 		}
 	}
 	return true;
 }
-
-
-function get_solution() {
-	var root = {g: [...grid], solution: []};
-	var queue = [root];
-	var parent, child;
-
-	while (queue.length > 0) {
-		parent = queue.shift();
-
-		var fp = get_flooded(parent.g);
-
-		if (fp.flooded.length == NUM_SQUARES * NUM_SQUARES) {
-			return parent.solution;
-		}
-
-		for (var c = 0; c < fp.boundary_colors.length; c++) {
-			child  = {g: fill([...parent.g], fp.flooded, fp.boundary_colors[c]), solution: [...parent.solution, fp.boundary_colors[c]]};
-			queue.push(child);
-		}
-	}
-
-}
-
-
-function fill(g, locs, color) {
-	for (var i = 0; i < locs.length; i++) {
-		g[locs[i]] = color;
-	}
-	return g;
-}
-
-
-
-function update() {
-
-	// floods and best
-	document.getElementById('floods').innerHTML = floods;
-	document.getElementById('possible').innerHTML = possible;
-	document.getElementById('best').innerHTML = best == Infinity ? "" : ("Personal Best: " + best);
-
-	// draw blocks
-	for (var i = 0; i < NUM_SQUARES; i++) {
-		for (var j = 0; j < NUM_SQUARES; j++) {
-			var x = i * SQUARE_SIZE;
-			var y = j * SQUARE_SIZE;
-			ctx.fillStyle = COLOR_STRINGS[grid[j * NUM_SQUARES + i]];
-			ctx.fillRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
-		}
-	}
-
-}
-
-
-
-
-
-
-
-
-// testing function
-
-
-function get_possible() {
-	var g = [...grid]; // get_random_grid();
-	var f = 0;
-	while (!is_all_flooded(g)) {
-		var boundary_color_counts = get_flooded(g).boundary_color_counts;
-		var color = boundary_color_counts.indexOf(Math.max(...boundary_color_counts));
-		g = fill(g, get_flooded(g).flooded, color);
-		f += 1;
-	}
-	return f;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function get_flooded(g) {
-// 	if (g.length > 0) {
-// 		var already_checked = [];
-// 		var same_color = [];
-// 		var stack = [0];
-// 		while (stack.length > 0) {
-// 			var p = stack.pop();
-// 			if (!already_checked.includes(p)) {
-// 				already_checked.push(p);
-// 				same_color.push(p);
-// 				// down row
-// 				if (Math.floor(p / NUM_SQUARES) + 1 < NUM_SQUARES && g[p + NUM_SQUARES] == g[0]) {
-// 					stack.push(p + NUM_SQUARES);
-// 				}
-// 				// right col
-// 				if ((p % NUM_SQUARES) < NUM_SQUARES - 1 && g[p + 1] == g[0]) {
-// 					stack.push(p + 1);
-// 				}
-// 				// up row
-// 				if (Math.floor(p / NUM_SQUARES) - 1 >= 0 && g[p - NUM_SQUARES] == g[0]) {
-// 					stack.push(p - NUM_SQUARES);
-// 				}
-// 				// left col
-// 				if ((p % NUM_SQUARES) - 1 >= 0 && g[p - 1] == g[0]) {
-// 					stack.push(p - 1);
-// 				}
-// 			}
-// 		}
-//
-// 		return same_color;
-// 	}
-// }
-
-
-
-// function flood(g, color) {
-// 	var same_color = get_flooded(g).flooded;
-// 	for (var i = 0; i < same_color.length; i++) {
-// 		g[same_color[i]] = color;
-// 	}
-// 	return g;
-// }
-
-
-
-
-// function get_boundary_colors(g) {
-// 	var boundary_colors = [];
-// 	var flooded = get_flooded(g);
-// 	for (var p = 0; p < flooded.length; p++) {
-// 		// down row
-// 		if (Math.floor(p / NUM_SQUARES) + 1 < NUM_SQUARES && g[p + NUM_SQUARES] != g[0]) {
-// 			boundary_colors.push(g[p + NUM_SQUARES]);
-// 		}
-// 		// right col
-// 		if ((p % NUM_SQUARES) < NUM_SQUARES - 1 && g[p + 1] != g[0]) {
-// 			boundary_colors.push(g[p + 1]);
-// 		}
-// 		// up row
-// 		if (Math.floor(p / NUM_SQUARES) - 1 >= 0 && g[p - NUM_SQUARES] != g[0]) {
-// 			boundary_colors.push(g[p - NUM_SQUARES]);
-// 		}
-// 		// left col
-// 		if ((p % NUM_SQUARES) - 1 >= 0 && g[p - 1] != g[0]) {
-// 			boundary_colors.push(g[p - 1]);
-// 		}
-// 	}
-//
-// 	return [...(new Set(boundary_colors))];
-// }
-// function get_solution() {
-// 	var root = {g: [...grid], solution: []};
-// 	var queue = [root];
-// 	var parent, child;
-//
-// 	while (queue.length > 0) {
-// 		parent = queue.shift();
-//
-// 		// console.log(parent.g);
-// 		if (is_all_flooded(parent.g)) {
-// 			return parent.solution;
-// 		}
-// 		var bc = get_boundary_colors(parent.g);
-// 		for (var c = 0; c < bc.length; c++) {
-// 			child  = {g: flood([...parent.g], bc[c]), solution: [...parent.solution, bc[c]]};
-// 			queue.push(child);
-// 		}
-// 	}
-//
-// }
