@@ -38,14 +38,8 @@
 				<div class="col-md-2"></div>
 				<div class="col-md-8">
 					<h1 class="text-center" style="margin-bottom:20px;">Same Game</h1>
-					<div class="row">
-						<div class="col-xs-6">
-							<h3>Score: <span id="score">0</span><span id="score-add"></span></h3>
-						</div>
-						<div class="col-xs-6">
-							<h3 class="text-right" id="best"></h3>
-						</div>
-					</div>
+					<h3 style="margin-bottom: 0px;">Score: <span id="score">0</span><span id="score-add"></span></h3>
+					<h3 style="margin-top: 5px;" id="best"></h3>
 					<canvas id="display" class="center-block" width="1500" height="1000"></canvas>
 					<div class="row text-center" style="padding-top: 30px;">
 						<button class="btn btn-default btn-lg btn-block" onclick="new_game()">New Game</button>
@@ -62,7 +56,7 @@
 				</div>
 			</div>
 
-		<script src="engine.js"></script>
+		<!-- <script src="engine.js"></script> -->
 		<script>
 
 			canvas.addEventListener('mousemove', function(e) {
@@ -79,6 +73,7 @@
 			});
 
 			canvas.addEventListener('click', function(e) {
+				hover = -1;
 				var rect = canvas.getBoundingClientRect();
 				var user_x = (e.clientX - rect.left) * (canvas.width / canvas.clientWidth);
 				var user_y = (e.clientY - rect.top) * (canvas.height / canvas.clientHeight);
