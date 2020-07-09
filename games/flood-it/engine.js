@@ -185,8 +185,8 @@ function update() {
 
 	// floods and best
 	document.getElementById('floods').innerHTML = floods;
-	document.getElementById('baseline').innerHTML = baseline;
-	document.getElementById('best').innerHTML = best == Infinity ? "" : ("Personal Best Score: " + best);
+	// document.getElementById('baseline').innerHTML = baseline;
+	document.getElementById('best').innerHTML = best == Infinity ? "" : ("Best: " + best);
 
 	// draw blocks
 	for (var i = 0; i < NUM_SQUARES; i++) {
