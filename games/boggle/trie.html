@@ -4,23 +4,23 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-		<script src="worker.js"></script>
 	</head>
 	<body>
 		<p id="test"></p>
 	</body>
+	<script src="trie.js"></script>
 	<script>
 
+		var dictionary = new Trie("");
+		$.get("https://raw.githubusercontent.com/PeterEFrancis/canvas-games/master/games/boggle/scrabble.txt", function(txt) {
+			var dict_words = txt.split("\n");
+			for (var i = 0; i < dict_words.length; i++ ) {
+				dictionary.push(dict_words[i].trim());
+			}
+			console.log(dictionary);
+			document.getElementById('test').innerHTML = dictionary;
+		});
 
-		var worker = new Worker('worker.js');
-
-		worker.onmessage = e => {
-			console.log(e.data);
-		};
-
-		var board = ["X", "E", "D", "T", "H", "E", "A", "Y", "M", "S", "E", "Y", "Z", "R", "U", "E"];
-
-		worker.postMessage(board.join());
 
 
 	</script>

@@ -59,9 +59,6 @@ $.get("https://raw.githubusercontent.com/PeterEFrancis/canvas-games/master/games
 });
 
 
-
-
-
 function jumble() {
 
 	board = [];

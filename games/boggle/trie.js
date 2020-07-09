@@ -1,28 +1,28 @@
 
 class Trie {
 
-	constructor(name) {
-		this.name = name;
-		this.children = {};
-		this.leaf = false;
+	constructor(n) {
+		this.n = n; // name
+		this.c = {}; // children
+		this.l = false; // is leaf
 	}
 
 	push(string) {
-		let name = string[0];
-		if (!(name in this.children)) {
-			this.children[name] = new Trie(name);
+		let n = string[0];
+		if (!(n in this.c)) {
+			this.c[n] = new Trie(n);
 		}
 		if (string.length > 1) {
-			this.children[name].push(string.substring(1));
+			this.c[n].push(string.substring(1));
 		} else {
-			this.children[name].leaf = true;
+			this.c[n].l = true;
 		}
 	}
 
 	contains(string) {
 		if (string.length == 1) {
-			if (string in this.children) {
-				if (this.children[string].leaf) {
+			if (string in this.c) {
+				if (this.c[string].l) {
 					return 2;
 				} else {
 					return 1;
@@ -32,28 +32,33 @@ class Trie {
 			}
 		}
 
-		if (string[0] in this.children) {
-			return this.children[string[0]].contains(string.substring(1));
+		if (string[0] in this.c) {
+			return this.c[string[0]].contains(string.substring(1));
 		} else {
 			return 0;
 		}
 	}
 
-	toString() {
+	display() {
 		let s = "";
-		if (this.leaf) {
+		if (this.l) {
 			s += "_";
 		}
-		s += this.name + "";
-		if (Object.keys(this.children).length > 0) {
+		s += this.n + "";
+		if (Object.keys(this.c).length > 0) {
 			s += "[";
-			for (let c in this.children) {
-				s += this.children[c].toString();
+			for (let c in this.c) {
+				s += this.c[c].display();
 				s += ","
 			}
 			s = s.substring(0, s.length - 1) + "]";
 		}
 		return s;
 	}
+
+	toString() {
+		return JSON.stringify(this);
+	}
+
 
 }

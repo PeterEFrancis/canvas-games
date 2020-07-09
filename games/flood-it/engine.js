@@ -20,8 +20,8 @@ const COLORS = [RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE];
 
 var grid  = [];
 var floods = 0;
-var best = Infinity;
-var possible;
+var best = 0;
+var baseline;
 
 new_game();
 
@@ -33,15 +33,17 @@ function user_flood(color) {
 		floods += 1;
 		update();
 		if (is_all_flooded(grid)) {
-			if (floods < best) {
-				best = floods;
+			var score = get_score(floods, baseline);
+			if (score > best) {
+				best = score;
 				update();
 			}
 			ctx.fillStyle = ["white", "black", "black", "white", "white", "white"][grid[0]];
 			ctx.textAlign = "center";
 			ctx.font = "80px Arial";
-			ctx.fillText("You Flooded the Board", canvas.width / 2, canvas.height / 2 - 50);
-			ctx.fillText("in " + floods + " flood" + (floods == 1 ? "" : "s") + "!", canvas.width / 2, canvas.height / 2 + 50);
+			ctx.fillText("You Flooded the Board", canvas.width / 2, canvas.height / 2 - 100);
+			ctx.fillText("in " + floods + " flood" + (floods == 1 ? "" : "s") + "!", canvas.width / 2, canvas.height / 2);
+			ctx.fillText("Your Score: " + score, canvas.width / 2, canvas.height / 2 + 200);
 		}
 	}
 }
@@ -127,8 +129,8 @@ function new_game() {
 	// set grid randomly
 	grid = get_random_grid();
 
-	// get possible
-	possible = get_possible();
+	// get baseline
+	baseline = get_baseline();
 
 	// update display
 	update();
@@ -183,8 +185,8 @@ function update() {
 
 	// floods and best
 	document.getElementById('floods').innerHTML = floods;
-	document.getElementById('possible').innerHTML = possible;
-	document.getElementById('best').innerHTML = best == Infinity ? "" : ("Personal Best: " + best);
+	document.getElementById('baseline').innerHTML = baseline;
+	document.getElementById('best').innerHTML = best == Infinity ? "" : ("Personal Best Score: " + best);
 
 	// draw blocks
 	for (var i = 0; i < NUM_SQUARES; i++) {
@@ -208,7 +210,7 @@ function update() {
 // testing function
 
 
-function get_possible() {
+function get_baseline() {
 	var g = [...grid]; // get_random_grid();
 	var f = 0;
 	while (!is_all_flooded(g)) {
@@ -222,7 +224,22 @@ function get_possible() {
 
 
 
-
+function get_score(flo, bl) {
+	// the score is based on a logistic curve fit to {(0, 100), (p, 50), (400, 0)}
+	var z1 = 3.8040453269 * Math.pow(10, -14);
+	var z2 = 36.1943506895;
+	var z3 = -14.846415964;
+	var z4 = 6.6991192176 * Math.pow(10, -15);
+	var z5 = 18.1748561744;
+	var z6 = 180.971753448;
+	var z7 = -15.7842944566;
+	var z8 = 17.1748542926;
+	var a = (z1 * Math.pow(bl, z8) + z6 * Math.pow(bl, z7) ) / (z2 * Math.pow(bl, z3) + z4 * Math.pow(bl, z5));
+	var b = (32 * Math.PI - 6) / 5;
+	var c = 5960 / Math.PI;
+	var d = 1 + Math.sqrt(3);
+	return Math.round((c / (b + Math.exp(a * flo - d))) * 100) / 100;
+}
 
 
 
