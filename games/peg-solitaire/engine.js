@@ -146,17 +146,17 @@ function update_display() {
 		if (SHAPES[shape].pegs.includes(i)) {
 			var x = MARGIN + (i % NUM_SQUARES) * SQUARE_SIZE + SQUARE_SIZE/2;
 			var y = MARGIN + Math.floor(i / NUM_SQUARES) * SQUARE_SIZE + SQUARE_SIZE/2;
-			ctx.fillStyle = board[i] == 1 ? "red" : "black";
+			ctx.fillStyle = board[i] == 1 ? "#e4c595" : "black";
 
 			if (next.includes(i)) {
 				ctx.shadowOffsetX = 0;
 				ctx.shadowOffsetY = 0;
-				ctx.shadowBlur = 40;
-				ctx.shadowColor = "yellow";
+				ctx.shadowBlur = 20;
+				ctx.shadowColor = "#a00";
 			} else if (i == selected) {
 				ctx.shadowOffsetX = 0;
 				ctx.shadowOffsetY = 0;
-				ctx.shadowBlur = 40;
+				ctx.shadowBlur = 20;
 				ctx.shadowColor = "white";
 			} else {
 				if (board[i] == 1) {
@@ -173,6 +173,7 @@ function update_display() {
 			ctx.beginPath();
 			ctx.arc(x, y, SQUARE_SIZE * 0.15, 2 * Math.PI, false);
 			ctx.fill();
+
 		}
 	}
 	ctx.shadowBlur = 0;
