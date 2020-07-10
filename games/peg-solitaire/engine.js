@@ -2,7 +2,7 @@
 const canvas = document.getElementById("display");
 const ctx = canvas.getContext("2d");
 
-const MARGIN = canvas.width * 0.1;
+const MARGIN = canvas.width * 0.05;
 const SIZE = canvas.width - 2 * MARGIN;
 const LINE_WIDTH = 4;
 const NUM_SQUARES = 9;
@@ -145,16 +145,30 @@ function update_display() {
 		if (SHAPES[shape].pegs.includes(i)) {
 			var x = MARGIN + (i % NUM_SQUARES) * SQUARE_SIZE + SQUARE_SIZE/2;
 			var y = MARGIN + Math.floor(i / NUM_SQUARES) * SQUARE_SIZE + SQUARE_SIZE/2;
+			ctx.fillStyle = board[i] == 1 ? "red" : "black";
+
 			if (next.includes(i)) {
+				ctx.shadowOffsetX = 0;
+				ctx.shadowOffsetY = 0;
 				ctx.shadowBlur = 40;
 				ctx.shadowColor = "yellow";
 			} else if (i == selected) {
+				ctx.shadowOffsetX = 0;
+				ctx.shadowOffsetY = 0;
 				ctx.shadowBlur = 40;
 				ctx.shadowColor = "white";
 			} else {
-				ctx.shadowBlur = 0;
+				if (board[i] == 1) {
+					ctx.shadowBlur = 15;
+					ctx.shadowColor = "black";
+					ctx.shadowOffsetX = 10;
+					ctx.shadowOffsetY = 10;
+				} else {
+					ctx.shadowBlur = 0;
+					ctx.shadowOffsetX = 0;
+					ctx.shadowOffsetY = 0;
+				}
 			}
-			ctx.fillStyle = board[i] == 1 ? "red" : "black";
 			ctx.beginPath();
 			ctx.arc(x, y, SQUARE_SIZE * 0.15, 2 * Math.PI, false);
 			ctx.fill();
