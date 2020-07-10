@@ -207,8 +207,6 @@ function update() {
 
 
 
-// testing function
-
 
 function get_baseline() {
 	var g = [...grid]; // get_random_grid();
@@ -241,6 +239,20 @@ function get_score(flo, bl) {
 	return Math.max(0, Math.round((c / (b + Math.exp(a * flo - d))) * 100) / 100);
 }
 
+
+
+
+
+
+
+function test() {
+	for (var i = 0; i < 20; i++) {
+		for (var j = 0; j < 20; j++) {
+			grid[i * 20 + j] = Math.max(i,j) %  6;
+		}
+	}
+	update();
+}
 
 
 
