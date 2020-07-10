@@ -186,7 +186,7 @@ function update() {
 	// floods and best
 	document.getElementById('floods').innerHTML = floods;
 	document.getElementById('baseline').innerHTML = baseline;
-	document.getElementById('best').innerHTML = best == Infinity ? "" : ("Best: " + best);
+	document.getElementById('best').innerHTML = best == 0 ? "" : ("Best: " + best);
 
 	// draw blocks
 	for (var i = 0; i < NUM_SQUARES; i++) {
