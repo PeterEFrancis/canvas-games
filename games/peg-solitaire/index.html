@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play Peg Solitaire</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+
+		<style>
+			html {
+				min-width: 200px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				width: 100%;
+				/* background-color: white; */
+				margin-bottom: 20px;
+				background-image: url('wood.jpg');
+				background-repeat: no-repeat;
+				background-attachment: fixed;
+				background-size: cover;
+			}
+
+			p {
+				font-size: 12pt;
+			}
+
+			button, select {
+				margin-bottom: 10px !important;
+				color: #333;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-6">
+					<h1 class="text-center" style="margin-bottom:20px;">Peg Solitaire</h1>
+					<h3 id="message" class="text-center">&emsp;</h3>
+					<canvas id="display" class="center-block" width="1200" height="1200">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<div class="text-center" style="margin-bottom: 40px;">
+						<select id="shape" class="btn btn-lg">
+							<option value="french">French</option>
+							<option value="german">German</option>
+							<option value="asymmetric">Asymmetric</option>
+							<option value="english">English</option>
+							<option value="diamond">Diamond</option>
+							<option value="triangle">Triangle</option>
+						</select>
+						<button class="btn btn-default btn-lg" onclick="reset()">New Game</button>
+						<button class="btn btn-default btn-lg" onclick="undo()">Undo</button>
+					</div>
+					<p>Click on pegs to jump them over an adjacent peg, into an open hole. Doing so removes the jumped peg from the board. You win the game when only one peg remains.</p>
+					<p class="text-center" style="margin-top:40px;">&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a></p>
+				</div>
+				<div class="col-md-3"></div>
+			</div>
+		</div>
+		<script src="engine.js"></script>
+		<script>
+
+			document.addEventListener('keydown', function(event) {
+				if (event.keyCode == 90 && (event.metaKey || event.ctrlKey)) {
+					undo();
+				}
+			});
+
+			canvas.addEventListener('click', function() {
+				var rect = canvas.getBoundingClientRect();
+				var user_x = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+				var user_y = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
+				if (user_x > MARGIN && user_x < canvas.width - MARGIN) {
+					if (user_y > MARGIN && user_y < canvas.width - MARGIN) {
+						var row = Math.floor((user_y - MARGIN) / (SIZE / NUM_SQUARES));
+						var col = Math.floor((user_x - MARGIN) / (SIZE / NUM_SQUARES));
+						click(row * NUM_SQUARES + col);
+					}
+				}
+
+			});
+
+
+		</script>
+	</body>
+</html>
