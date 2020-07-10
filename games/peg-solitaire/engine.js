@@ -109,6 +109,7 @@ function undo() {
 		board[last[0]] = PEG;
 		board[get_middle(last[0], last[1])] = PEG;
 		board[last[1]] = NO_PEG;
+		selected = last[0];
 		update_display();
 		document.getElementById('message').innerHTML = "&emsp;";
 	}
@@ -159,10 +160,10 @@ function update_display() {
 				ctx.shadowColor = "white";
 			} else {
 				if (board[i] == 1) {
-					ctx.shadowBlur = 15;
+					ctx.shadowBlur = 20;
 					ctx.shadowColor = "black";
-					ctx.shadowOffsetX = 10;
-					ctx.shadowOffsetY = 10;
+					ctx.shadowOffsetX = 8;
+					ctx.shadowOffsetY = 8;
 				} else {
 					ctx.shadowBlur = 0;
 					ctx.shadowOffsetX = 0;
