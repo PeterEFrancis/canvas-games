@@ -38,7 +38,6 @@ function change_pegs(p) {
 }
 
 function change_discs(d) {
-	console.log(d);
 	resize_to(num_pegs, d)
 }
 
