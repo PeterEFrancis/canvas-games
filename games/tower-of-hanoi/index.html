@@ -65,8 +65,11 @@
 								<input class="form-control" type="number" value="3" id="pegs" min="3" max="10" onchange="change_pegs(Number(this.value));">
 							</div>
 						</div>
-						<div class="col-sm-6">
+						<div class="col-sm-3">
 							<button class="btn btn-default btn-lg btn-block" onclick="reset()">Reset</button>
+						</div>
+						<div class="col-sm-3">
+							<button class="btn btn-default btn-lg btn-block" onclick="undo()">Undo</button>
 						</div>
 					</div>
 					<p class="text-center">
@@ -92,6 +95,11 @@
 				}
 			});
 
+			document.addEventListener('keydown', function(event) {
+				if (event.keyCode == 90 && (event.metaKey || event.ctrlKey)) {
+					undo();
+				}
+			});
 
 		</script>
 	</body>

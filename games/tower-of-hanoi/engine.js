@@ -18,11 +18,20 @@ var selected;
 
 var moves;
 
+var move_history;
 
 resize_to(3, 5);
 reset();
 
 
+
+function undo() {
+	if (move_history.length > 0) {
+		var last = move_history.pop();
+		towers[last[0]].push(towers[last[1]].pop());
+		moves--;
+	}
+}
 
 function change_pegs(p) {
 	resize_to(p, num_discs);
@@ -60,9 +69,11 @@ function reset() {
 	// reset selected
 	selected = -1;
 
-
 	// reset moves
 	moves = 0;
+
+	// reset move_history
+	move_history = [];
 }
 
 
@@ -73,6 +84,7 @@ function click(s) {
 		if (towers[s].length == 0 || towers[s][towers[s].length - 1] > towers[selected][towers[selected].length - 1]) {
 			towers[s].push(towers[selected].pop());
 			moves++;
+			move_history.push([selected, s]);
 		}
 		selected = -1;
 	}
