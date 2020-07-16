@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Play Tower of Hanoi</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+
+		<style>
+
+			html {
+				min-width: 200px;
+			}
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				background-color: transparent;
+				max-width: 100%;
+				width: 100%;
+				margin-bottom: 20px;
+				min-width: 20px;
+				min-height: 20px;
+			}
+			p {
+				font-size: 12pt;
+			}
+			.col-sm-3 {
+				padding: 0px 5px;
+				margin-bottom: 10px;
+			}
+
+			.control {
+				margin-bottom: 20px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<h1 class="text-center">Towers of Hanoi</h1>
+					<canvas id="display" class="center-block" width="2000" height="1000"></canvas>
+					<div class="row control">
+						<div class="col-sm-3">
+							<div class="input-group input-group-lg">
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-resize-vertical"></span>
+								</span>
+								<input class="form-control" type="number" value="5" id="discs" min="2" max="12" onchange="change_discs(Number(this.value));">
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="input-group input-group-lg">
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-resize-horizontal"></span>
+								</span>
+								<input class="form-control" type="number" value="3" id="pegs" min="3" max="10" onchange="change_pegs(Number(this.value));">
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<button class="btn btn-default btn-lg btn-block" onclick="reset()">Reset</button>
+						</div>
+					</div>
+					<p class="text-center">
+						Successively move all blocks to the rightmost peg: only smaller blocks may rest on larger ones.
+					</p>
+					<p style="margin-top:40px;" class="text-center">
+						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-2"></div>
+			</div>
+		</div>
+		<script src="engine.js"></script>
+		<script>
+
+			canvas.addEventListener('click', function() {
+				var rect = canvas.getBoundingClientRect();
+				var user_x = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+				var user_y = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
+				if (user_x > MARGIN && user_x < canvas.width - MARGIN) {
+					var sect = Math.floor((user_x - MARGIN) / ((canvas.width - 2 * MARGIN) / num_pegs));
+					click(sect);
+				}
+			});
+
+
+		</script>
+	</body>
+</html>
