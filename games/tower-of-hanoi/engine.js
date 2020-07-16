@@ -16,6 +16,7 @@ var towers;
 
 var selected;
 
+var moves;
 
 
 resize_to(3, 5);
@@ -58,6 +59,10 @@ function reset() {
 
 	// reset selected
 	selected = -1;
+
+
+	// reset moves
+	moves = 0;
 }
 
 
@@ -67,6 +72,7 @@ function click(s) {
 	} else {
 		if (towers[s].length == 0 || towers[s][towers[s].length - 1] > towers[selected][towers[selected].length - 1]) {
 			towers[s].push(towers[selected].pop());
+			moves++;
 		}
 		selected = -1;
 	}
@@ -109,6 +115,8 @@ function update() {
 		ctx.shadowBlur = 0;
 	}
 
+	// moves counter
+	document.getElementById('moves').innerHTML = moves;
 
 }
 setInterval(update, 10);
