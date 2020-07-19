@@ -10,7 +10,7 @@ if (canvas.height / NUM_SQUARES_Y != SQUARE_SIZE) {
 	alert("canvas is not correctly porportioned!")
 }
 
-const COLOR_STRINGS = ["red", "green", "blue"];
+const COLOR_STRINGS = ["#ed1c24", "#05f140", "#3b60f7"];
 
 const BLANK = -1;
 const RED = 0;
