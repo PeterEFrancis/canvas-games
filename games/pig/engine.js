@@ -75,8 +75,9 @@ title_img.onload = function() {
 
 animal_img = new Image();
 animal_img.src = "img/animal.png";
+animal_img.height = animal_img.width = 120;
 animal_img.onload = function() {
-    ctx.drawImage(animal_img, 0, HEIGHT - animal_img.height * 0.8 - 1, animal_img.width * 0.8, animal_img.height * 0.8);
+    ctx.drawImage(animal_img, 0, HEIGHT - animal_img.height, animal_img.width, animal_img.height);
 }
 
 hold_img = new Image();
@@ -155,8 +156,6 @@ function circle(ctx, x, y, radius) {
 }
 
 function update() {
-    console.log("update()");
-
     // current player triangle
     ctx.clearRect(180, 10, 30, 110);
     ctx.lineWidth = 0;
@@ -381,8 +380,6 @@ function is_game_over() {
 
 
 function switch_players() {
-  console.log("switch_players()");
-
   current_player = USER + COMPUTER - current_player;
 
   if (current_player == COMPUTER) {
@@ -425,22 +422,23 @@ canvas.addEventListener('mousemove', function(evt) {
   }
 });
 
+canvas.addEventListener('mouseleave', function(evt) {
+  hint = false;
+})
+
 
 function set_computer_speed(val) {
   computer_speed = [3000, 2000, 1500, 1000, 500][Number(val)];
-  console.log("set_computer_speed() -> " + computer_speed);
 }
 
 
 function set_animation_speed(val) {
   animation_speed = [75, 60, 45, 15, 0][Number(val)];
-  console.log("set_animation_speed() -> " + computer_speed);
 }
 
 
 function set_computer_difficulty(val) {
   computer_difficulty = Number(val);
-  console.log("set_computer_difficulty() -> " + computer_difficulty);
 }
 
 
@@ -458,7 +456,6 @@ function set_computer_difficulty(val) {
 
 
 function roll() {
-  console.log("roll()");
   moving = true;
   var i = 0;
   var rollIntervalId = setInterval(function() {
@@ -469,13 +466,11 @@ function roll() {
       clearInterval(rollIntervalId);
       if (current_die == 1) {
         turn_totals[current_player] = 0;
-        console.log(current_player + " rolled a pig!");
         update();
         clearInterval(computerTurnIntervalID);
         switch_players();
       } else {
         turn_totals[current_player] += current_die;
-        console.log(current_player + " rolled a " + current_die + " -> turn total of " + turn_totals[current_player]);
         if (is_game_over()) {
           hold();
         }
@@ -489,8 +484,6 @@ function roll() {
 
 
 function hold() {
-  console.log(current_player + " holds");
-
   scores[current_player] += turn_totals[current_player];
   turn_totals[current_player] = 0;
 
@@ -506,8 +499,6 @@ function hold() {
 
 
 function computer_turn() {
-  console.log("computer_turn()");
-
   computerTurnIntervalID = setInterval(function() {
       if (computer_should_roll()) {
         roll();
@@ -522,10 +513,8 @@ function computer_turn() {
 
 function computer_should_roll() {
   if (computer_difficulty == 5) { // optimal
-    console.log("here 5");
     return shouldRoll(scores[COMPUTER], scores[USER], turn_totals[COMPUTER]);
   } else if (computer_difficulty == 4) { // keep pace and end race
-    console.log("here 4");
     if (scores[COMPUTER] + turn_totals[COMPUTER] >= GOAL) {
       return false;
     }
@@ -534,7 +523,6 @@ function computer_should_roll() {
     }
     return false;
   } else if (computer_difficulty == 3) { // Score Base, Keep Pace, and End Race
-    console.log("here 3");
     if (scores[USER] >= 69 || scores[COMPUTER] >= 69) {
       return true;
     } else {
@@ -545,21 +533,18 @@ function computer_should_roll() {
       }
     }
   } else if (computer_difficulty == 2) { // 4 scoring turns
-    console.log("here 2");
     if (turn_totals[COMPUTER] >= Math.floor((100 - scores[COMPUTER]) / (4 - num_turns_held))) {
       return false;
     } else {
       return true;
     }
   } else if (computer_difficulty == 1) { // hold at 25 or goal
-    console.log("here 1");
     if (turn_totals[COMPUTER] >= 25 || scores[COMPUTER] + turn_totals[COMPUTER] >= GOAL) {
       return false;
     } else {
       return true;
     }
   } else if (computer_difficulty == 0) { // hold at 20 or goal
-    console.log("here 0 (" + scores[COMPUTER] + ")");
     if (turn_totals[COMPUTER] >= 20 || scores[COMPUTER] + turn_totals[COMPUTER] >= GOAL) {
       return false;
     } else {
@@ -635,7 +620,6 @@ function pWin(i, j, k) {
   else if (j >= GOAL)
     return 0.0;
   else if (k != 0 && p[i][j].length < GOAL - i) { // not yet computed in full
-    //console.log('computing ' + i + ', ' + j + ' ...')
     for (var k2 = GOAL - 1; k2 > 0; k2--) {
       // Compute the probability of winning with a roll
 			var pRoll = 1.0 - pWin(j, i, 0);
