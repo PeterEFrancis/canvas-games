@@ -413,9 +413,9 @@ function register_click() {
 
 canvas.addEventListener('mousemove', function(evt) {
   var rect = canvas.getBoundingClientRect();
-  var x = evt.clientX - rect.left;
-  var y = evt.clientY - rect.top;
-  if (x < animal_img.width * 0.8 && y > HEIGHT - animal_img.height * 0.8) {
+  var x = (evt.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+	var y = (evt.clientY - rect.top) * (canvas.height / canvas.clientHeight);
+  if (x < animal_img.width && y > HEIGHT - animal_img.height) {
     hint = true;
   } else {
     hint = false;
