@@ -29,6 +29,7 @@ function reset_game() {
 
 
 window.addEventListener("deviceorientation", function(event) {
-	document.getElementById('output').innerHTML += JSON.stingify(event);
+	document.getElementById('output').innerHTML += JSON.stringify(event);
+	document.getElementById('output2').innerHTML += event;
     // process event.alpha, event.beta and event.gamma
 }, true);
