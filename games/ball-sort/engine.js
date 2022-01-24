@@ -1,4 +1,5 @@
 
+"use strict";
 
 // some of the maze generation code adapted from Todd Neller
 
@@ -159,7 +160,7 @@ function start_game(n_colors, n_balls) {
   num_colors = Math.min(COLORS.length, n_colors);
   num_balls = n_balls;
 
-  num_balls_side = Math.sqrt((num_colors + 2) * num_balls);
+  let num_balls_side = Math.sqrt((num_colors + 2) * num_balls);
 
   rows = Math.round(num_balls_side / num_balls);
   cols = Math.round((num_colors + 2) / rows);
@@ -172,6 +173,7 @@ function start_game(n_colors, n_balls) {
   BALL_RADIUS = TUBE_WIDTH / 2.1;
 
   tubes = generate(num_colors, num_balls).tubes;
+  clicked = null;
   update_display();
 }
 
