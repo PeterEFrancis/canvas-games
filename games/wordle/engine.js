@@ -77,9 +77,10 @@ function update_display() {
         ctx.fillRect(55 + j * 100, 50 + i * 115, 90, 90);
       }
       ctx.fillStyle = "white";
-      ctx.font = "80px monospace";
+      ctx.textAlign = "center";
+      ctx.font = "80px arial";
       if (grid[i] && grid[i].length > j) {
-        ctx.fillText(grid[i][j].toUpperCase(), 75 + j * 100, 120 + i * 115);
+        ctx.fillText(grid[i][j].toUpperCase(), 100 + j * 100, 125 + i * 115);
       }
       ctx.strokeRect(55 + j * 100, 50 + i * 115, 90, 90);
     }
