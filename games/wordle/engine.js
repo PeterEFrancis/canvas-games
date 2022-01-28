@@ -18,6 +18,7 @@ var guesses;
 
 function new_game() {
   word_id = Math.floor(Math.random() * FIVE_LETTER_WORDS.length);
+  document.getElementById('wordle').innerHTML = FIVE_LETTER_WORDS[word_id];
 	curr = '';
   guesses = [];
   update_display();
@@ -44,6 +45,11 @@ function enter_word() {
       guesses.push(curr);
       curr = '';
       update_display();
+      if (guesses.length == 6) {
+        if (guesses[5] != FIVE_LETTER_WORDS[word_id]) {
+          $("#modal").modal();
+        }
+      }
     } else {
       alert(curr + ' is not a valid word!');
     }
@@ -87,13 +93,19 @@ function update_display() {
   }
 
   // update keyboard
-  let yellow_letters = guesses.join("").split("").filter(x => FIVE_LETTER_WORDS[word_id].includes(x));
-  for (let i = 0; i < yellow_letters.length; i++) {
-    document.getElementById('letter-' + yellow_letters[i].toUpperCase()).style.backgroundColor = 'rgb(177, 159, 76)';
-  }
-  let grey_letters = guesses.join("").split("").filter(x => !FIVE_LETTER_WORDS[word_id].includes(x));
-  for (let i = 0; i < grey_letters.length; i++) {
-    document.getElementById('letter-' + grey_letters[i].toUpperCase()).style.backgroundColor = 'grey';
+  if (guesses.length == 0) {
+    for (let i = 0; i < 26; i++) {
+      document.getElementById('letter-' + String.fromCharCode(65 + i)).style.backgroundColor = 'white';
+    }
+  } else {
+    let yellow_letters = guesses.join("").split("").filter(x => FIVE_LETTER_WORDS[word_id].includes(x));
+    for (let i = 0; i < yellow_letters.length; i++) {
+      document.getElementById('letter-' + yellow_letters[i].toUpperCase()).style.backgroundColor = 'rgb(177, 159, 76)';
+    }
+    let grey_letters = guesses.join("").split("").filter(x => !FIVE_LETTER_WORDS[word_id].includes(x));
+    for (let i = 0; i < grey_letters.length; i++) {
+      document.getElementById('letter-' + grey_letters[i].toUpperCase()).style.backgroundColor = 'grey';
+    }
   }
 
 }
