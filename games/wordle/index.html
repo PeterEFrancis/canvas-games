@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play Wordle</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+		<style>
+			html {
+				min-width: 441px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+
+			canvas {
+				width: 100%;
+				background-color: black;
+				margin-bottom: 20px;
+			}
+
+			* {
+				font-size: 12pt;
+			}
+
+			.num-btn {
+				padding: 10px 2px;
+				width: 11%;
+			}
+
+			.btn-lg {
+				margin-bottom: 20px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-6 text-center">
+					<h1 style="margin-bottom:20px;">Wordle</h1>
+					<canvas id="display" class="center-block" width="600" height="775">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<button class="center-block btn btn-lg btn-success" onclick="new_game()">New Game</button>
+					<br>
+					<div class="row">
+						<div class="col-sm-12 text-center">
+							<button id="letter-Q" class="btn btn-default" onclick="type_letter('Q')">Q</button>
+							<button id="letter-W" class="btn btn-default" onclick="type_letter('W')">W</button>
+							<button id="letter-E" class="btn btn-default" onclick="type_letter('E')">E</button>
+							<button id="letter-R" class="btn btn-default" onclick="type_letter('R')">R</button>
+							<button id="letter-T" class="btn btn-default" onclick="type_letter('T')">T</button>
+							<button id="letter-Y" class="btn btn-default" onclick="type_letter('Y')">Y</button>
+							<button id="letter-U" class="btn btn-default" onclick="type_letter('U')">U</button>
+							<button id="letter-I" class="btn btn-default" onclick="type_letter('I')">I</button>
+							<button id="letter-O" class="btn btn-default" onclick="type_letter('O')">O</button>
+							<button id="letter-P" class="btn btn-default" onclick="type_letter('P')">P</button>
+						</div>
+					</div>
+					<div class="row" style="margin-top: 5px;">
+						<div class="col-sm-12 text-center">
+							<button id="letter-A" class="btn btn-default" onclick="type_letter('A')">A</button>
+							<button id="letter-S" class="btn btn-default" onclick="type_letter('S')">S</button>
+							<button id="letter-D" class="btn btn-default" onclick="type_letter('D')">D</button>
+							<button id="letter-F" class="btn btn-default" onclick="type_letter('F')">F</button>
+							<button id="letter-G" class="btn btn-default" onclick="type_letter('G')">G</button>
+							<button id="letter-H" class="btn btn-default" onclick="type_letter('H')">H</button>
+							<button id="letter-J" class="btn btn-default" onclick="type_letter('J')">J</button>
+							<button id="letter-K" class="btn btn-default" onclick="type_letter('K')">K</button>
+							<button id="letter-L" class="btn btn-default" onclick="type_letter('L')">L</button>
+						</div>
+					</div>
+					<div class="row" style="margin-top: 5px;">
+						<div class="col-sm-12 text-center">
+							<button id="enter-btn" class="btn btn-primary" onclick="enter_word()">Enter</button>
+							<button id="letter-Z" class="btn btn-default" onclick="type_letter('Z')">Z</button>
+							<button id="letter-X" class="btn btn-default" onclick="type_letter('X')">X</button>
+							<button id="letter-C" class="btn btn-default" onclick="type_letter('C')">C</button>
+							<button id="letter-V" class="btn btn-default" onclick="type_letter('V')">V</button>
+							<button id="letter-B" class="btn btn-default" onclick="type_letter('B')">B</button>
+							<button id="letter-N" class="btn btn-default" onclick="type_letter('N')">N</button>
+							<button id="letter-M" class="btn btn-default" onclick="type_letter('M')">M</button>
+							<button id="delete-btn" class="btn btn-danger" onclick="delete_letter()">Delete</button>
+						</div>
+					</div>
+					<p class="text-center" style="margin-top:40px;">
+						&#169; 2022 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-3"></div>
+			</div>
+		<script src="engine.js"></script>
+    <script>
+      document.addEventListener('keydown', function(event) {
+        if (event.keyCode <= 90 && event.keyCode >= 65) {
+          type_letter(String.fromCharCode(event.keyCode));
+        } else if (event.keyCode == 8) {
+          delete_letter();
+        } else if (event.keyCode == 13) {
+          enter_word();
+        }
+      });
+    </script>
+	</body>
+</html>
