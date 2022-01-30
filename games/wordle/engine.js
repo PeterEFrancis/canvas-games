@@ -1,4 +1,23 @@
 
+var random;
+
+function set_seed(seed) {
+  console.log('seed:', seed);
+  random = mulberry32(seed);
+}
+
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+
+set_seed(Math.round(new Date().getTime() / 1000 ));
+
+
 const canvas = document.getElementById("display");
 const ctx = canvas.getContext("2d");
 
@@ -19,7 +38,8 @@ var guesses;
 function new_game() {
   word_id = Math.floor(Math.random() * FIVE_LETTER_WORDS.length);
   document.getElementById('wordle').innerHTML = FIVE_LETTER_WORDS[word_id];
-	curr = '';
+  document.getElementById('word_id').innerHTML = word_id;
+  curr = '';
   guesses = [];
   update_display();
 }
