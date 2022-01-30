@@ -15,7 +15,7 @@ function mulberry32(a) {
   }
 }
 
-set_seed(Math.round(new Date().getTime() / 1000 ));
+set_seed(Math.round(new Date().getTime() / 2000 ));
 
 
 const canvas = document.getElementById("display");
@@ -36,7 +36,7 @@ var guesses;
 
 
 function new_game() {
-  word_id = Math.floor(Math.random() * FIVE_LETTER_WORDS.length);
+  word_id = Math.floor(random() * FIVE_LETTER_WORDS.length);
   document.getElementById('wordle').innerHTML = FIVE_LETTER_WORDS[word_id];
   document.getElementById('word_id').innerHTML = word_id;
   curr = '';
