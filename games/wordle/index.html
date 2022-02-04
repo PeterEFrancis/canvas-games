@@ -116,6 +116,7 @@
 		<script src="engine.js"></script>
     <script>
       document.addEventListener('keydown', function(event) {
+        console.log(event.keycode);
         if (event.keyCode <= 90 && event.keyCode >= 65) {
           type_letter(String.fromCharCode(event.keyCode));
         } else if (event.keyCode == 8) {

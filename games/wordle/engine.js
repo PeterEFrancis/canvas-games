@@ -92,11 +92,11 @@ function update_display() {
   ctx.strokeStyle = "white";
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 5; j++) {
-      if (grid[i] && grid[i].length == 5 && (curr == '' || i != guesses.length)) {
+      if (grid[i] && grid[i].length === 5 && (curr === '' || i != guesses.length)) {
         if (FIVE_LETTER_WORDS[word_id][j] === grid[i][j]) {
-          ctx.fillStyle = "rgb(96, 139, 85)";
-        } else if (FIVE_LETTER_WORDS[word_id].includes(grid[i][j])) {
-          ctx.fillStyle = "rgb(177, 159, 76)";
+          ctx.fillStyle = "rgb(96, 139, 85)"; // green
+        } else if (FIVE_LETTER_WORDS[word_id].includes(grid[i][j]) && ) {
+          ctx.fillStyle = "rgb(177, 159, 76)"; // yellow
         } else {
           ctx.fillStyle = "grey";
         }
