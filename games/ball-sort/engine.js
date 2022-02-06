@@ -55,7 +55,7 @@ function random_choice_prob(arr) {
       return arr[i][0];
     }
   }
-  console.log('here');
+  return arr[arr.length - 1][0];
 }
 
 function get_top(arr) {
@@ -111,6 +111,7 @@ function generate_helper(num_colors, num_balls) {
   }
   let j = 0;
   let last = {take: null, put: null};
+
   do {
     j++;
 
@@ -118,18 +119,25 @@ function generate_helper(num_colors, num_balls) {
     let take_arr = tubes
       .map((x, i) => rev_can_take(x) && i != last.put ? [i, num_top_sim(x) ** 2] : -1)
       .filter(x => x != -1);
-    let take = random_choice_prob(take_arr);
+    let take = random() < 0.75 && rev_can_take(last.take) ? last.take : random_choice_prob(take_arr);
 
-    // can put in any tube that is not full and is different from take
-    // prioritize tubes with few balls
-    let put_arr = tubes
-      .map((x, i) => x.length != num_balls && i != take && i != last.take ? [i, num_balls - x.length] : -1)
-      .filter(x => x != -1);
-    let put = random_choice_prob(put_arr);
-    let poss_moves = Math.min(num_top_sim(tubes[take]), num_balls - tubes[put].length);
-    for (let i = 0; i < Math.floor(random() * poss_moves) + 1; i++) {
-      tubes[put].push(tubes[take].pop());
-    }
+    let move_color = get_top(tubes[take]);
+    // while (get_top(tubes[take]) == move_color && random() < 0.4) {
+    //   console.log(take, tubes[take]);
+
+      // can put in any tube that is not full and is different from take
+      // prioritize tubes with few balls
+      let put_arr = tubes
+        .map((x, i) => x.length != num_balls && i != take && i != last.take ? [i, num_balls - x.length] : -1)
+        .filter(x => x != -1);
+      let put = random_choice_prob(put_arr);
+      let poss_moves = Math.min(num_top_sim(tubes[take]), num_balls - tubes[put].length);
+      for (let i = 0; i < Math.floor(random() * poss_moves) + 1; i++) {
+        tubes[put].push(tubes[take].pop());
+      }
+
+    // }
+
     last = {take: take, put: put};
   } while (!is_scrambled(tubes) || j < 30)
   return {
