@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play Tromino Task</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+		<style>
+			html {
+				min-width: 300px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				width: 100%;
+				background-color: lightgrey;
+        margin-bottom: 20px;
+			}
+
+			* {
+				font-size: 12pt;
+			}
+
+		</style>
+	</head>
+	<body onload="clear_board();">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<h1 class="text-center" style="margin-bottom:20px;">Tromino Task</h1>
+					<canvas id="display" class="center-block" width="1000" height="1000">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<div class="row">
+						<div class="col-xs-4" style="padding: 0px 2px 30px 2px;">
+							<button class="btn btn-default btn-lg btn-block" onclick="clear_board();">Clear</button>
+						</div>
+						<div class="col-xs-4" style="padding: 0px 2px 30px 2px;">
+              <div class="btn-group" style="width: 100%">
+  							<button id="minus" class="btn btn-default btn-lg" onclick="change_num_squares(-1)" style="width:50%">
+                  <span class="glyphicon glyphicon-minus"></span>
+  							</button>
+                <button id="plus" class="btn btn-default btn-lg" onclick="change_num_squares(1)" style="width:50%">
+                  <span class="glyphicon glyphicon-plus"></span>
+  							</button>
+              </div>
+						</div>
+            <div class="col-xs-4" style="padding: 0px 2px 30px 2px;">
+              <div class="btn-group" style="width: 100%">
+  							<button id="undo" class="btn btn-default btn-lg" onclick="undo()" style="width:50%" disabled>
+                  undo
+  							</button>
+                <button id="redo" class="btn btn-default btn-lg" onclick="redo()" style="width:50%" disabled>
+                  redo
+  							</button>
+              </div>
+						</div>
+					</div>
+          <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              Let \(n \geq 2\) be an integer. An \(n \times n\) board is initially empty. Each minute, you may perform one of three moves:
+              <ul>
+                <li>If there is an L-shaped tromino region of three cells without stones on the board (rotations not allowed), you may place a stone in each of those cells.</li>
+                <li>If all cells in a column have a stone, you may remove all stones from that column.</li>
+                <li>If all cells in a row have a stone, you may remove all stones from that row.</li>
+              </ul>
+            For which \(n\) is it possible that, after some nonzero number of moves, the board has no stones?
+            <br><br>
+            <b>To perform an action, hover over a collection of cells.</b>
+            </div>
+          </div>
+
+					<p class="text-center" style="margin-top:40px;">
+						&#169; 2022 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-2"></div>
+			</div>
+		</div>
+		<script src="engine.js"></script>
+	</body>
+</html>
