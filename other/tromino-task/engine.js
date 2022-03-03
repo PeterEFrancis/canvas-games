@@ -1,4 +1,6 @@
 
+"use strict";
+
 const canvas = document.getElementById("display");
 const ctx = canvas.getContext("2d");
 
@@ -186,7 +188,7 @@ function clear_board() {
   board = Array(num_squares ** 2).fill(BLANK);
   last_three = [];
   undo_stack = [];
-  redo_Stack = [];
+  redo_stack = [];
   update_display();
 }
 
@@ -198,6 +200,9 @@ function get_rc() {
 
 
 function is_last_three_all_empty() {
+  if (last_three.length != 3) {
+    return false;
+  }
   return Array(3).fill(0).map((x,i) => board[last_three[i]]).reduce((x,y) => x + y) == BLANK * 3;
 }
 function is_row_full(r) {
@@ -220,9 +225,15 @@ function is_tromino(rc) {
   return last_three.includes(m + num_squares) && last_three.includes(m + num_squares + 1);
 }
 function is_column(rc) {
+  if (rc.length != 3) {
+    return false;
+  }
   return rc[0][1] == rc[1][1] && rc[1][1] == rc[2][1];
 }
 function is_row(rc) {
+  if (rc.length != 3) {
+    return false;
+  }
   return rc[0][0] == rc[1][0] && rc[1][0] == rc[2][0];
 }
 
@@ -232,13 +243,26 @@ function is_row(rc) {
 function update_display() {
   // clear the display
   ctx.clearRect(0, 0, SIZE, SIZE);
+
+  // add slight grey for last_three
+  for (let i = 0; i < last_three.length; i++) {
+    let x = (last_three[i] % num_squares) * (square_size);
+    let y = Math.floor(last_three[i] / num_squares) * (square_size);
+    ctx.fillStyle = "rgba(0,0,0,0.10)";
+    ctx.fillRect(x, y, square_size, square_size);
+  }
+
+
   for (let i = 0; i < num_squares * num_squares; i++) {
     let x = (i % num_squares) * (square_size);
     let y = Math.floor(i / num_squares) * (square_size);
     // draw icon
     if (is_tile(i)) {
       ctx.fillStyle = "blue";
-      ctx.fillRect(x + square_size / 6, y + square_size / 6, square_size * (4/6), square_size * (4/6));
+      ctx.beginPath();
+      ctx.arc(x + square_size / 2, y + square_size / 2, square_size / 2.75, 0, 2 * Math.PI);
+      ctx.fill();
+      // ctx.fillRect(x + square_size / 6, y + square_size / 6, square_size * (4/6), square_size * (4/6));
     }
 
   }
@@ -256,7 +280,7 @@ function update_display() {
         ctx.fillStyle = "transparent";
       }
       for (let i = 0; i < num_squares; i++) {
-        ctx.strokeRect(i * square_size, rc[0][0] * square_size, square_size, square_size);
+        // ctx.strokeRect(i * square_size, rc[0][0] * square_size, square_size, square_size);
         ctx.fillRect(i * square_size, rc[0][0] * square_size, square_size, square_size);
       }
     } else if (is_column(rc)) {
@@ -268,8 +292,8 @@ function update_display() {
         ctx.fillStyle = "transparent";
       }
       for (let i = 0; i < num_squares; i++) {
-        ctx.strokeRect(rc[0][1] * square_size, i * (square_size), square_size, square_size);
-        ctx.fillRect(rc[0][1] * square_size, i * (square_size), square_size, square_size);
+        // ctx.strokeRect(rc[0][1] * square_size, i * square_size, square_size, square_size);
+        ctx.fillRect(rc[0][1] * square_size, i * square_size, square_size, square_size);
       }
     } else if (is_tromino(rc)) {
       if (is_last_three_all_empty()) {
@@ -282,7 +306,7 @@ function update_display() {
       for (let i = 0; i < 3; i++) {
         let x = (last_three[i] % num_squares) * (square_size);
         let y = Math.floor(last_three[i] / num_squares) * (square_size);
-        ctx.strokeRect(x, y, square_size, square_size);
+        // ctx.strokeRect(x, y, square_size, square_size);
         ctx.fillRect(x, y, square_size, square_size);
       }
     }
