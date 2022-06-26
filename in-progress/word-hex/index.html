@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play Boggle</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+		<style>
+			html {
+				min-width: 300px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				width: 100%;
+				background-color: transparent;
+				margin-bottom: 20px;
+			}
+
+			* {
+				font-size: 12pt;
+			}
+
+			.num-btn {
+				padding: 10px 2px;
+				width: 11%;
+			}
+
+			.btn-lg {
+				margin-bottom: 20px;
+			}
+
+		</style>
+	</head>
+	<body>
+
+		<div id="modal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title" style="color: black">All Words</h4>
+					</div>
+					<div class="modal-body">
+						<p id="words" style="color: black"></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-6">
+					<h1 class="text-center" style="margin-bottom:20px;">Boggle</h1>
+					<canvas id="display" class="center-block" width="1000" height="1000">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<div class="row">
+						<div class="col-sm-7">
+							<div class="text-center controls" style="margin-bottom: 20px;">
+								<button class="btn btn-default btn-lg btn-block" onclick="jumble()" id="jumble">Jumble!</button>
+								<button class="btn btn-default btn-lg btn-block" id="get-all-words" data-toggle="modal" data-target="#modal">Get All Words</button>
+							</div>
+						</div>
+						<div class="col-sm-5">
+							<div class="panel panel-default text-center">
+		            <div class="panel-body">
+		              <h1 id="time" style="margin-top:0px; font-size: 40pt; font-weight:lighter; user-select: none; color: black">3:00</h1>
+		              <div class="btn-group">
+                    <button id="play-timer-button" type="button" class="btn btn-default" onclick="start_timer()">
+                      <span class="glyphicon glyphicon-play"></span>
+                    </button>
+                    <button id="pause-timer-button" type="button" class="btn btn-default" onclick="pause_timer()">
+                      <span class="glyphicon glyphicon-pause"></span>
+                    </button>
+                    <button id="stop-timer-button" type="button" class="btn btn-default" onclick="stop_timer()">
+                      <span class="glyphicon glyphicon-stop"></span>
+                    </button>
+		              </div>
+		              <br>
+		              <p id="timer-warning" style="font-size: 8pt; color: red; margin: 0px; display: none;">
+										<span class="glyphicon glyphicon-info-sign"></span> Your network's time is not set properly. Set your time globally before your table uses the timer.
+									</p>
+		            </div>
+		          </div>
+
+						</div>
+					</div>
+					<p class="controls"></p>
+					<p class="text-center" style="margin-top:40px;">
+						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-3"></div>
+			</div>
+		</div>
+		<script src="trie.js"></script>
+		<script src="engine.js"></script>
+	</body>
+</html>

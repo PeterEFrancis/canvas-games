@@ -93,10 +93,17 @@ function update_display() {
   for (let i = 0; i < 6; i++) {
     for (let j = 0; j < 5; j++) {
       if (grid[i] && grid[i].length === 5 && (curr === '' || i != guesses.length)) {
-        if (FIVE_LETTER_WORDS[word_id][j] === grid[i][j]) {
-          ctx.fillStyle = "rgb(96, 139, 85)"; // green
-        } else if (FIVE_LETTER_WORDS[word_id].includes(grid[i][j])) {
-          ctx.fillStyle = "rgb(177, 159, 76)"; // yellow
+        if (grid[i].includes(FIVE_LETTER_WORDS[word_id]))
+
+
+        if (FIVE_LETTER_WORDS[word_id].includes(grid[i][j])) {
+          let num_in_word = Math.sum(FIVE_LETTER_WORDS[word_id].map(x => x == grid[i][j] ? 1 : 0));
+
+          if (FIVE_LETTER_WORDS[word_id][j] === grid[i][j]) {
+            ctx.fillStyle = "rgb(96, 139, 85)"; // green
+          } else {
+            ctx.fillStyle = "rgb(177, 159, 76)"; // yellow
+          }
         } else {
           ctx.fillStyle = "grey";
         }
