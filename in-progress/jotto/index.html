@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>Play Jotto</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="engine.js"></script>
+    <style>
+
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="text-center">Jotto</h1>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Guess</th>
+                <th>#</th>
+              </tr>
+            </thead>
+            <tbody id="rows">
+              <tr>
+                <td>soter</td>
+                <td id="input-1">
+                  <div class="input-group">
+                    <input id="f" type="number" class="form-control" min="0" max="5" oninput="validate(this)">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-primary" onclick="enter()">Enter</button>
+                      <!-- <button type="button" class="btn btn-success" onclick="correct()">Correct</button> -->
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+
+  </script>
+</html>
