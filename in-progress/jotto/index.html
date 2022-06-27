@@ -8,41 +8,65 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="engine.js"></script>
     <style>
-
+      textarea {
+        width: 100%;
+        font-family: monospace;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <h1 class="text-center">Jotto</h1>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Guess</th>
-                <th>#</th>
-              </tr>
-            </thead>
-            <tbody id="rows">
-              <tr>
-                <td>soter</td>
-                <td id="input-1">
-                  <div class="input-group">
-                    <input id="f" type="number" class="form-control" min="0" max="5" oninput="validate(this)">
-                    <span class="input-group-btn">
-                      <button type="button" class="btn btn-primary" onclick="enter()">Enter</button>
-                      <!-- <button type="button" class="btn btn-success" onclick="correct()">Correct</button> -->
-                    </span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <h1 class="text-center">Jotto</h1><br>
+          <div class="panel panel-default">
+            <div class="panel-heading">Default</div>
+            <div class="panel-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Guess</th>
+                    <th>#</th>
+                  </tr>
+                </thead>
+                <tbody id="rows">
+                  <tr>
+                    <td>soter</td>
+                    <td id="input-1">
+                      <div class="input-group">
+                        <input id="f" type="number" class="form-control" min="0" max="5" oninput="validate(this)">
+                        <span class="input-group-btn">
+                          <button type="button" class="btn btn-primary" onclick="enter()">Enter</button>
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">Batch</div>
+            <div class="panel-body">
+              <textarea rows="10" id="textbox" placeholder="guess 1"></textarea>
+              <br><br>
+              <button class="btn btn-primary" onclick="batch_get_guess()">Get Guess</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </body>
   <script>
-
+    function batch_get_guess() {
+      let batch = document.getElementById('textbox').value.split('\n').map(x => x.split(' '));
+      let jotto = new Jotto();
+      for (let i = 0; i < batch.length; i++) {
+        jotto.log(batch[i][0], Number(batch[i][1]));
+      }
+      let guess = jotto.get_guess();
+      document.getElementById('textbox').value += "\n" + guess + ' ';
+      console.log(guess);
+    }
   </script>
 </html>
