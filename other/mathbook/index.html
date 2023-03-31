@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play Mathbook</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+		<style>
+			html {
+				min-width: 300px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				width: 100%;
+				background-color: lightgrey;
+        margin-bottom: 20px;
+			}
+
+			* {
+				font-size: 12pt;
+			}
+
+		</style>
+	</head>
+	<body onload="clear_board();">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<h1 class="text-center" style="margin-bottom:20px;">Mathbook</h1>
+					<canvas id="display" class="center-block" width="1000" height="1000">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<div class="row">
+						<div class="col-xs-6" style="padding: 0px 2px 30px 2px;">
+							<button class="btn btn-default btn-block" onclick="clear_board();">Clear</button>
+						</div>
+						<div class="col-xs-6" style="padding: 0px 2px 30px 2px;">
+              <div class="input-group">
+                <span class="input-group-addon">\(n=\) </span>
+                <input id="n" type="number" class="form-control" name="msg" value="6" min="3" max="18" onchange="change_n(this.value)">
+              </div>
+						</div>
+					</div>
+          <div class="row">
+            <div class="col-lg-12">
+              There are \(n\) users on a social network called Mathbook, and some of them are Mathbook-friends. (On Mathbook, friendship is always mutual and permanent.) Starting now, Mathbook will only allow a new friendship to be formed between two users if they have at least two friends in common. What is the minimum number of friendships that must already exist so that every user could eventually become friends with every other user?
+            </div>
+          </div>
+
+					<p class="text-center" style="margin-top:40px;">
+						&#169; 2023 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-2"></div>
+			</div>
+		</div>
+		<script src="engine.js"></script>
+	</body>
+</html>

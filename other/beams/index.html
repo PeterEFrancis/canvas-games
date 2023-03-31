@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play Beams</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+		<style>
+			html {
+				min-width: 300px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				width: 100%;
+				background-color: #3F3F3F;
+        margin-bottom: 20px;
+			}
+
+			* {
+				font-size: 12pt;
+			}
+
+		</style>
+	</head>
+	<body onload="clear_board();">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<h1 class="text-center" style="margin-bottom:20px;">Beams</h1>
+					<canvas id="display" class="center-block" width="1000" height="1100">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<div class="row">
+						<div class="col-xs-6" style="padding: 0px 2px 30px 2px;">
+							<button class="btn btn-default btn-block" onclick="clear_board();">Clear</button>
+						</div>
+						<div class="col-xs-6" style="padding: 0px 2px 30px 2px;">
+              <div class="input-group">
+                <span class="input-group-addon">\(n=\) </span>
+                <input id="n" type="number" class="form-control" name="msg" value="6" min="1" max="100" onchange="change_n(this.value)">
+              </div>
+						</div>
+					</div>
+          <div class="row">
+            <div class="col-lg-12">
+              An empty \(n\times n\times n\) cube is given, and a \(n\times n\) grid of square unit cells is drawn on each of its six faces. A beam is a \(1 \times 1 \times n\) rectangular prism.
+              <br>
+              Several beams are placed inside the cube subject to the following conditions:
+              <ul>
+                <li>The two \(1 \times 1\) faces of each beam coincide with unit cells lying on opposite faces of the cube. (Hence, there are \(3n\) possible positions for a beam.)</li>
+                <li>No two beams have intersecting interiors.</li>
+                <li>The interiors of each of the four \(1 \times n\) faces of each beam touch either a face of the cube or the interior of the face of another beam.</li>
+              </ul>
+              What is the smallest positive number of beams that can be placed to satisfy these conditions?
+            </div>
+          </div>
+
+					<p class="text-center" style="margin-top:40px;">
+						&#169; 2023 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-2"></div>
+			</div>
+		</div>
+		<script src="engine.js"></script>
+	</body>
+</html>
