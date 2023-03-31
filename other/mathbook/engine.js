@@ -116,6 +116,7 @@ function update_display() {
   }
 
   // hover line
+  ctx.lineWidth = 5;
   if (hover_loc != null && clicked_person != null) {
     ctx.beginPath();
     ctx.moveTo(...get_coords(clicked_person));
@@ -124,11 +125,22 @@ function update_display() {
   }
 
   // draw connections
+  ctx.lineWidth = 5;
   for (let conn of connections) {
     let rconn = JSON.parse(conn);
     ctx.beginPath();
     ctx.moveTo(...get_coords(rconn[0]));
     ctx.lineTo(...get_coords(rconn[1]));
+    ctx.stroke();
+  }
+
+  // draw possible connections
+  let poss_conns = get_possible_connections(connections);
+  ctx.lineWidth = 1;
+  for (let conn of poss_conns) {
+    ctx.beginPath();
+    ctx.moveTo(...get_coords(conn[0]));
+    ctx.lineTo(...get_coords(conn[1]));
     ctx.stroke();
   }
 
@@ -145,7 +157,7 @@ function update_display() {
   // eventually complete
   let t = 200;
   let text;
-  if (eventually_complete(connections)) {
+  if (poss_conns.length == choose(n, 2)) {
     ctx.fillStyle = "green";
     text = "Eventually Complete";
   } else {
@@ -198,8 +210,8 @@ function zeros(m) {
   return z;
 }
 
-function eventually_complete(conns) {
 
+function get_possible_connections(conns) {
   let conn_arr = zeros(n).map(x => zeros(n));
 
   for (let conn of conns) {
@@ -225,6 +237,22 @@ function eventually_complete(conns) {
       clean_trials++;
     }
   }
-  return conn_arr.map(x => x.reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0) == 2 * choose(n, 2);
 
+  let ret = [];
+  for (let a = 0; a < n; a++) {
+    for (let b = 0; b < a; b++) {
+      if (conn_arr[b][a] == 1) {
+        ret.push([a, b]);
+      }
+    }
+  }
+
+  return ret;
 }
+
+
+// function eventually_complete(conns) {
+//
+//   return conn_arr.map(x => x.reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0) == 2 * choose(n, 2);
+//
+// }
