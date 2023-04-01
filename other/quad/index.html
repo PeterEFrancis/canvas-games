@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play Quad</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+
+		<style>
+			html {
+				min-width: 150px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				width: 100%;
+				background-color: lightgrey;
+			}
+
+			p {
+				font-size: 12pt;
+			}
+
+			button {
+				margin-bottom: 10px !important;
+			}
+
+		</style>
+	</head>
+	<body onload="clear_board();">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3"></div>
+				<div class="col-md-6">
+					<h1 class="text-center" style="margin-bottom:20px;">Quad</h1>
+					<canvas id="display" class="center-block" width="1000" height="1000" style="margin-bottom: 20px;">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<div class="text-center" style="margin-bottom: 40px;">
+            <button class="btn btn-default btn-lg" onclick="clear_board()">Reset</button>
+
+						<div class="btn-group">
+							<button class="btn btn-default btn-lg"  onclick="change_num_squares(-1)">
+								<span class="glyphicon glyphicon-minus"></span>
+							</button>
+							<button class="btn btn-default btn-lg"  onclick="change_num_squares(1)">
+								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+						</div>
+            <h3>
+              Turn: <span id="turn" class="badge" style="margin-right: 50px; font-size: 25px;">Blue</span>
+              Score: <span id="score"></span>
+            </h3>
+					</div>
+					<p>Two players, B and R, play the following game on an innite grid of unit squares, all initially colored white. The players take turns starting with B. On B's turn, B selects one white unit square and colors it blue. On R's turn, R selects two white unit squares and colors them red. The players alternate until B decides to end the game. At this point, B gets a score, given by the number of unit squares in the largest (in terms of area) simple polygon containing only blue unit squares. What is the largest score B can guarantee?</p>
+					<p class="text-center" style="margin-top:40px;">
+						&#169; 2023 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-3"></div>
+			</div>
+		</div>
+		<script src="engine.js"></script>
+	</body>
+</html>
