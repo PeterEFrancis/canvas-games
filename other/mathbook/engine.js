@@ -7,7 +7,7 @@ const ctx = canvas.getContext("2d");
 const S = canvas.width;
 const R = 20;
 
-var n = 6;
+var n = 8;
 
 var hover_loc = null;
 
@@ -15,11 +15,20 @@ var connections = new Set();
 
 var clicked_person = null;
 
+var completion_mode = false;
+
+
+
 function change_n(num) {
+  if (num >= 18 || num <= 3) {
+    return;
+  }
   n = num;
   clear_board();
   update_display();
 }
+
+
 
 
 function get_loc(e) {
@@ -51,7 +60,6 @@ function draw_circle(center, radius, color) {
   ctx.beginPath();
   ctx.arc(...center, radius, 0, 2 * Math.PI);
   ctx.fill();
-
 }
 
 
@@ -89,6 +97,7 @@ function clear_board() {
   hover_loc = null;
   connections = new Set();
   clicked_person = null;
+  completion_mode = false;
   update_display();
 }
 
@@ -98,6 +107,18 @@ function get_coords(i) {
     (S / 2) + (S * 3 / 8) * Math.cos(2 * Math.PI * i / n),
     (S / 2) - (S * 3 / 8) * Math.sin(2 * Math.PI * i / n) + 30
   ];
+}
+
+
+
+function toggle_complete_mode(btn) {
+  completion_mode = !completion_mode;
+  update_display();
+  if (completion_mode) {
+    btn.innerHTML = "Turn Completion Mode Off";
+  } else {
+    btn.innerHTML = "Turn Completion Mode On";
+  }
 }
 
 
@@ -136,12 +157,14 @@ function update_display() {
 
   // draw possible connections
   let poss_conns = get_possible_connections(connections);
-  ctx.lineWidth = 1;
-  for (let conn of poss_conns) {
-    ctx.beginPath();
-    ctx.moveTo(...get_coords(conn[0]));
-    ctx.lineTo(...get_coords(conn[1]));
-    ctx.stroke();
+  if (completion_mode) {
+    ctx.lineWidth = 1;
+    for (let conn of poss_conns) {
+      ctx.beginPath();
+      ctx.moveTo(...get_coords(conn[0]));
+      ctx.lineTo(...get_coords(conn[1]));
+      ctx.stroke();
+    }
   }
 
   // draw people
@@ -155,21 +178,28 @@ function update_display() {
   }
 
   // eventually complete
-  let t = 200;
-  let text;
-  if (poss_conns.length == choose(n, 2)) {
-    ctx.fillStyle = "green";
-    text = "Eventually Complete";
-  } else {
-    ctx.fillStyle = "red";
-    text = "Not Eventually Complete";
+  if (completion_mode) {
+    let t = 200;
+    let text;
+    if (poss_conns.length == choose(n, 2)) {
+      ctx.fillStyle = "green";
+      text = "Complete";
+    } else {
+      ctx.fillStyle = "red";
+      text = "Incomplete";
+    }
+    ctx.fillRect(0, 0, S, 50);
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText(text, S / 2, 35);
   }
-  ctx.fillRect(0, 0, S, 50);
-  ctx.font = "30px Arial";
-  ctx.fillStyle = "white";
-  ctx.textAlign = "center";
-  ctx.fillText(text, S / 2, 35);
 
+  // number of edges
+  ctx.font = "30px Arial";
+  ctx.fillStyle = "black";
+  ctx.textAlign = "left";
+  ctx.fillText("E = " + connections.size, 10, S - 20);
 
 
 }

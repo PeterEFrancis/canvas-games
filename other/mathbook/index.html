@@ -43,13 +43,16 @@
 						HTML Canvas element is not supported on your device and/or borwser.
 					</canvas>
 					<div class="row">
-						<div class="col-xs-6" style="padding: 0px 2px 30px 2px;">
+						<div class="col-xs-4" style="padding: 0px 2px 30px 2px;">
 							<button class="btn btn-default btn-block" onclick="clear_board();">Clear</button>
 						</div>
-						<div class="col-xs-6" style="padding: 0px 2px 30px 2px;">
+            <div class="col-xs-4" style="padding: 0px 2px 30px 2px;">
+							<button class="btn btn-default btn-block" onclick="toggle_complete_mode(this);">Turn Completion Mode On</button>
+						</div>
+						<div class="col-xs-4" style="padding: 0px 2px 30px 2px;">
               <div class="input-group">
                 <span class="input-group-addon">\(n=\) </span>
-                <input id="n" type="number" class="form-control" name="msg" value="6" min="3" max="18" onchange="change_n(this.value)">
+                <input id="n" type="number" class="form-control" name="msg" value="8" min="3" max="18" onchange="change_n(this.value)">
               </div>
 						</div>
 					</div>
