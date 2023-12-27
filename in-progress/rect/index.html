@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play Rect</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+
+		<style>
+			html {
+				min-width: 150px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				width: 100%;
+				background-color: black;
+			}
+
+			p {
+				font-size: 12pt;
+			}
+
+			button {
+				margin-bottom: 10px !important;
+			}
+
+		</style>
+	</head>
+	<body onload="reset_game();">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h1 class="text-center" style="margin-bottom:20px;">Rect</h1>
+					<canvas id="display" class="center-block" width="600" height="600" style="margin-bottom: 20px;">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<div class="text-center" style="margin-bottom: 40px;">
+						<button class="btn btn-default btn-lg" onclick="reset_game()">New Game</button>
+						<div class="btn-group">
+							<button class="btn btn-default btn-lg" onclick="change_num_squares(-1)">
+								<span class="glyphicon glyphicon-minus"></span>
+							</button>
+							<button class="btn btn-default btn-lg"  onclick="change_num_squares(1)">
+								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+						</div>
+					</div>
+					<p></p>
+					<p class="text-center" style="margin-top:40px;">
+						&#169; 2020 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<script src="engine.js"></script>
+	</body>
+</html>
