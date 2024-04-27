@@ -74,7 +74,29 @@ function get_random_deck() {
 
 
 
-// drawing
+
+// const r_arr = new Uint8ClampedArray(400);
+// const g_arr = new Uint8ClampedArray(300);
+// const b_arr = new Uint8ClampedArray(300);
+// let arrs = [r_arr, g_arr, b_arr];
+
+// for (let i = 0; i < r_arr.length; i += 4) {
+// 	if ((i / 4) % 10 < 4) {
+// 		r_arr[i + 0] = 255; // R value
+// 		r_arr[i + 1] = 0; // G value
+// 		r_arr[i + 2] = 0; // B value
+// 		r_arr[i + 3] = 255; // A value
+// 	} else {
+// 		r_arr[i + 0] = 255; // R value
+// 		r_arr[i + 1] = 255; // G value
+// 		r_arr[i + 2] = 255; // B value
+// 		r_arr[i + 3] = 255; // A value
+// 	}
+// }
+
+// Initialize a new ImageData object
+// let p_r = createImageBitmap(new ImageData(r_arr, 10));
+
 
 let p_r = document.getElementById('redstripe');
 let p_g = document.getElementById('greenstripe')

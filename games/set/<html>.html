@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Play SET</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="../../img/logo/favicon.ico" type="image/x-icon" />
+
+		<style>
+			html {
+				min-width: 300px;
+			}
+
+			body {
+				background-color: #3F3F3F;
+				color: lightgrey;
+			}
+			canvas {
+				width: 100%;
+				background-color: #3F3F3F;
+				margin-bottom: 20px;
+/*				border: 1px solid black;*/
+			}
+
+			* {
+				font-size: 12pt;
+			}
+
+			.num-btn {
+				padding: 10px 2px;
+				width: 11%;
+			}
+
+			@media print {
+				.controls {
+					display: none;
+				}
+			}
+
+			.btn-lg {
+				margin-bottom: 20px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<h1 class="text-center" style="margin-bottom:20px;">SET</h1>
+					<div class="text-center controls" style="margin-bottom: 20px;">
+						<button class="btn btn-default btn-lg" onclick="new_game()">New Game</button>
+						<button class="btn btn-default btn-lg" onclick="find_set()">Find Set</button>
+					
+						<button class="btn btn-default btn-lg" onclick="add_cards()">Add 3 Cards</button>
+					</div>
+					<canvas id="display" class="center-block" width="800" height="1000">
+						HTML Canvas element is not supported on your device and/or borwser.
+					</canvas>
+					<p>Each card has 4 characteristics (color, number, shape, pattern) and each characteristic has three variations (e.g. red, blue, and green; diamond, oval, squiggle). A SET consists of three cards that are either all the same or all different in each category. Click three cards to make a SET and remove them from the board. If you cannot find a SET or believe there is not one on the board, add 3 cards.</p>
+					
+					<p class="text-center" style="margin-top:40px;">
+						&#169; 2024 <a href="https://PeterEFrancis.com" target="_blank" style="color:lightgrey;"><u>Peter E. Francis</u></a>
+					</p>
+				</div>
+				<div class="col-md-2"></div>
+			</div>
+		</div>
+		
+		<img id="redstripe" src="redstripe.png" width="2" height="2" hidden/>
+		<img id="bluestripe" src="bluestripe.png" width="2" height="2" hidden/>
+		<img id="greenstripe" src="greenstripe.png" width="2" height="2" hidden/>
+		<script src="engine.js"></script>
+
+		<script>
+			canvas.addEventListener('click', function(evt) {
+				let rect = canvas.getBoundingClientRect();
+				let x = (event.clientX - rect.left) * (canvas.width / canvas.clientWidth);
+				let y = (event.clientY - rect.top) * (canvas.height / canvas.clientHeight);
+				click_card(get_card_num(x, y));
+			})
+		</script>
+
+	</body>
+</html>
